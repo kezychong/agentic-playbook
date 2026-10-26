@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "origin": "Original first-party generated JARVIS artwork",
+  "member_treatment": "Same image bytes with generic filenames and configurable labels. The internal reference screenshot is excluded.",
+  "files": [
+    {
+      "path": "payload/frontend/assets/cc/bg-nebula.jpg",
+      "sha256": "92cda56ca71972fda0cfb12bf2c64bcae0be41d790388861755d5d40684aa3a3"
+    },
+    {
+      "path": "payload/frontend/assets/cc/orb-agent.jpg",
+      "sha256": "2cb19e3c902ec1b59e97d5e2ca79f80210fd55c2ddc71db5b25decd0e52e05fd"
+    },
+    {
+      "path": "payload/frontend/assets/cc/orb-brain-1.jpg",
+      "sha256": "0f8506f5d63a26cdfe908d38e58c6bb9d43e7104a5ac56a006db1712fa021dc6"
+    },
+    {
+      "path": "payload/frontend/assets/cc/orb-brain-2.jpg",
+      "sha256": "9257ff1b242ae73928f47fa7373870581b98e164bd34dba4e5ecae968fb27a6a"
+    },
+    {
+      "path": "payload/frontend/assets/cc/orb-brain-3.jpg",
+      "sha256": "6c5b35b6d57fd1e7226e963ce70a009c2c3f7a2d39aac81a45c37c2a013f3358"
+    }
+  ]
+}

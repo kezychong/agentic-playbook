@@ -1,0 +1,12 @@
+{
+  "id": "fresh-eyes-judge",
+  "title": "Fresh Eyes Judge",
+  "topic": "04",
+  "skill_ids": [
+    "ap-fresh-eyes-judge"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

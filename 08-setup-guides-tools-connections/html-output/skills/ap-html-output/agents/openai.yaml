@@ -1,0 +1,7 @@
+interface:
+  display_name: "HTML Output"
+  short_description: "Turn long answers into clear offline pages"
+  default_prompt: "Use $ap-html-output to turn this long answer into a simple page with useful pictures and clear decisions."
+
+policy:
+  allow_implicit_invocation: true

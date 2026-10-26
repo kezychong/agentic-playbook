@@ -1,0 +1,7 @@
+interface:
+  display_name: "VSL → Book a Call"
+  short_description: "Script the 15 to 20 minute video that gets the right people to book a call."
+  default_prompt: "Use $ap-vsl-book-a-call. Interview me first, one question at a time, build the foundation records, then write the script. Run the gate and the fresh-eyes judge before showing me anything. Never publish or upload."
+
+policy:
+  allow_implicit_invocation: true

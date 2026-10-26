@@ -1,0 +1,791 @@
+{
+  "schema_version": 1,
+  "package_name": "ap-jarvis-mode",
+  "package_version": "0.1.0",
+  "release_ready": false,
+  "release_state": "unvalidated-repackage",
+  "release_gates": {
+    "frontend_source_and_bundle": false,
+    "host_patch_compatibility_proof": false,
+    "licence_and_art_provenance": false,
+    "two_device_install_proof": false,
+    "linux_headless_proof": false
+  },
+  "verification_notes": [
+    "Agentic Playbook \u2014 by Kezy. Adapted local source package; no source scripts, host patches, hardware or integrations were executed.",
+    "Prior source release proofs do not certify these modified bytes. Release gates intentionally remain closed; a maintainer must perform the supplied acceptance procedure before live installation.",
+    "File hashes were recalculated mechanically for integrity only; they are not runtime evidence."
+  ],
+  "files": [
+    {
+      "path": "INSTALL.md",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 2258,
+      "sha256": "2e8bc0ece58be0e74a4cd3d858037277e8f1f41cda5bc5cbdc8a2fc68efc6c9e"
+    },
+    {
+      "path": "README.md",
+      "role": "source-and-support",
+      "required": true,
+      "status": "present",
+      "size": 1842,
+      "sha256": "a341c2c15db91c9643abc4c99c3aebed3eb79459c5c77fa3596ab901a386c502"
+    },
+    {
+      "path": "SKILL.md",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 11125,
+      "sha256": "c25776e3537be3eba0f7fb6eff093048ae9b7988a4ea303d004fcf2d866b9cde"
+    },
+    {
+      "path": "agents/openai.yaml",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 382,
+      "sha256": "c081a3db77607607b81354f1a016d024d2bfe79224331cd01dd8b2a67ecf2c9a"
+    },
+    {
+      "path": "payload/backend/hermes-jarvis/__init__.py",
+      "role": "headless-backend",
+      "status": "present",
+      "required": true,
+      "size": 15147,
+      "sha256": "a4d9e204f332367d2a3cd8bb8617fb15cf8a95b3960cfa061927882c220a43d6"
+    },
+    {
+      "path": "payload/backend/hermes-jarvis/config.py",
+      "role": "headless-backend",
+      "status": "present",
+      "required": true,
+      "size": 15237,
+      "sha256": "8811a57629b16bd0217e0202fb586be35e95793ba48c9f2cd65b76c7fe255cd1"
+    },
+    {
+      "path": "payload/backend/hermes-jarvis/dashboard/dist/index.js",
+      "role": "headless-backend",
+      "status": "present",
+      "required": true,
+      "size": 4384,
+      "sha256": "204328673237ec5d1ff9df3a97471bfae85ae68c7bb4165ecc4cb5623a17608c"
+    },
+    {
+      "path": "payload/backend/hermes-jarvis/dashboard/jarvis_calendar.py",
+      "role": "headless-backend",
+      "status": "present",
+      "required": true,
+      "size": 5132,
+      "sha256": "da75956ff14b7917940d77e58c2fd8cde8ea31ed66646f1dc0c341e7fa767b41"
+    },
+    {
+      "path": "payload/backend/hermes-jarvis/dashboard/manifest.json",
+      "role": "headless-backend",
+      "status": "present",
+      "required": true,
+      "size": 261,
+      "sha256": "4e053cbe4040433d64f1235f17037c632891ca7b3c3764a3d8b83cf063c576e5"
+    },
+    {
+      "path": "payload/backend/hermes-jarvis/dashboard/mirror.html",
+      "role": "headless-backend",
+      "status": "present",
+      "required": true,
+      "size": 1249016,
+      "sha256": "d1fcfa3debc613066c190a8fa875d7352d43d6f0d85572ea1ace0dce86075664"
+    },
+    {
+      "path": "payload/backend/hermes-jarvis/dashboard/mirror.template.html",
+      "role": "headless-backend",
+      "status": "present",
+      "required": true,
+      "size": 1622,
+      "sha256": "2487515dce51d9b37fb5a2f897f4f4ecbb564c2bc97e18eae984fc2ece2e00ba"
+    },
+    {
+      "path": "payload/backend/hermes-jarvis/dashboard/plugin_api.py",
+      "role": "headless-backend",
+      "status": "present",
+      "required": true,
+      "size": 92988,
+      "sha256": "9d9ac283da74f12d2f502910cb3d12c2d2df2f86000c1b1cadf80cb9d0916f86"
+    },
+    {
+      "path": "payload/backend/hermes-jarvis/plugin.yaml",
+      "role": "headless-backend",
+      "status": "present",
+      "required": true,
+      "size": 298,
+      "sha256": "cd94ba43ad8a76a8ca352c061cd07020ba8b3d2844f0ed4ae72422a18e55d452"
+    },
+    {
+      "path": "payload/bin/install-hands.sh",
+      "role": "main-helper",
+      "status": "present",
+      "required": true,
+      "size": 9306,
+      "sha256": "e12b41de84771867f3d67f9da543d5098dc5a6cff9f90b77f720b9c4f189824f"
+    },
+    {
+      "path": "payload/bin/jarvis-mirror",
+      "role": "main-helper",
+      "status": "present",
+      "required": true,
+      "size": 12012,
+      "sha256": "82f5ce0ee0c9407d6d952430b61ba81fa1a95ce16edfb975df17a69e6f5e6455"
+    },
+    {
+      "path": "payload/bin/jarvis-toggle",
+      "role": "main-helper",
+      "status": "present",
+      "required": true,
+      "size": 6811,
+      "sha256": "a297ea970d98da80d94cb5b6222e5e9154d571da124bdb450b1cc2a3c9a44b56"
+    },
+    {
+      "path": "payload/frontend/assets/cc/bg-nebula.jpg",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 33092,
+      "sha256": "92cda56ca71972fda0cfb12bf2c64bcae0be41d790388861755d5d40684aa3a3"
+    },
+    {
+      "path": "payload/frontend/assets/cc/orb-agent.jpg",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 161116,
+      "sha256": "2cb19e3c902ec1b59e97d5e2ca79f80210fd55c2ddc71db5b25decd0e52e05fd"
+    },
+    {
+      "path": "payload/frontend/assets/cc/orb-brain-1.jpg",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 71079,
+      "sha256": "0f8506f5d63a26cdfe908d38e58c6bb9d43e7104a5ac56a006db1712fa021dc6"
+    },
+    {
+      "path": "payload/frontend/assets/cc/orb-brain-2.jpg",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 57009,
+      "sha256": "9257ff1b242ae73928f47fa7373870581b98e164bd34dba4e5ecae968fb27a6a"
+    },
+    {
+      "path": "payload/frontend/assets/cc/orb-brain-3.jpg",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 65146,
+      "sha256": "6c5b35b6d57fd1e7226e963ce70a009c2c3f7a2d39aac81a45c37c2a013f3358"
+    },
+    {
+      "path": "payload/frontend/dashboard/dist/index.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 4384,
+      "sha256": "204328673237ec5d1ff9df3a97471bfae85ae68c7bb4165ecc4cb5623a17608c"
+    },
+    {
+      "path": "payload/frontend/dashboard/mirror.html",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 1251816,
+      "sha256": "6b661174e1c1ab32ebdb02c44aba7f0191c0df81ef90dc611b88f0b1b630aa29"
+    },
+    {
+      "path": "payload/frontend/dashboard/mirror.template.html",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 1622,
+      "sha256": "2487515dce51d9b37fb5a2f897f4f4ecbb564c2bc97e18eae984fc2ece2e00ba"
+    },
+    {
+      "path": "payload/frontend/desktop/plugin.js",
+      "role": "main-frontend",
+      "status": "present",
+      "required": true,
+      "size": 1649171,
+      "sha256": "e205003e1a3f33bb9a5d74ede11386ebd8bb307ca79ba483c786b384976a5b67"
+    },
+    {
+      "path": "payload/frontend/scripts/build.py",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 5620,
+      "sha256": "e2ed02c045a0c0ff9b557b7d0d2d847d822c916b6847ef62a9f451764052ff4d"
+    },
+    {
+      "path": "payload/frontend/scripts/embed-assets.py",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 3707,
+      "sha256": "3ba1910c05bb6eac237e911f6557413be77df8d6dbca51dde17b4bc8b91a7350"
+    },
+    {
+      "path": "payload/frontend/src/00-header.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 377,
+      "sha256": "d170d4ce431791001283e580efd100dc284e14f99d9136dbcfb8db6c7e7e518a"
+    },
+    {
+      "path": "payload/frontend/src/05-scope.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 11282,
+      "sha256": "b3692005e7cd42856fe80c0867ec8decb6bccd98cb02212b3dcde54fd2795667"
+    },
+    {
+      "path": "payload/frontend/src/10-theme.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 57206,
+      "sha256": "18deb369d7c41ad6f4c2a4a0d33aafe6fc4930545c28505ccc93b89610232a7b"
+    },
+    {
+      "path": "payload/frontend/src/20-presence.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 159162,
+      "sha256": "13308fc22a17dfb18b4378347d3d3cfbaf61b4c1c03fdaf36b0b73a925eb9c41"
+    },
+    {
+      "path": "payload/frontend/src/25-relay.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 15858,
+      "sha256": "a0eca29724a5f4620d9a09f7df1c4a5e62e8f4275456dbbc5006f1df6130a689"
+    },
+    {
+      "path": "payload/frontend/src/30-data.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 81616,
+      "sha256": "546ec55e229e7c25a245074d15b5b4a66959d94fe8d1ec4add18051e3f755912"
+    },
+    {
+      "path": "payload/frontend/src/35-assets.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 1034213,
+      "sha256": "a59f6284ae7670a39d8cec23b67e21f80973b4849ffa6a2401b86d728c144c52"
+    },
+    {
+      "path": "payload/frontend/src/40-scene.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 82004,
+      "sha256": "49f4c3deff5146a5a9a1b44d17c59ee7bc0990ba0f349c40ef80bd8032ccfa03"
+    },
+    {
+      "path": "payload/frontend/src/45-mirror.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 12340,
+      "sha256": "478a4b1ea91443da90fc0aec6aeedbd1cdb3b0e147cf66355e7daf5c6f97b8df"
+    },
+    {
+      "path": "payload/frontend/src/50-overlay.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 153530,
+      "sha256": "cfa2d454fca126520225b7648fe082f4904c55ffe493332474c9ac9a03b3e1cf"
+    },
+    {
+      "path": "payload/frontend/src/55-room.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 13715,
+      "sha256": "377948766414daa00b6c4d596f161faf8dbc25db354b301ba5a455ba00f612e1"
+    },
+    {
+      "path": "payload/frontend/src/60-plugin.js",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 38311,
+      "sha256": "63834b510572e015ee5f5a5e34b19088584bcbaed2084e0b988171c9b67d1f93"
+    },
+    {
+      "path": "payload/frontend/tests/activity.test.mjs",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 44464,
+      "sha256": "f84d18f3b67402cc79c20f1c6cab57fd95ee3085aaa4401dd330702870d486e9"
+    },
+    {
+      "path": "payload/frontend/tests/callend.test.mjs",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 22839,
+      "sha256": "355ff0d23d00433c5494894f8e61c0130c52d3814a691557ecaf6ff1b28ec499"
+    },
+    {
+      "path": "payload/frontend/tests/dashboard.test.mjs",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 4468,
+      "sha256": "f73257754950df15a783147dfe0abaa534fa69b596a3785e91b614980b042997"
+    },
+    {
+      "path": "payload/frontend/tests/mirror.test.mjs",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 8226,
+      "sha256": "45da0bb403d6ca7cbcbf10537f8b01b94976c1d3e8ead21740ebb02dc94f342c"
+    },
+    {
+      "path": "payload/frontend/tests/overlay-preview.html",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 31568,
+      "sha256": "52d679ac499d1d858b75a20a67041627dd517de9757232ead8db594db18aab53"
+    },
+    {
+      "path": "payload/frontend/tests/plugin-smoke.test.mjs",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 98554,
+      "sha256": "8ee69f035fa0c4a63ae7c3f50907851934bc70b2882e917521b62c961e7b3b93"
+    },
+    {
+      "path": "payload/frontend/tests/presence.test.mjs",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 110513,
+      "sha256": "e6a31d68c740eefcd542e2588994c26c159044d2ab44072a47b3de188e4facf6"
+    },
+    {
+      "path": "payload/frontend/tests/rails.test.mjs",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 68169,
+      "sha256": "3614c4c53fa95b5717752cf246b9de680b8e558f998e1a6fd383ca6606d47757"
+    },
+    {
+      "path": "payload/frontend/tests/relay.test.mjs",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 26950,
+      "sha256": "c3792af7d48846acc6430a5f491908a79b352bbc4421d5971cd075abc99c2f26"
+    },
+    {
+      "path": "payload/frontend/tests/scene-preview.html",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 7186,
+      "sha256": "85513cc1c6e51bbb3e7d5daca89d0b8fa985c6d1cbcf70b284bc6b2e067fd112"
+    },
+    {
+      "path": "payload/frontend/tests/scene.test.mjs",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 44770,
+      "sha256": "223a323156110e138207b10d6c3b9a77397ce2034349d0c4f0dd144abfb36790"
+    },
+    {
+      "path": "payload/frontend/tests/scope.test.mjs",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 17588,
+      "sha256": "b4f55d59c426c274be4af0240a905648fb23d4b95a6edd9d50faf975a53473cc"
+    },
+    {
+      "path": "payload/hands/ap-macbook-hands",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 44992,
+      "sha256": "a742bc7a68a0dc2663fbd21e73abb2cb7635cadb8d17c0557020e2d82c831dd5"
+    },
+    {
+      "path": "payload/hands/cua-driver-notice.txt",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 811,
+      "sha256": "60fe6bf055cfd0b6054d600bd436d368aa8d47a943a28620fb95ff438c707a38"
+    },
+    {
+      "path": "payload/hands/install-cua-driver.sh",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 11778,
+      "sha256": "b758b9d5964746c6201345bbbb0db1984e06c5f691a2073aae291bce7c21e442"
+    },
+    {
+      "path": "payload/hands/install-hands-transaction.py",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 9746,
+      "sha256": "5e436a43e5f9bf27cb13e58704549fc59d45184735676d47abfa8f4ff52d0a4e"
+    },
+    {
+      "path": "payload/hands/skill/ap-macbook-hands/skill-template.md",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 4399,
+      "sha256": "a076c5695e4b5bc5a15bdbeb7e1fb5bf547bcef15dae5bbe9e00383d869c74cd"
+    },
+    {
+      "path": "payload/host/host-compatibility.md",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 8873,
+      "sha256": "b03ec65a5e52c8c5acba8716681a39dcd8c8f401561fb766743b554a30a4b3c7"
+    },
+    {
+      "path": "payload/host/host-patch.py",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 10329,
+      "sha256": "6e2682011c0b6ecdfeac487e0703a7ba66c103ba4755ef537f393ba416a121fd"
+    },
+    {
+      "path": "payload/host/licenses/hermes/LICENSE",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 1070,
+      "sha256": "821556e6336796450ab852d375117b48a4887e71d255794fd6318d99982a5ab6"
+    },
+    {
+      "path": "payload/host/licenses/hermes-talk/LICENSE",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 1065,
+      "sha256": "ff4c72804ca0a821527c22ca0e129ed5559117fea32b6df16116a68384a598bc"
+    },
+    {
+      "path": "payload/host/licenses/hermes-talk/THIRD_PARTY_NOTICES.md",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 2961,
+      "sha256": "ea6b3aee1cfe7d1ed190dda3f8e75ac73d2648025f2b459feef5e1a3a46311d0"
+    },
+    {
+      "path": "payload/host/talk-presence/patch-talk-presence.py",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 13907,
+      "sha256": "d7efde65d9b52ca062892c08c6da191051f1e5767ca4c66b75283d0539e56eba"
+    },
+    {
+      "path": "payload/host/talk-presence/talk-presence-safe.py",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 8101,
+      "sha256": "d8231cc63ae5e5ee131e429a00cd803bf12c0c8f450ea4c9550765c5e744cc85"
+    },
+    {
+      "path": "payload/host/voice-1-67601e80767.patch",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 19311,
+      "sha256": "12bd145b04bd65f901f3063932543291041cdcec5661b5095dc7e2e87a641a59"
+    },
+    {
+      "path": "payload/host/voice-2-d0903ea0486.patch",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 29541,
+      "sha256": "945a09d36d2724b76831fbd8818285de92e23ef89fe469bac9b9748eb7c393a7"
+    },
+    {
+      "path": "payload/host/voice-3-ccbf400b47d.patch",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 6525,
+      "sha256": "1d3fd048a1ff07ef9547b5e620b519a878c2eeaaba22801a89f136e19bc6eb99"
+    },
+    {
+      "path": "payload/host/voice-4-64f012ac0c.patch",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 8833,
+      "sha256": "e3e1688dad390177dcc8d48e88191a493bcbda5ae57be6c05522c818ef6fe5d0"
+    },
+    {
+      "path": "payload/host/voice-5-ec5a0d4df4d.patch",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 22909,
+      "sha256": "96f09bc4a3cdbfbae19c42c4bd32c287e34e8bb93a281921b914ef855273ece7"
+    },
+    {
+      "path": "payload/host/voice-6-cf0ecb16df7.patch",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 13376,
+      "sha256": "3bacee6a8c7d30baa57158758787f3aecb52b89caecc0e304f3232873cf2025a"
+    },
+    {
+      "path": "payload/host/voice-patch-compatibility.json",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 23111,
+      "sha256": "4739c93d6b463236d1b39ea36bc934b916de309a129a7fdbce10e1995eec3e4b"
+    },
+    {
+      "path": "references/config.example.json",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 1776,
+      "sha256": "6baec94f76e6dab8e284969b80e611ad60c2973107538be63aff3bcda8b3a606"
+    },
+    {
+      "path": "references/configuration.md",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 8874,
+      "sha256": "331f6e9b7982e4a01dc9c11447a0beebfb62d0717640b301ea4d70c452493d67"
+    },
+    {
+      "path": "references/device-acceptance.md",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 4397,
+      "sha256": "6e481268032f479429e38765405d37e17080e0d4c634b0f47ebc7ef05512206e"
+    },
+    {
+      "path": "references/hands.md",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 6573,
+      "sha256": "81bc3d8d5cca69dca7a8c6b45b83fffb2c6849dcb4e9b7f40b0d57643f91e6e9"
+    },
+    {
+      "path": "references/install-contract.md",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 6043,
+      "sha256": "4147298c2614310636e346089ecbb9c9e6220839de156ee3daa1ad6da765b6ab"
+    },
+    {
+      "path": "references/notices/CuaDriver-MIT.txt",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 1069,
+      "sha256": "c0779290c1d4783169aa3dbfb55feb505e563ef8a004bbf55298ceffcfbda8d9"
+    },
+    {
+      "path": "references/notices/README.md",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 1150,
+      "sha256": "3da4a7a9636113abe64c66ff02ea80dafd13c874510849876147f5ab07ae2c2e"
+    },
+    {
+      "path": "references/notices/art-provenance.json",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 1017,
+      "sha256": "69378b2b595466fe357b3ddb3207e2168bbde307c51b141a19396714db0cbb88"
+    },
+    {
+      "path": "scripts/install.py",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 55164,
+      "sha256": "78541c717311c39f7761769090a2d1a4e36d19d494a1f83bca67052fe000b10e"
+    },
+    {
+      "path": "scripts/prepare_package.py",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 12062,
+      "sha256": "e3739c85015344c56670604ed70e9465ffc6f123fc8daebfacd52cffd082fe54"
+    },
+    {
+      "path": "scripts/seal_manifest.py",
+      "role": "source-and-support",
+      "status": "present",
+      "required": true,
+      "size": 7831,
+      "sha256": "e485fc7c393d75f0829f1b0b61b1274e1cb4a3dbd73f4b6069381e553ffd6fd6"
+    },
+    {
+      "path": "tests/hardware/test_bin_scripts.sh",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 7954,
+      "sha256": "f1148214b241173893a40f297f9b48ad3b6e693bac4d5ea8daf47832a896b107"
+    },
+    {
+      "path": "tests/hardware/test_hands.py",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 80188,
+      "sha256": "acdb13fd9fe8a79e0a11e83ddd35572dda6f86cd6c49f1655722c0472b322901"
+    },
+    {
+      "path": "tests/test_backend.py",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 32817,
+      "sha256": "974361ea299efe6b11a6b17530f0e6410cd3a1b74abf7e89bb1744e8f274ca3a"
+    },
+    {
+      "path": "tests/test_hands_member.py",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 20113,
+      "sha256": "de5ee5177b0ae95d71e1eae049daeb9903d61664ccdb01e4d8dc262710d40e4a"
+    },
+    {
+      "path": "tests/test_host_patches.py",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 13433,
+      "sha256": "47cdd55ab6812aed9ed20a8fb1e19a7df4d57fe7688c3a814e0d177a7d3dff8f"
+    },
+    {
+      "path": "tests/test_install.py",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 52975,
+      "sha256": "32987b5266021f514afc6f0d8ae386319e71036fef135bad64d7636963594600"
+    },
+    {
+      "path": "tests/test_patch_talk_presence.py",
+      "role": "qa",
+      "status": "present",
+      "required": true,
+      "size": 16367,
+      "sha256": "6c2407fc26d4d65bab3d39254f821a9e293f5056b012a6e3725b453c3b6890a8"
+    }
+  ],
+  "install_mappings": {
+    "main": [
+      {
+        "package_path": "payload/frontend/desktop/plugin.js",
+        "target_relative": "desktop-plugins/hermes-jarvis/plugin.js",
+        "role": "main-frontend"
+      },
+      {
+        "package_path": "payload/bin/jarvis-toggle",
+        "target_relative": "jarvis/bin/jarvis-toggle",
+        "role": "main-helper"
+      },
+      {
+        "package_path": "payload/bin/jarvis-mirror",
+        "target_relative": "jarvis/bin/jarvis-mirror",
+        "role": "main-helper"
+      }
+    ],
+    "headless": [
+      {
+        "package_path": "payload/backend/hermes-jarvis/__init__.py",
+        "target_relative": "plugins/hermes-jarvis/__init__.py",
+        "role": "headless-backend"
+      },
+      {
+        "package_path": "payload/backend/hermes-jarvis/config.py",
+        "target_relative": "plugins/hermes-jarvis/config.py",
+        "role": "headless-backend"
+      },
+      {
+        "package_path": "payload/backend/hermes-jarvis/dashboard/dist/index.js",
+        "target_relative": "plugins/hermes-jarvis/dashboard/dist/index.js",
+        "role": "headless-backend"
+      },
+      {
+        "package_path": "payload/backend/hermes-jarvis/dashboard/jarvis_calendar.py",
+        "target_relative": "plugins/hermes-jarvis/dashboard/jarvis_calendar.py",
+        "role": "headless-backend"
+      },
+      {
+        "package_path": "payload/backend/hermes-jarvis/dashboard/manifest.json",
+        "target_relative": "plugins/hermes-jarvis/dashboard/manifest.json",
+        "role": "headless-backend"
+      },
+      {
+        "package_path": "payload/backend/hermes-jarvis/dashboard/mirror.html",
+        "target_relative": "plugins/hermes-jarvis/dashboard/mirror.html",
+        "role": "headless-backend"
+      },
+      {
+        "package_path": "payload/backend/hermes-jarvis/dashboard/mirror.template.html",
+        "target_relative": "plugins/hermes-jarvis/dashboard/mirror.template.html",
+        "role": "headless-backend"
+      },
+      {
+        "package_path": "payload/backend/hermes-jarvis/dashboard/plugin_api.py",
+        "target_relative": "plugins/hermes-jarvis/dashboard/plugin_api.py",
+        "role": "headless-backend"
+      },
+      {
+        "package_path": "payload/backend/hermes-jarvis/plugin.yaml",
+        "target_relative": "plugins/hermes-jarvis/plugin.yaml",
+        "role": "headless-backend"
+      }
+    ]
+  }
+}

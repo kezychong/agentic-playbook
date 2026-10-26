@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" data-mood="editorial-ink">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Hanken+Grotesk:wght@300;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{font-family:var(--body);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}.deck{width:100%;height:100%}.slide{position:absolute;inset:0;display:flex;visibility:hidden;opacity:0;pointer-events:none;overflow:hidden;padding:clamp(44px,6vw,96px);background:var(--bg);color:var(--text)}.slide.active{visibility:visible;opacity:1;pointer-events:auto;z-index:2}.slide.dark{background:var(--dark);color:var(--on-dark)}.slide.wash{background:var(--wash)}.center{align-items:center;justify-content:center;text-align:center}.stack{display:flex;flex-direction:column;gap:clamp(18px,2.6vw,36px)}.split{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(40px,7vw,120px);width:100%;height:100%}.eyebrow{font:600 clamp(13px,1.1vw,18px)/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--primary)}.dark .eyebrow{color:var(--on-dark-muted)}h1,h2,p{margin:0}h1{font-family:var(--display);font-size:clamp(64px,8vw,126px);line-height:.94;letter-spacing:-.055em;max-width:13ch}h2{font-family:var(--display);font-size:clamp(48px,5.7vw,86px);line-height:.98;letter-spacing:-.045em;max-width:16ch}.center h1,.center h2{margin-inline:auto}.accent{color:var(--primary)}.payoff{color:var(--payoff)}.sub{font-size:clamp(22px,2vw,32px);line-height:1.35;color:var(--muted);max-width:48ch}.dark .sub{color:var(--on-dark-muted)}.diagram{width:100%;max-height:55vh}.card{border:1.5px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:clamp(24px,3vw,42px)}.big-number{font-family:var(--display);font-weight:800;font-size:clamp(110px,17vw,280px);line-height:.78;letter-spacing:-.07em;color:var(--primary)}.meta{position:absolute;left:clamp(30px,4vw,64px);bottom:clamp(22px,3vw,42px);font:600 13px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.counter{position:absolute;right:clamp(30px,4vw,64px);bottom:clamp(22px,3vw,42px);font:600 13px/1 var(--mono);color:var(--muted)}.progress{position:fixed;left:0;bottom:0;height:5px;width:0;background:var(--primary);transition:width .2s ease;z-index:10}.reveal{opacity:0;transform:translateY(12px)}.active .reveal{animation:up .45s cubic-bezier(.2,.8,.2,1) forwards}.active .d2{animation-delay:.08s}.active .d3{animation-delay:.16s}.active .d4{animation-delay:.24s}@keyframes up{to{opacity:1;transform:none}}@media(max-width:900px){.split{grid-template-columns:1fr;align-content:center}.diagram{max-height:38vh}}@media(max-height:760px){.slide{padding-top:38px;padding-bottom:38px}.stack{gap:16px}.diagram{max-height:44vh}h2{font-size:clamp(42px,5.2vw,68px)}}@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.active .reveal{animation:none}}
+
+html[data-mood="editorial-ink"]{--bg:#F5F6F9;--surface:#fff;--dark:#0B0C0F;--wash:#E5EBFF;--text:#0B0C0F;--muted:#4A4F5A;--on-dark:#fff;--on-dark-muted:#C8CDD8;--line:#DCE1EB;--primary:#2850E8;--payoff:#E85D4F;--display:'Hanken Grotesk',sans-serif;--body:'Hanken Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;--radius:22px}
+html[data-mood="warm-studio"]{--bg:#FBF4E8;--surface:#FFFDFC;--dark:#1B1714;--wash:#F3E0C8;--text:#1B1714;--muted:#6E6258;--on-dark:#FFFDFC;--on-dark-muted:#D8CFC5;--line:#E4D7C8;--primary:#C77A2A;--payoff:#C9573D;--display:'Fraunces',serif;--body:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;--radius:28px}
+html[data-mood="signal-blue"]{--bg:#F3F7FF;--surface:#fff;--dark:#07111F;--wash:#DDE9FF;--text:#07111F;--muted:#52627A;--on-dark:#fff;--on-dark-muted:#BFCBE0;--line:#CBD9F1;--primary:#176BFF;--payoff:#25C9E8;--display:'Space Grotesk',sans-serif;--body:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;--radius:18px}
+html[data-mood="quiet-mono"]{--bg:#F2F0EB;--surface:#fff;--dark:#111;--wash:#E4E2DC;--text:#111;--muted:#66645F;--on-dark:#fff;--on-dark-muted:#C7C5BE;--line:#D2D0C9;--primary:#333;--payoff:#B8D84A;--display:'IBM Plex Sans',sans-serif;--body:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace;--radius:8px}
+</style>
+</head>
+<body>
+<main class="deck" aria-live="polite">
+  <section class="slide dark center active" data-slide="1">
+    <div class="stack">
+      <div class="eyebrow reveal">Presentation title</div>
+      <h1 class="reveal d2">A clear idea, <span class="payoff">made visual.</span></h1>
+      <p class="sub reveal d3">Replace this sample with one plain sentence that tells the audience what changes.</p>
+    </div>
+    <span class="meta">Your name or leave blank</span><span class="counter">01</span>
+  </section>
+
+  <section class="slide split" data-slide="2">
+    <div class="stack">
+      <div class="eyebrow reveal">The problem</div>
+      <h2 class="reveal d2">The old way creates <span class="accent">friction.</span></h2>
+      <p class="sub reveal d3">Use three trigger words, not a paragraph of explanation.</p>
+    </div>
+    <svg class="diagram reveal d3" viewBox="0 0 700 520" role="img" aria-label="A tangled path becoming blocked">
+      <path d="M70 130 C220 20 250 250 390 120 S570 190 620 70" fill="none" stroke="var(--muted)" stroke-width="12" stroke-linecap="round" opacity=".35"/>
+      <path d="M70 365 C180 220 300 500 430 340 S560 300 635 420" fill="none" stroke="var(--primary)" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="70" cy="365" r="26" fill="var(--primary)"/><circle cx="635" cy="420" r="34" fill="var(--payoff)"/>
+      <text x="70" y="455" text-anchor="middle" font-family="var(--mono)" font-size="22" fill="var(--muted)">START</text>
+      <text x="635" y="490" text-anchor="middle" font-family="var(--mono)" font-size="22" fill="var(--muted)">BLOCKED</text>
+    </svg>
+    <span class="counter">02</span>
+  </section>
+
+  <section class="slide wash center" data-slide="3">
+    <div class="stack">
+      <div class="eyebrow reveal">The reframe</div>
+      <h2 class="reveal d2">Simpler is not smaller. It is <span class="accent">clearer.</span></h2>
+      <svg class="diagram reveal d3" viewBox="0 0 1000 260" role="img" aria-label="Five scattered points becoming one straight path">
+        <g fill="var(--muted)" opacity=".35"><circle cx="90" cy="70" r="22"/><circle cx="255" cy="190" r="22"/><circle cx="420" cy="55" r="22"/><circle cx="585" cy="175" r="22"/><circle cx="750" cy="90" r="22"/></g>
+        <path d="M95 215 H855" stroke="var(--primary)" stroke-width="14" stroke-linecap="round"/>
+        <circle cx="95" cy="215" r="25" fill="var(--primary)"/><circle cx="855" cy="215" r="34" fill="var(--payoff)"/>
+      </svg>
+    </div>
+    <span class="counter">03</span>
+  </section>
+
+  <section class="slide center" data-slide="4">
+    <div class="stack" style="width:min(1200px,100%)">
+      <div class="eyebrow reveal">The method</div>
+      <h2 class="reveal d2">Three moves. One <span class="accent">direction.</span></h2>
+      <svg class="diagram reveal d3" viewBox="0 0 1200 390" role="img" aria-label="Three-stage process from focus to proof">
+        <path d="M195 210 H1005" stroke="var(--line)" stroke-width="18" stroke-linecap="round"/>
+        <g font-family="var(--body)" text-anchor="middle">
+          <circle cx="220" cy="210" r="94" fill="var(--surface)" stroke="var(--primary)" stroke-width="8"/><text x="220" y="202" font-size="34" font-weight="700" fill="var(--text)">FOCUS</text><text x="220" y="246" font-size="22" fill="var(--muted)">pick the point</text>
+          <circle cx="600" cy="210" r="94" fill="var(--surface)" stroke="var(--primary)" stroke-width="8"/><text x="600" y="202" font-size="34" font-weight="700" fill="var(--text)">BUILD</text><text x="600" y="246" font-size="22" fill="var(--muted)">make it visible</text>
+          <circle cx="980" cy="210" r="105" fill="var(--payoff)"/><text x="980" y="202" font-size="34" font-weight="700" fill="var(--dark)">PROVE</text><text x="980" y="246" font-size="22" fill="var(--dark)">show the result</text>
+        </g>
+      </svg>
+    </div>
+    <span class="counter">04</span>
+  </section>
+
+  <section class="slide split dark" data-slide="5">
+    <div class="stack">
+      <div class="eyebrow reveal">The proof</div>
+      <h2 class="reveal d2">Use a number people can <span class="payoff">repeat.</span></h2>
+      <p class="sub reveal d3">Name the source in a quiet line below it.</p>
+    </div>
+    <div class="card reveal d3" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16);text-align:center">
+      <div class="big-number">3×</div>
+      <p class="sub" style="margin:24px auto 0;color:var(--on-dark)">A real result goes here</p>
+      <div class="eyebrow" style="margin-top:28px;color:var(--on-dark-muted)">Source · month year</div>
+    </div>
+    <span class="counter">05</span>
+  </section>
+
+  <section class="slide center" data-slide="6">
+    <div class="stack">
+      <div class="eyebrow reveal">Next move</div>
+      <h1 class="reveal d2">Do the <span class="accent">smallest useful thing.</span></h1>
+      <p class="sub reveal d3" style="margin-inline:auto">End with one action the audience can take without guessing.</p>
+    </div>
+    <span class="counter">06</span>
+  </section>
+</main>
+<div class="progress" aria-hidden="true"></div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];let current=0;
+function show(index,updateHash=true){current=Math.max(0,Math.min(slides.length-1,index));slides.forEach((slide,i)=>slide.classList.toggle('active',i===current));document.querySelector('.progress').style.width=`${((current+1)/slides.length)*100}%`;if(updateHash)history.replaceState(null,'',`#${current+1}`)}
+function fromHash(){const n=parseInt(location.hash.slice(1),10);show(Number.isFinite(n)?n-1:0,false)}
+addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();show(current+1)}if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();show(current-1)}if(e.key==='Home'){e.preventDefault();show(0)}if(e.key==='End'){e.preventDefault();show(slides.length-1)}});
+addEventListener('hashchange',fromHash);fromHash();
+</script>
+</body>
+</html>

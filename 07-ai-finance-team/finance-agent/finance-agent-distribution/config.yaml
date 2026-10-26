@@ -1,0 +1,25 @@
+
+profile:
+  name: finance
+  role: finance and bookkeeping agent
+model:
+  provider: "{{MODEL_PROVIDER}}"
+  name: "{{SUPPORTED_MODEL_ID}}"
+  credential_reference: "{{SECURE_LOCAL_CREDENTIAL_REFERENCE}}"
+accounting:
+  software: "{{ACCOUNTING_SOFTWARE}}"
+  currency: "{{CURRENCY}}"
+  invoice_terms: "{{INVOICE_TERMS}}"
+  financial_year_end: "{{FINANCIAL_YEAR_END}}"
+  week_start_day: "{{WEEK_START_DAY}}"
+safety:
+  default_scope: read_only
+  approval_threshold: "{{APPROVAL_THRESHOLD}}"
+  approval_required_for_money_movement: true
+  client_facing_email: draft_only
+  invoice_writes: disabled
+  payments: disabled
+  trades: disabled
+  filings: disabled
+  payroll_execution: disabled
+  schedules_enabled: false

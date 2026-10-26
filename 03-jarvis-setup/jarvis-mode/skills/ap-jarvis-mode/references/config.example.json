@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "profile_id": "member-profile",
+  "agent_name": "chief-of-staff",
+  "owner_label": "Member",
+  "timezone": "Etc/UTC",
+  "enabled_boxes": [
+    "agent_helpers",
+    "waiting_on_you",
+    "agent_in_flight",
+    "overnight_jobs",
+    "next_meeting",
+    "today",
+    "spend",
+    "scoreboard",
+    "fleet"
+  ],
+  "enabled_sources": [
+    "agent_state",
+    "agent_helpers",
+    "next_meeting",
+    "today_plan",
+    "overnight_jobs",
+    "one_thing_scoreboard",
+    "spend",
+    "lever",
+    "brains",
+    "scoreboard",
+    "log"
+  ],
+  "sources": {
+    "agent_state": {
+      "path": "/absolute/member/agent/STATE.md",
+      "briefs_path": "/absolute/member/agent/WAITING-ON-OWNER.md"
+    },
+    "agent_helpers": {
+      "path": "/absolute/member/hermes/state.db"
+    },
+    "next_meeting": {
+      "service_account_path": "/absolute/member/calendar/service-account.json",
+      "python_path": "/absolute/member/bin/python3",
+      "hours": 36
+    },
+    "today_plan": {
+      "path": "/absolute/member/plans/TODAY.md"
+    },
+    "overnight_jobs": {
+      "path": "/absolute/member/agent/cron.json"
+    },
+    "one_thing_scoreboard": {
+      "path": "/absolute/member/plans/SCOREBOARD.md"
+    },
+    "spend": {
+      "path": "/absolute/member/hermes/state.db"
+    },
+    "lever": {
+      "path": "/absolute/member/plans/LEVER.md"
+    },
+    "scoreboard": {
+      "path": "/absolute/member/agent/SCOREBOARD.md"
+    },
+    "log": {
+      "path": "/absolute/member/agent/LOG.md"
+    }
+  },
+  "brains": [
+    {
+      "id": "member-brain",
+      "label": "Personal brain",
+      "path": "/absolute/member/brains/personal"
+    },
+    {
+      "id": "company-brain",
+      "label": "Company brain",
+      "path": "/absolute/member/brains/company"
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+# jarvis-toggle — OPTIONAL Mac helper: a deep-link toggle for the Jarvis
+# overlay in Hermes.app. Nothing in JARVIS Mode needs it; the overlay's own
+# shortcut inside Hermes Desktop does the same job on every platform.
+#
+#   jarvis-toggle [--toggle|--open|--close|--demo] [--keystroke] [--dry-run]
+#
+# TWO DOORS, IN THIS ORDER, AND THE ORDER IS THE POINT
+#
+#   1. The deep link:  open "hermes://jarvis/<name>"
+#      LaunchServices hands the URL to Hermes.app, the app's renderer bridge
+#      passes it to the plugin (src/60-plugin.js subscribes to
+#      window.hermesDesktop.onDeepLink and handles kind==='jarvis'), and the
+#      overlay toggles. This needs NO macOS permission of any kind, works from
+#      a shortcut, a cron, or an ssh session with a GUI login, and it is what
+#      this script does every time.
+#
+#   2. Synthetic ⌘⌥J, ONLY with --keystroke.
+#      Pressing keys for another app is Accessibility-gated. On this machine
+#      osascript "System Events" keystroke calls HUNG (no error, no dialog, no
+#      return) for an agent process that had not been granted Accessibility —
+#      so this leg is opt-in, is wrapped in a hard 8-second alarm, and says in
+#      plain words what to tick when it fails. It is never the default.
+#
+# Exit codes: 0 fine · 1 Hermes.app is not installed · 2 the keystroke leg
+# failed or timed out (the deep link was still sent).
+#
+# Overrides for tests / an unusual install:
+#   JARVIS_HERMES_APP   path to Hermes.app (default /Applications/Hermes.app)
+#   JARVIS_OPEN_BIN     the `open` binary  (default /usr/bin/open)
+
+set -uo pipefail
+
+HERMES_APP="${JARVIS_HERMES_APP:-/Applications/Hermes.app}"
+OPEN_BIN="${JARVIS_OPEN_BIN:-/usr/bin/open}"
+
+action="toggle"
+keystroke=0
+dry=0
+
+usage() {
+    cat <<'USAGE'
+usage: jarvis-toggle [--toggle|--open|--close|--demo] [--keystroke] [--dry-run]
+
+  --toggle      toggle the overlay (default)
+  --open        open it
+  --close       close it
+  --demo        toggle demo mode (synthetic levels, labelled DEMO on screen)
+  --keystroke   also try synthetic Cmd+Alt+J if the deep link cannot be sent;
+                needs Accessibility permission, off by default
+  --dry-run     print the exact commands and change nothing
+USAGE
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --toggle) action="toggle" ;;
+        --open)   action="open" ;;
+        --close)  action="close" ;;
+        --demo)   action="demo" ;;
+        --keystroke) keystroke=1 ;;
+        --dry-run|-n) dry=1 ;;
+        -h|--help) usage; exit 0 ;;
+        *) printf 'jarvis-toggle: unknown option "%s"\n\n' "$1" >&2; usage >&2; exit 64 ;;
+    esac
+    shift
+done
+
+LINK="hermes://jarvis/${action}"
+
+# Hermes not installed is a dead end for BOTH doors, so it is checked first and
+# said in one plain sentence rather than failing later inside `open`.
+if [ ! -d "$HERMES_APP" ]; then
+    printf 'jarvis-toggle: Hermes is not installed at %s, so there is nothing to toggle. Install Hermes.app (or set JARVIS_HERMES_APP to where it lives) and run this again.\n' "$HERMES_APP" >&2
+    exit 1
+fi
+
+# ---------------------------------------------------------------- deep link
+
+if [ "$dry" -eq 1 ]; then
+    printf 'DRY RUN: nothing was opened, pressed or changed.\n'
+    printf 'action: %s\n' "$action"
+    printf 'hermes app: %s\n' "$HERMES_APP"
+    printf 'would run: %s %s\n' "$OPEN_BIN" "$LINK"
+    if [ "$keystroke" -eq 1 ]; then
+        printf 'would run (fallback, only if the deep link fails): perl -e alarm 8 osascript — activate Hermes, then keystroke "j" using {command down, option down}\n'
+    else
+        printf 'keystroke fallback: off (pass --keystroke to arm it)\n'
+    fi
+    exit 0
+fi
+
+link_ok=0
+if "$OPEN_BIN" "$LINK" >/dev/null 2>&1; then
+    link_ok=1
+    printf 'handed %s to macOS.\n' "$LINK"
+    printf 'That is all this exit code proves: macOS accepted the link because the hermes:// scheme is registered.\n'
+    printf 'The overlay only toggles if Hermes is running with the Jarvis plugin loaded.\n'
+    if [ -n "${HERMES_HOME:-}" ] && [ -n "${JARVIS_CONNECTION_ID:-}" ] \
+       && [ -n "${JARVIS_ROUTE_PROFILE:-}" ] && [ -n "${JARVIS_TARGET_PROFILE:-}" ]; then
+        scope="$(/usr/bin/env python3 - "$JARVIS_CONNECTION_ID" "$JARVIS_ROUTE_PROFILE" "$JARVIS_TARGET_PROFILE" <<'PY'
+import json, sys
+text = json.dumps(sys.argv[1:], ensure_ascii=False, separators=(",", ":"))
+raw = text.encode("utf-16-le", "surrogatepass")
+value = 0x811c9dc5
+for offset in range(0, len(raw), 2):
+    value ^= raw[offset] | (raw[offset + 1] << 8)
+    value = (value * 0x01000193) & 0xffffffff
+digits = "0123456789abcdefghijklmnopqrstuvwxyz"
+out = "0" if value == 0 else ""
+while value:
+    value, rem = divmod(value, 36)
+    out = digits[rem] + out
+print(out)
+PY
+)"
+        receipt="$HERMES_HOME/jarvis/desktop-heartbeat-$scope.json"
+        printf 'To confirm, read %s and match its connectionId and profile to this selected route.\n' "$receipt"
+    else
+        printf 'To confirm, read the desktop-heartbeat-<scope>.json receipt for the selected connection and profile under the main device HERMES_HOME/jarvis directory.\n'
+    fi
+else
+    printf 'jarvis-toggle: macOS would not hand %s to any app. Hermes may not have registered the hermes:// scheme yet — launch Hermes.app once by hand and try again.\n' "$LINK" >&2
+fi
+
+if [ "$link_ok" -eq 1 ]; then
+    exit 0
+fi
+
+# ------------------------------------------------- keystroke fallback (opt-in)
+
+if [ "$keystroke" -ne 1 ]; then
+    printf 'No fallback was tried. Re-run with --keystroke to let this script press Cmd+Alt+J for you (that needs Accessibility permission).\n' >&2
+    exit 2
+fi
+
+printf 'Trying the Cmd+Alt+J fallback...\n'
+
+# `alarm 8` is not belt-and-braces: without it this call can hang forever when
+# Accessibility has not been granted to whatever launched the script.
+if perl -e 'alarm 8; exec @ARGV' /usr/bin/osascript \
+    -e 'tell application "Hermes" to activate' \
+    -e 'delay 0.4' \
+    -e 'tell application "System Events" to keystroke "j" using {command down, option down}' \
+    >/dev/null 2>&1
+then
+    printf 'pressed Cmd+Alt+J in Hermes.\n'
+    exit 0
+fi
+
+cat >&2 <<'NOTE'
+jarvis-toggle: the keystroke did not go through.
+
+Almost always this means macOS has not been told that the program running this
+script is allowed to press keys in other apps. Nothing is broken; a permission
+is simply missing.
+
+To fix it: System Settings -> Privacy & Security -> Accessibility, then switch
+ON whatever launched this script (Terminal, a shortcut app, Hammerspoon —
+whichever one it was). macOS asks per app, so granting it to Terminal does not
+grant it to anything else.
+
+You do not need this at all if the deep link works: `open "hermes://jarvis/toggle"`
+needs no permission. This fallback exists only for when it does not.
+NOTE
+exit 2

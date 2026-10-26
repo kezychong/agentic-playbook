@@ -1,0 +1,1246 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""ap-macbook-hands - a member's hands on their main Mac screen.
+
+This command runs on the configured agent host. It never touches that host's own
+screen: every action travels over ssh to the selected main computer and is carried out there by CuaDriver's
+one-shot CLI (`cua-driver call <tool> '<json>'`).
+
+    ap-macbook-hands status [--json]      is the MacBook ready for hands?
+    ap-macbook-hands wake                 start the driver's daemon over there
+    ap-macbook-hands tools                what the hands can do
+    ap-macbook-hands describe <tool>      the arguments one tool takes
+    ap-macbook-hands call <tool> [<json>|-]   do one thing
+
+Python 3.9, standard library only. SPEC section 9.2, amendments E, F and H.
+"""
+
+import base64
+import binascii
+import json
+import os
+import re
+import shlex
+import stat
+import subprocess
+import sys
+import time
+import uuid
+from datetime import datetime
+
+try:  # keep every byte we print UTF-8, whatever the caller's locale says
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:  # pragma: no cover - old or exotic streams
+    pass
+
+# ---------------------------------------------------------------- settings --
+
+DEFAULT_HOSTS = ""
+DEFAULT_DRIVER = "/Applications/CuaDriver.app/Contents/MacOS/cua-driver"
+DEFAULT_DENY = (
+    "replay_trajectory,install_ffmpeg,set_config,check_for_update,"
+    "start_recording,stop_recording"
+)
+DEFAULT_TIMEOUT = 60.0
+
+ROUTE_MAX_AGE = 60.0      # seconds a remembered route is trusted
+PROBE_TIMEOUT = 15.0      # seconds for the cheap `ssh <host> true` probe
+WAKE_WAIT = 10.0          # seconds to wait for the daemon after a wake
+SHOT_TOOLS = ("get_window_state",)   # tools that can write the PNG themselves
+# The driver refuses an output path under /tmp on macOS: /tmp is a symlink, so
+# its "existing ancestor is not a directory". The real directory is the one the
+# symlink points at (F1).
+REMOTE_SHOT_DIR = "/private/tmp/"
+SHOTS_KEEP = 40           # newest screenshots kept under state/shots
+CALLS_KEEP = 2000         # newest receipt lines kept in calls.jsonl
+B64_MIN = 20000           # a string this long may be a picture
+STR_MAX = 200000          # any other string is cut here
+MSG_MAX = 2000            # plain driver text is cut here
+
+EXIT_OK = 0
+EXIT_DRIVER_ERROR = 1
+EXIT_REFUSED = 2
+EXIT_UNREACHABLE = 3
+EXIT_NO_DRIVER = 4
+EXIT_PERMISSIONS = 5
+EXIT_DAEMON = 6
+EXIT_TIMEOUT = 124
+
+# The outcome-unknown sentence, used by both a timeout and a dropped link: in
+# either case the action may or may not have happened over there.
+UNKNOWN_MSG = ("%s - the outcome is UNKNOWN, the action may have happened. "
+               "Look at the screen before acting again; do not retry this call.")
+
+# A tool name the agent may send. Anything else never reaches the wire, and never
+# reaches the receipt either (E5).
+TOOL_NAME = re.compile(r"^[a-z][a-z0-9_]*$")
+PROFILE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
+SSH_HOST = re.compile(
+    r"^(?:[A-Za-z0-9._-]+@)?(?:[A-Za-z0-9][A-Za-z0-9.-]*|\[[0-9A-Fa-f:]+\])$"
+)
+
+# ------------------------------------------------------------------ guards --
+
+# Key combos that end a session, wipe a disk or log the member out. A combo is
+# refused when its keys are a SUPERSET of any of these (E9).
+BLOCKED_COMBOS = (
+    frozenset(("cmd", "shift", "backspace")),
+    frozenset(("cmd", "option", "backspace")),
+    frozenset(("ctrl", "option", "backspace")),
+    frozenset(("cmd", "ctrl", "q")),
+    frozenset(("cmd", "shift", "q")),
+    frozenset(("cmd", "option", "shift", "q")),
+)
+
+# Modifier glyphs. These arrive glued together (⌘⇧⌫), so they are split out of
+# a token one character at a time before anything else is read.
+GLYPH_KEYS = {
+    "⌘": "cmd",        # the apple key
+    "⇧": "shift",
+    "⌥": "option",
+    "⌃": "ctrl",
+    "⌫": "backspace",
+    "⌦": "backspace",  # forward delete: the same danger
+}
+
+KEY_ALIASES = {
+    "command": "cmd",
+    "apple": "cmd",
+    "meta": "cmd",
+    "super": "cmd",
+    "control": "ctrl",
+    "ctl": "ctrl",
+    "alt": "option",
+    "opt": "option",
+    "delete": "backspace",
+    "del": "backspace",
+    "forwarddelete": "backspace",
+    "bksp": "backspace",
+}
+
+# Text that would hand the machine to someone else. Checked on every string in
+# the payload of a typing tool.
+BLOCKED_TYPE_PATTERNS = (
+    re.compile(r"curl\s+[^|]*\|\s*(ba)?sh", re.I),
+    re.compile(r"wget\s+[^|]*\|\s*bash", re.I),
+    re.compile(r"\bsudo\s+rm\s+-[rf]", re.I),
+    re.compile(r"\brm\s+-rf\s+/\s*$", re.I | re.M),
+    re.compile(r":\s*\(\s*\)\s*\{[^}]*\}\s*;\s*:", re.S),   # the fork bomb
+)
+
+KEY_TOOLS = ("hotkey", "press_key")
+TYPE_TOOLS = ("type_text", "browser_type")
+
+USAGE = __doc__
+
+
+class Unreachable(Exception):
+    """No configured host answered the probe."""
+
+
+class LinkDropped(Exception):
+    """ssh died part-way through a command that had already been sent."""
+
+    def __init__(self, host):
+        Exception.__init__(self, host)
+        self.host = host
+
+
+class RemoteTimeout(Exception):
+    """The remote command did not answer in time. The outcome is unknown."""
+
+    def __init__(self, host):
+        Exception.__init__(self, host)
+        self.host = host
+
+
+class ConfigurationError(Exception):
+    """The selected member profile has no safe, complete hands config."""
+
+
+def _now_iso():
+    return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _stamp():
+    return datetime.now().strftime("%Y%m%d-%H%M%S")
+
+
+def _text(raw):
+    if raw is None:
+        return ""
+    if isinstance(raw, bytes):
+        return raw.decode("utf-8", "replace")
+    return raw
+
+
+def _profile_name(raw):
+    """Return a validated profile id; never collapse two invalid ids together."""
+    value = str(raw or "").strip()
+    if PROFILE_NAME.match(value):
+        return value
+    raise ConfigurationError("JARVIS_HANDS_PROFILE is missing or invalid")
+
+
+def _host_name(raw):
+    value = str(raw or "").strip()
+    if value.startswith("-") or not SSH_HOST.match(value):
+        raise ConfigurationError("a configured hands host is invalid")
+    return value
+
+
+def _installed_config_path():
+    """Config beside a per-profile install, never a guessed personal path."""
+    binary = os.path.realpath(__file__)
+    parent = os.path.dirname(binary)
+    if os.path.basename(parent) != "bin":
+        return None
+    hands_dir = os.path.dirname(parent)
+    if os.path.basename(hands_dir) != "hands":
+        return None
+    return os.path.join(hands_dir, "config.json")
+
+
+def _read_config(path):
+    try:
+        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+        fd = os.open(path, flags)
+        with os.fdopen(fd, "r", encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except (OSError, ValueError) as exc:
+        raise ConfigurationError("hands config cannot be read") from exc
+    if not isinstance(doc, dict) or doc.get("schema") != 1:
+        raise ConfigurationError("hands config schema is invalid")
+    return doc
+
+
+def _profile_home(raw, profile):
+    if (not isinstance(raw, str) or not os.path.isabs(raw)
+            or ".." in raw.split(os.path.sep)
+            or any(ord(char) < 32 for char in raw)):
+        raise ConfigurationError("hands config profile_home is invalid")
+    value = os.path.normpath(raw)
+    if os.path.basename(value) != profile:
+        raise ConfigurationError("hands config profile_home does not match profile")
+    current = os.path.sep
+    for part in [item for item in value.split(os.path.sep) if item]:
+        current = os.path.join(current, part)
+        try:
+            mode = os.lstat(current).st_mode
+        except FileNotFoundError:
+            raise ConfigurationError("hands config profile_home does not exist")
+        if stat.S_ISLNK(mode) or not stat.S_ISDIR(mode):
+            raise ConfigurationError("hands config profile_home contains an unsafe path")
+    return value
+
+
+class Result(object):
+    """One finished remote command."""
+
+    def __init__(self, host, code, out, err):
+        self.host = host
+        self.code = code
+        self.out = out
+        self.err = err
+
+    @property
+    def both(self):
+        return (self.out + "\n" + self.err).strip()
+
+
+class Hands(object):
+    def __init__(self, env=None):
+        env = os.environ if env is None else env
+        config_path = env.get("JARVIS_HANDS_CONFIG") or _installed_config_path()
+        config = None
+        if config_path:
+            config = _read_config(os.path.abspath(os.path.expanduser(config_path)))
+
+        if config is not None:
+            profile = config.get("profile")
+            profile = _profile_name(profile)
+            hosts = config.get("hosts")
+            driver = config.get("driver")
+            state_path = config.get("state")
+            profile_home = config.get("profile_home")
+            if not isinstance(hosts, list) or not hosts:
+                raise ConfigurationError("hands config needs at least one host")
+            profile_home = _profile_home(profile_home, profile)
+            expected_state = os.path.join(profile_home, "jarvis", "hands", "state")
+            if not isinstance(state_path, str) or os.path.normpath(state_path) != expected_state:
+                raise ConfigurationError("hands config state is outside the selected profile")
+            expected_config = os.path.join(profile_home, "jarvis", "hands", "config.json")
+            if os.path.normpath(os.path.abspath(os.path.expanduser(config_path))) != expected_config:
+                raise ConfigurationError("hands config is outside the selected profile")
+        else:
+            profile = env.get("JARVIS_HANDS_PROFILE")
+            hosts_raw = env.get("JARVIS_HANDS_HOSTS")
+            state_path = env.get("JARVIS_HANDS_STATE")
+            driver = env.get("JARVIS_HANDS_DRIVER", DEFAULT_DRIVER)
+            if not profile or not hosts_raw or not state_path:
+                raise ConfigurationError(
+                    "hands is not configured; install it for a selected profile"
+                )
+            hosts = [item.strip() for item in hosts_raw.split(",") if item.strip()]
+
+        self.profile = _profile_name(profile)
+        self.hosts = [_host_name(host) for host in hosts]
+        if not self.hosts:
+            raise ConfigurationError("hands needs at least one configured host")
+        if not isinstance(driver, str) or not os.path.isabs(driver):
+            raise ConfigurationError("the configured driver path must be absolute")
+        if not isinstance(state_path, str) or not os.path.isabs(state_path):
+            raise ConfigurationError("the configured state path must be absolute")
+        self.driver = driver
+        self.ssh = env.get("JARVIS_HANDS_SSH", "ssh")
+        self.scp = env.get("JARVIS_HANDS_SCP", "scp")
+        self.state = os.path.abspath(os.path.expanduser(state_path))
+        self.deny = set(d.strip() for d in
+                        env.get("JARVIS_HANDS_DENY", DEFAULT_DENY).split(",") if d.strip())
+        try:
+            self.timeout = float(env.get("JARVIS_HANDS_TIMEOUT", DEFAULT_TIMEOUT))
+        except (TypeError, ValueError):
+            self.timeout = DEFAULT_TIMEOUT
+        self.host = None          # the route this process settled on
+        self._woke = False        # one automatic wake per process
+
+    # -- state directory ---------------------------------------------------
+
+    def _private_dir(self, path):
+        """Create/tighten one private directory without following symlinks."""
+        path = os.path.abspath(path)
+        current = os.path.sep
+        for part in [item for item in path.split(os.path.sep) if item]:
+            current = os.path.join(current, part)
+            try:
+                mode = os.lstat(current).st_mode
+            except FileNotFoundError:
+                os.mkdir(current, 0o700)
+                mode = os.lstat(current).st_mode
+            if stat.S_ISLNK(mode) or not stat.S_ISDIR(mode):
+                raise ConfigurationError("hands state contains an unsafe path")
+        os.chmod(path, 0o700)
+        return path
+
+    def _safe_file(self, path, flags, mode="r"):
+        self._private_dir(os.path.dirname(path))
+        flags |= getattr(os, "O_NOFOLLOW", 0)
+        fd = os.open(path, flags, 0o600)
+        os.fchmod(fd, 0o600)
+        if "b" in mode:
+            return os.fdopen(fd, mode)
+        return os.fdopen(fd, mode, encoding="utf-8")
+
+    def _write_text(self, path, text):
+        parent = self._private_dir(os.path.dirname(path))
+        if os.path.lexists(path):
+            mode = os.lstat(path).st_mode
+            if stat.S_ISLNK(mode) or not stat.S_ISREG(mode):
+                raise ConfigurationError("hands state file is unsafe")
+        tmp = os.path.join(parent, ".%s.%s.tmp" % (os.path.basename(path), uuid.uuid4().hex))
+        try:
+            with self._safe_file(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, "w") as fh:
+                fh.write(text)
+                fh.flush()
+                os.fsync(fh.fileno())
+            os.replace(tmp, path)
+            os.chmod(path, 0o600)
+        finally:
+            try:
+                os.remove(tmp)
+            except OSError:
+                pass
+
+    def _dir(self, *parts):
+        path = os.path.join(self.state, *parts) if parts else self.state
+        parent = path if not parts else os.path.dirname(path)
+        self._private_dir(parent)
+        return path
+
+    def shots_dir(self):
+        path = os.path.join(self._dir(), "shots")
+        return self._private_dir(path)
+
+    # -- transport ---------------------------------------------------------
+
+    def _ssh_opts(self):
+        return [
+            "-T",
+            "-o", "BatchMode=yes",
+            "-o", "StrictHostKeyChecking=yes",
+            "-o", "ConnectTimeout=4",
+            "-o", "ServerAliveInterval=15",
+            "-o", "ControlMaster=auto",
+            "-o", "ControlPersist=120",
+            "-o", "ControlPath=" + os.path.join(self._dir(), "cm-%C"),
+        ]
+
+    def _scp_opts(self):
+        return [o for o in self._ssh_opts() if o != "-T"]
+
+    def _route_path(self):
+        return os.path.join(self._dir(), "route.json")
+
+    def _remembered_host(self):
+        """The route from a recent run, when it is still one of OUR hosts (E7)."""
+        try:
+            with self._safe_file(self._route_path(), os.O_RDONLY, "r") as fh:
+                route = json.load(fh)
+        except Exception:
+            return None
+        if not isinstance(route, dict):
+            return None
+        host = route.get("host")
+        at = route.get("at")
+        if not isinstance(host, str) or not isinstance(at, (int, float)):
+            return None
+        if host not in self.hosts:      # a poisoned route.json is ignored
+            return None
+        if (time.time() - float(at)) > ROUTE_MAX_AGE:
+            return None
+        return host
+
+    def _remember(self, host):
+        self.host = host
+        try:
+            self._write_text(
+                self._route_path(),
+                json.dumps({"host": host, "at": time.time()}, separators=(",", ":")),
+            )
+        except Exception:
+            pass
+
+    def _forget(self):
+        self.host = None
+        try:
+            os.remove(self._route_path())
+        except OSError:
+            pass
+
+    def _probe(self, host):
+        """`ssh <host> true`: cheap, changes nothing, proves the link (E12)."""
+        cmd = [self.ssh] + self._ssh_opts() + [host, "true"]
+        try:
+            proc = subprocess.run(
+                cmd,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                timeout=min(self.timeout, PROBE_TIMEOUT),
+            )
+        except subprocess.TimeoutExpired:
+            return False
+        return proc.returncode != 255
+
+    def choose_host(self):
+        """The one host this process talks to. Probed, never guessed."""
+        if self.host:
+            return self.host
+        remembered = self._remembered_host()
+        if remembered:
+            self.host = remembered
+            return remembered
+        for host in self.hosts:
+            if self._probe(host):
+                self._remember(host)
+                return host
+        raise Unreachable()
+
+    def run_remote(self, args, timeout=None, readonly=False):
+        """Run one command on the MacBook and return a Result.
+
+        The remote command line is built ONLY from shlex.quote of each argument.
+        No other string ever reaches the remote shell.
+
+        The host is picked by a probe BEFORE this command is sent, so the
+        command itself goes to exactly one host, once. When ssh drops after it
+        left (exit 255) the outcome is unknown, so it is never re-sent
+        elsewhere - except for a read, which is safe to repeat (E12).
+        """
+        line = " ".join(shlex.quote(a) for a in args)
+        attempt = 0
+        while True:
+            attempt += 1
+            host = self.choose_host()
+            cmd = [self.ssh] + self._ssh_opts() + [host, line]
+            try:
+                proc = subprocess.run(
+                    cmd,
+                    stdin=subprocess.DEVNULL,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    timeout=self.timeout if timeout is None else timeout,
+                )
+            except subprocess.TimeoutExpired:
+                raise RemoteTimeout(host)
+            if proc.returncode == 255:      # ssh died with the command in flight
+                self._forget()
+                if readonly and attempt == 1:
+                    continue                # probe again, ask again: reads are safe
+                raise LinkDropped(host)
+            return Result(host, proc.returncode,
+                          _text(proc.stdout), _text(proc.stderr))
+
+    def fetch_file(self, remote_path, local_path):
+        """scp one file back from the MacBook. True when it landed."""
+        host = self.host
+        if not host:
+            try:
+                host = self.choose_host()
+            except Exception:
+                return False
+        cmd = [self.scp] + self._scp_opts() + [
+            "%s:%s" % (host, remote_path), local_path]
+        try:
+            proc = subprocess.run(cmd,
+                                  stdin=subprocess.DEVNULL,
+                                  stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE, timeout=self.timeout)
+        except subprocess.TimeoutExpired:
+            return False
+        landed = proc.returncode == 0 and os.path.exists(local_path)
+        if landed:
+            try:
+                if stat.S_ISLNK(os.lstat(local_path).st_mode):
+                    return False
+                os.chmod(local_path, 0o600)
+            except OSError:
+                return False
+        return landed
+
+    # -- driver ------------------------------------------------------------
+
+    def driver_run(self, *rest, **kw):
+        readonly = kw.pop("readonly", False)
+        timeout = kw.pop("timeout", None)
+        return self.run_remote([self.driver] + list(rest),
+                               timeout=timeout, readonly=readonly)
+
+    def daemon_running(self, result=None):
+        if result is None:
+            result = self.driver_run("status", readonly=True)
+        low = result.both.lower()
+        if "not running" in low:
+            return False
+        return result.code == 0
+
+    def missing_driver(self, result):
+        return result.code == 127 or "no such file" in result.both.lower()
+
+    def wake(self):
+        """Start the driver's daemon on the MacBook. True when it came up.
+
+        A timeout, a dead link or an unreachable MacBook is NOT swallowed here:
+        the caller turns it into this command's pinned exit code (E4).
+        """
+        self.run_remote(
+            ["/usr/bin/open", "-n", "-g", "-a", "CuaDriver", "--args", "serve"],
+            timeout=min(self.timeout, 20.0),
+        )
+        deadline = time.time() + WAKE_WAIT
+        while True:
+            if self.daemon_running():
+                return True
+            if time.time() >= deadline:
+                return False
+            time.sleep(0.5)
+
+    # -- receipts ----------------------------------------------------------
+
+    def receipt(self, tool, ok, ms, host, exit_code):
+        """Six keys, never an argument and never an output."""
+        record = {
+            "at": _now_iso(),
+            "tool": tool,
+            "ok": bool(ok),
+            "ms": int(ms),
+            "host": host,
+            "exit": int(exit_code),
+        }
+        line = json.dumps(record, ensure_ascii=False, separators=(",", ":"))
+        try:
+            calls = os.path.join(self._dir(), "calls.jsonl")
+            with self._safe_file(calls, os.O_WRONLY | os.O_CREAT | os.O_APPEND, "a") as fh:
+                fh.write(line + "\n")
+            with self._safe_file(calls, os.O_RDONLY, "r") as fh:
+                lines = fh.readlines()
+            if len(lines) > CALLS_KEEP:
+                self._write_text(calls, "".join(lines[-CALLS_KEEP:]))
+            self._write_text(os.path.join(self._dir(), "last.json"), line + "\n")
+        except Exception:
+            pass
+
+    # -- pictures ----------------------------------------------------------
+
+    def save_shot(self, data, tool, suffix=".png"):
+        shots = self.shots_dir()
+        base = "%s-%s" % (_stamp(), tool)
+        path = os.path.join(shots, base + suffix)
+        n = 2
+        while os.path.exists(path):
+            path = os.path.join(shots, "%s-%d%s" % (base, n, suffix))
+            n += 1
+        with self._safe_file(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, "wb") as fh:
+            fh.write(data)
+        return path
+
+    def prune_shots(self):
+        try:
+            shots = self.shots_dir()
+            files = [os.path.join(shots, f) for f in os.listdir(shots)]
+            files = [f for f in files if stat.S_ISREG(os.lstat(f).st_mode)]
+            files.sort(key=lambda f: os.path.getmtime(f), reverse=True)
+            for old in files[SHOTS_KEEP:]:
+                try:
+                    os.remove(old)
+                except OSError:
+                    pass
+        except Exception:
+            pass
+
+    def save_b64_image(self, text, tool):
+        """A picture hiding in a `_b64` key becomes a file (F3).
+
+        The local path, or None when the value is not a PNG or a JPEG, or could
+        not be written. Length is not considered: `zoom` returns a few KB of
+        base64, which would otherwise ride all the way into the agent's context.
+        """
+        image = _decode_image(text)
+        if image is None:
+            return None
+        data, suffix = image
+        try:
+            return self.save_shot(data, tool, suffix)
+        except Exception:
+            return None
+
+    def scrub(self, value, tool):
+        """Pictures and giant strings never reach stdout."""
+        if isinstance(value, dict):
+            out = {}
+            saved = None
+            for key, item in value.items():
+                if (isinstance(key, str) and key.endswith("_b64")
+                        and isinstance(item, str)):
+                    path = self.save_b64_image(item, tool)
+                    if path is not None:
+                        if saved is None:
+                            saved = path
+                        continue          # the key itself is dropped (F3)
+                out[key] = self.scrub(item, tool)
+            # ... and this object says where the picture went, unless it
+            # already carries a path of its own.
+            if saved is not None and not out.get("screenshot_file_path"):
+                out["screenshot_file_path"] = saved
+            return out
+        if isinstance(value, list):
+            return [self.scrub(v, tool) for v in value]
+        if isinstance(value, str) and len(value) > B64_MIN:
+            image = _decode_image(value)
+            if image is not None:
+                data, suffix = image
+                try:
+                    path = self.save_shot(data, tool, suffix)
+                except Exception:
+                    return value[:STR_MAX] + "…[cut]"
+                return {"saved_to": path, "bytes": len(data)}
+            if len(value) > STR_MAX:
+                return value[:STR_MAX] + "…[cut]"
+        return value
+
+
+def _decode_image(text):
+    """(bytes, suffix) when this string is base64 of a PNG or JPEG, else None."""
+    stripped = "".join(text.split())
+    if len(stripped) % 4:
+        return None
+    try:
+        data = base64.b64decode(stripped, validate=True)
+    except (binascii.Error, ValueError):
+        return None
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        return (data, ".png")
+    if data[:3] == b"\xff\xd8\xff":
+        return (data, ".jpg")
+    return None
+
+
+# ------------------------------------------------------------- key guards --
+
+def _split_glyphs(part):
+    """"⌘⇧⌫" is three keys, not one word (E9)."""
+    out = []
+    word = ""
+    for char in part:
+        if char in GLYPH_KEYS:
+            if word:
+                out.append(word)
+                word = ""
+            out.append(GLYPH_KEYS[char])
+        else:
+            word += char
+    if word:
+        out.append(word)
+    return out
+
+
+def _tokens(value):
+    out = []
+    if isinstance(value, (list, tuple)):
+        for item in value:
+            out.extend(_tokens(item))
+        return out
+    if value is None or isinstance(value, (dict, bool)):
+        return out
+    text = value if isinstance(value, str) else str(value)
+    for part in re.split(r"[+\-\s]+", text):   # plus, minus or a space
+        part = part.strip()
+        if not part:
+            continue
+        for piece in _split_glyphs(part):
+            piece = piece.strip().lower()
+            if not piece:
+                continue
+            out.append(KEY_ALIASES.get(piece, piece))
+    return out
+
+
+def combo_keys(payload):
+    """Every key named in this payload, canonical and lowercase."""
+    keys = []
+    for field in ("keys", "key", "combo", "modifiers", "modifier", "shortcut"):
+        if field in payload:
+            keys.extend(_tokens(payload[field]))
+    return frozenset(keys)
+
+
+def blocked_combo(payload):
+    keys = combo_keys(payload)
+    if not keys:
+        return None
+    for combo in BLOCKED_COMBOS:
+        if combo <= keys:
+            return "+".join(sorted(combo))
+    return None
+
+
+def _strings(value):
+    if isinstance(value, dict):
+        for item in value.values():
+            for found in _strings(item):
+                yield found
+    elif isinstance(value, list):
+        for item in value:
+            for found in _strings(item):
+                yield found
+    elif isinstance(value, str):
+        yield value
+
+
+def blocked_text(payload):
+    for text in _strings(payload):
+        for pattern in BLOCKED_TYPE_PATTERNS:
+            if pattern.search(text):
+                return pattern.pattern
+    return None
+
+
+# --------------------------------------------------------------- printing --
+
+def emit(obj, stream=None):
+    stream = sys.stdout if stream is None else stream
+    stream.write(json.dumps(obj, ensure_ascii=False) + "\n")
+    stream.flush()
+
+
+def say(line, stream=None):
+    stream = sys.stderr if stream is None else stream
+    stream.write(line.rstrip("\n") + "\n")
+    stream.flush()
+
+
+def _unreachable_line(hands):
+    return ("MacBook did not answer on %s - it is asleep or off the network"
+            % ", ".join(hands.hosts or ["no host"]))
+
+
+# ----------------------------------------------------------------- status --
+
+def cmd_status(hands, as_json):
+    report = {
+        "ok": False,
+        "state": "unknown",
+        "host": None,
+        "driver": None,
+        "daemon": None,
+        "permissions": None,
+        "message": "",
+        "exit": EXIT_OK,
+    }
+
+    def finish(code):
+        report["exit"] = code
+        report["ok"] = (code == EXIT_OK)
+        if as_json:
+            emit(report)
+        else:
+            lines = []
+            lines.append("host        %s" % (report["host"] or "unreachable"))
+            if report["driver"]:
+                lines.append("driver      %s" % report["driver"])
+            if report["daemon"]:
+                lines.append("daemon      %s" % report["daemon"])
+            if report["permissions"]:
+                lines.append("permissions %s" % report["permissions"])
+            lines.append("ready" if code == EXIT_OK else report["message"])
+            for line in lines[:6]:
+                say(line, sys.stdout)
+        return code
+
+    # Every reading below travels; a link that dies takes the same three roads
+    # out, here and inside wake() (E4).
+    try:
+        version = hands.driver_run("--version", readonly=True)
+        report["host"] = version.host
+        if hands.missing_driver(version):
+            report["state"] = "no_driver"
+            report["driver"] = "missing"
+            report["message"] = "CuaDriver is not at %s on the MacBook" % hands.driver
+            return finish(EXIT_NO_DRIVER)
+        report["driver"] = (version.out.strip().splitlines() or [""])[0][:80] or "unknown"
+
+        status = hands.driver_run("status", readonly=True)
+        if hands.daemon_running(status):
+            report["daemon"] = "running"
+        else:
+            report["daemon"] = "woken" if hands.wake() else "down"
+            if report["daemon"] == "down":
+                report["state"] = "daemon_down"
+                report["message"] = ("CuaDriver's daemon is not running and did "
+                                     "not start")
+                return finish(EXIT_DAEMON)
+
+        perms = hands.driver_run("call", "check_permissions", "{}", readonly=True)
+    except RemoteTimeout as exc:
+        report["host"] = exc.host
+        report["state"] = "timeout"
+        report["message"] = "no answer from the MacBook in time"
+        return finish(EXIT_TIMEOUT)
+    except LinkDropped as exc:
+        report["host"] = exc.host
+        report["state"] = "link_dropped"
+        report["message"] = "the link to the MacBook dropped mid-command"
+        return finish(EXIT_UNREACHABLE)
+    except Unreachable:
+        report["state"] = "unreachable"
+        report["message"] = _unreachable_line(hands)
+        return finish(EXIT_UNREACHABLE)
+
+    if "permissions_pending" in perms.both:
+        report["permissions"] = "pending"
+        report["state"] = "permissions_pending"
+        report["message"] = ("The member has not granted Accessibility and Screen "
+                             "Recording to CuaDriver on the main computer")
+        return finish(EXIT_PERMISSIONS)
+    report["permissions"] = "granted"
+    report["state"] = "ready"
+    report["message"] = "ready"
+    return finish(EXIT_OK)
+
+
+def cmd_wake(hands):
+    try:
+        if hands.daemon_running():
+            say("daemon already running", sys.stdout)
+            return EXIT_OK
+        if hands.wake():
+            say("daemon started", sys.stdout)
+            return EXIT_OK
+    except RemoteTimeout:
+        say("no answer from the MacBook in time")
+        return EXIT_TIMEOUT
+    except LinkDropped:
+        say("the link to the MacBook dropped mid-command")
+        return EXIT_UNREACHABLE
+    except Unreachable:
+        say(_unreachable_line(hands))
+        return EXIT_UNREACHABLE
+    say("daemon did not start")
+    return EXIT_DAEMON
+
+
+def cmd_tools(hands):
+    try:
+        result = hands.driver_run("list-tools", readonly=True)
+    except RemoteTimeout:
+        say("no answer from the MacBook in time")
+        return EXIT_TIMEOUT
+    except LinkDropped:
+        say("the link to the MacBook dropped mid-command")
+        return EXIT_UNREACHABLE
+    except Unreachable:
+        say(_unreachable_line(hands))
+        return EXIT_UNREACHABLE
+    for line in result.out.splitlines():
+        name = line.split(":", 1)[0].strip()
+        if name in hands.deny:
+            continue
+        say(line, sys.stdout)
+    if result.err.strip():
+        say(result.err.strip())
+    return EXIT_OK if result.code == 0 else EXIT_DRIVER_ERROR
+
+
+def cmd_describe(hands, tool):
+    if not TOOL_NAME.match(tool or ""):
+        say("bad_tool_name: a tool name is lowercase letters, digits and "
+            "underscores; nothing was sent")
+        return EXIT_REFUSED
+    try:
+        result = hands.driver_run("describe", tool, readonly=True)
+    except RemoteTimeout:
+        say("no answer from the MacBook in time")
+        return EXIT_TIMEOUT
+    except LinkDropped:
+        say("the link to the MacBook dropped mid-command")
+        return EXIT_UNREACHABLE
+    except Unreachable:
+        say(_unreachable_line(hands))
+        return EXIT_UNREACHABLE
+    if result.out:
+        sys.stdout.write(result.out if result.out.endswith("\n") else result.out + "\n")
+    if result.err.strip():
+        say(result.err.strip())
+    return EXIT_OK if result.code == 0 else EXIT_DRIVER_ERROR
+
+
+# ------------------------------------------------------------------- call --
+
+def _driver_error(payload):
+    for key in ("isError", "is_error"):
+        if bool(payload.get(key)):
+            return True
+    return False
+
+
+def _refusal(payload):
+    """(code, message) when the driver REFUSED this call (F2), else None.
+
+    A refusal is a plain JSON answer with exit 0 and no isError:
+    {"status":"refused","refusal":{"code":..., "message":...}}.
+    """
+    refusal = payload.get("refusal")
+    if not isinstance(refusal, dict) and payload.get("status") != "refused":
+        return None
+    if not isinstance(refusal, dict):
+        refusal = {}
+    code = refusal.get("code")
+    if not isinstance(code, str) or not code.strip():
+        code = "refused"
+    message = refusal.get("message")
+    if not isinstance(message, str):
+        message = "" if message is None else str(message)
+    return (code, message[:MSG_MAX])
+
+
+def _coded_failure(payload):
+    """(code, message) when the driver failed in its plainest shape (H1).
+
+    Live, some failures come back as JSON with exit 0, no isError and no
+    refusal: {"code":"window_id_not_found","suggestion":"..."}. A top-level
+    string `code` TOGETHER WITH a top-level `suggestion` is that failure. A
+    code on its own is NOT one: `bring_to_front` succeeds with
+    {"code":"bring_to_front_exact_window_verified","status":"activated"}.
+    """
+    code = payload.get("code")
+    if not isinstance(code, str) or not code.strip():
+        return None
+    if "suggestion" not in payload:
+        return None
+    suggestion = payload.get("suggestion")
+    if isinstance(suggestion, str):
+        message = suggestion
+    elif suggestion is None:
+        message = ""
+    else:
+        try:
+            message = json.dumps(suggestion, ensure_ascii=False)
+        except Exception:
+            message = str(suggestion)
+    return (code.strip(), message[:MSG_MAX])
+
+
+def _permissions_pending(payload):
+    try:
+        blob = json.dumps(payload, ensure_ascii=False)
+    except Exception:
+        blob = ""
+    if "permissions_pending" in blob:
+        return True
+    structured = payload.get("structuredContent")
+    if isinstance(structured, dict):
+        for key in ("exitCode", "exit_code", "exit"):
+            if structured.get(key) == 75:
+                return True
+    return False
+
+
+def _plain_error(text):
+    first = text.strip().splitlines()[0] if text.strip() else ""
+    if ":" in first:
+        words = first.split(":", 1)[0].split()
+        if words:
+            return words[0]
+    return "driver_text"
+
+
+def parse_driver_json(text):
+    """The driver's JSON object, banner line and all (E1).
+
+    The whole of stdout first. When that is not one JSON object, try from the
+    first LINE that starts with `{` to the end - a driver that prints a notice
+    before its answer still answered. Only then is the output plain text.
+    """
+    if not text or not text.strip():
+        return None
+    try:
+        whole = json.loads(text)
+        if isinstance(whole, dict):
+            return whole
+    except ValueError:
+        pass
+    lines = text.splitlines()
+    for index, line in enumerate(lines):
+        if line.lstrip().startswith("{"):
+            try:
+                tail = json.loads("\n".join(lines[index:]))
+            except ValueError:
+                return None
+            return tail if isinstance(tail, dict) else None
+    return None
+
+
+def cmd_call(hands, tool, source):
+    """One thing, done over there. Exactly one JSON object on stdout, always."""
+    started = time.time()
+    logged = tool if TOOL_NAME.match(tool or "") else "?"
+
+    def done(code, body, ok=False, host=None):
+        hands.receipt(logged, ok, (time.time() - started) * 1000.0, host, code)
+        emit(body)
+        return code
+
+    def refuse(error, message):
+        say("%s: %s" % (error, message))
+        return done(EXIT_REFUSED, {"ok": False, "error": error, "message": message})
+
+    # 1. the tool name, before it can reach a shell or a log (E5)
+    if not TOOL_NAME.match(tool or ""):
+        return refuse("bad_tool_name",
+                      "a tool name is lowercase letters, digits and underscores; "
+                      "nothing was sent")
+
+    # 2. the payload. This is the only read of our own stdin, and it happens
+    #    before any subprocess starts (E3).
+    if source is None:
+        raw = "{}"
+    elif source == "-":
+        raw = sys.stdin.read()
+    else:
+        raw = source
+    if not raw.strip():
+        raw = "{}"
+    try:
+        payload = json.loads(raw)
+    except ValueError as exc:
+        return refuse("bad_json", "the arguments are not valid JSON (%s)" % exc)
+    if not isinstance(payload, dict):
+        return refuse("bad_json", "the arguments must be a JSON object, nothing was sent")
+
+    # 3. guards, before anything is sent
+    if tool in hands.deny:
+        return refuse("denied_tool", "%s is not allowed from here" % tool)
+    if tool in KEY_TOOLS:
+        hit = blocked_combo(payload)
+        if hit:
+            return refuse("blocked_key_combo", "%s ends the session or wipes the disk" % hit)
+    if tool in TYPE_TOOLS:
+        hit = blocked_text(payload)
+        if hit:
+            return refuse("blocked_type_pattern", "that text runs something dangerous")
+
+    # 4. pictures go to a file over there, not down the wire. The caller never
+    #    chooses a write path on the MacBook (E6).
+    remote_shot = None
+    if tool in SHOT_TOOLS and (payload.get("screenshot_out_file")
+                               or payload.get("include_screenshot") is not False):
+        remote_shot = REMOTE_SHOT_DIR + "jarvis-hands-%s.png" % uuid.uuid4().hex
+        payload["screenshot_out_file"] = remote_shot
+
+    body = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+    def unknown(error, reason, host):
+        say("%s: outcome unknown, do not retry" % error)
+        return done(EXIT_TIMEOUT,
+                    {"ok": False, "error": error, "message": UNKNOWN_MSG % reason},
+                    host=host)
+
+    def unreachable():
+        say(_unreachable_line(hands))
+        return done(EXIT_UNREACHABLE,
+                    {"ok": False, "error": "unreachable", "hosts": hands.hosts,
+                     "message": "the MacBook did not answer"})
+
+    # 5. send it. One automatic wake and one retry, and only when the driver
+    #    did NOT answer with JSON (E2).
+    attempts = 0
+    while True:
+        attempts += 1
+        try:
+            result = hands.driver_run("call", tool, body)
+        except RemoteTimeout as exc:
+            return unknown("timeout", "no answer in %.0fs" % hands.timeout, exc.host)
+        except LinkDropped as exc:
+            return unknown("link_dropped", "the link dropped mid-command", exc.host)
+        except Unreachable:
+            return unreachable()
+        parsed = parse_driver_json(result.out)
+        if (parsed is None and attempts == 1 and not hands._woke
+                and "daemon is not running" in result.both.lower()):
+            hands._woke = True
+            try:
+                hands.wake()
+            except RemoteTimeout as exc:
+                return unknown("timeout", "no answer while starting the daemon",
+                               exc.host)
+            except LinkDropped as exc:
+                return unknown("link_dropped",
+                               "the link dropped while starting the daemon", exc.host)
+            except Unreachable:
+                return unreachable()
+            continue
+        break
+
+    ms = (time.time() - started) * 1000.0
+
+    # 6. what the driver said
+    if parsed is None:
+        text = result.both
+        error = _plain_error(text)
+        code = EXIT_PERMISSIONS if error == "permissions_pending" else EXIT_DRIVER_ERROR
+        return done(code, {"ok": False, "error": error, "message": text[:MSG_MAX]},
+                    host=result.host)
+
+    # Order: the error flag, then a refusal (F2), then the plain coded
+    # failure (H1). The first one that matches names the failure.
+    failed = _driver_error(parsed)
+    refusal = _refusal(parsed)
+    coded = None
+    if refusal is not None:      # a refusal is a failure, whatever isError says
+        failed = True
+    elif not failed:
+        coded = _coded_failure(parsed)
+        if coded is not None:
+            failed = True
+    parsed["ok"] = not failed
+    if refusal is not None:
+        parsed["error"], parsed["message"] = refusal
+    elif coded is not None:
+        # the driver's own object wins: never write over what it already said
+        if "error" not in parsed:
+            parsed["error"] = coded[0]
+        if "message" not in parsed:
+            parsed["message"] = coded[1]
+
+    # 7. bring the picture home. A refused or failed call wrote nothing.
+    if remote_shot and refusal is None and coded is None:
+        try:
+            local = os.path.join(hands.shots_dir(), "%s-%s.png" % (_stamp(), tool))
+            n = 2
+            while os.path.exists(local):
+                local = os.path.join(hands.shots_dir(),
+                                     "%s-%s-%d.png" % (_stamp(), tool, n))
+                n += 1
+            got = hands.fetch_file(remote_shot, local)
+        except Exception:
+            got = False
+        if got:
+            parsed["screenshot_file_path"] = local
+        else:
+            parsed.pop("screenshot_file_path", None)
+            parsed["screenshot_note"] = "copy failed"
+        try:    # best effort: the MacBook's /private/tmp is not ours to litter
+            hands.run_remote(["/bin/rm", "-f", remote_shot],
+                             timeout=min(hands.timeout, 15.0))
+        except Exception:
+            pass
+
+    parsed = hands.scrub(parsed, tool)
+    hands.prune_shots()
+
+    if refusal is not None or coded is not None:
+        code = EXIT_DRIVER_ERROR
+    elif failed:
+        code = EXIT_PERMISSIONS if _permissions_pending(parsed) else EXIT_DRIVER_ERROR
+    else:
+        code = EXIT_OK
+    return done(code, parsed, ok=not failed, host=result.host)
+
+
+# ------------------------------------------------------------------- main --
+
+def dispatch(hands, verb, rest):
+    if verb == "status":
+        return cmd_status(hands, "--json" in rest)
+    if verb == "wake":
+        return cmd_wake(hands)
+    if verb == "tools":
+        return cmd_tools(hands)
+    if verb == "describe":
+        if len(rest) != 1:
+            say("describe needs one tool name")
+            return EXIT_REFUSED
+        return cmd_describe(hands, rest[0])
+    if verb == "call":
+        if not rest:
+            say("call needs a tool name")
+            emit({"ok": False, "error": "bad_tool_name",
+                  "message": "call needs a tool name"})
+            return EXIT_REFUSED
+        return cmd_call(hands, rest[0], rest[1] if len(rest) > 1 else None)
+    say("unknown command: %s (try status, wake, tools, describe, call)" % verb)
+    return EXIT_REFUSED
+
+
+def main(argv):
+    if not argv or argv[0] in ("-h", "--help", "help"):
+        say(USAGE, sys.stdout)
+        return EXIT_OK
+    verb = argv[0]
+    rest = argv[1:]
+    hands = None
+    try:
+        hands = Hands()
+        return dispatch(hands, verb, rest)
+    except ConfigurationError as exc:
+        emit({"ok": False, "error": "configuration", "message": str(exc)})
+        return EXIT_REFUSED
+    except Exception as exc:        # last resort: a traceback helps nobody (E4)
+        if verb == "call" and hands is not None:
+            tool = rest[0] if rest else ""
+            if not TOOL_NAME.match(tool or ""):
+                tool = "?"
+            try:
+                hands.receipt(tool, False, 0, None, EXIT_DRIVER_ERROR)
+            except Exception:
+                pass
+        emit({"ok": False, "error": "internal", "message": exc.__class__.__name__})
+        return EXIT_DRIVER_ERROR
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except KeyboardInterrupt:       # pragma: no cover
+        sys.exit(EXIT_TIMEOUT)

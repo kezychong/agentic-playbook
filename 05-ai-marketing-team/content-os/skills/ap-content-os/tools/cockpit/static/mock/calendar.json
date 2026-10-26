@@ -1,0 +1,47 @@
+{
+  "snapshot_latest": "2026-08-22",
+  "stats_as_of": "2026-08-23",
+  "ledger_ok": true,
+  "posts": [
+    {
+      "date": "2026-08-22",
+      "shortCode": "CwQ0aBcDeFg",
+      "post_url": "https://example.com/p/CwQ0aBcDeFg/",
+      "platform": "instagram",
+      "format": "reel",
+      "title": "The number nobody checks",
+      "caption_snippet": "The number nobody checks in their own books",
+      "views": 18400,
+      "likes": 402,
+      "comments": 31,
+      "stats_as_of": "2026-08-23",
+      "franchise": "Numbers nobody checks",
+      "thumb": null
+    },
+    {
+      "date": "2026-08-15",
+      "shortCode": null,
+      "post_url": null,
+      "platform": "linkedin",
+      "format": "post",
+      "title": "What our slowest month taught us",
+      "caption_snippet": "What our slowest month taught us about pricing",
+      "views": null,
+      "likes": 88,
+      "comments": 12,
+      "stats_as_of": "2026-08-23",
+      "franchise": "",
+      "thumb": null
+    }
+  ],
+  "plans": [
+    {
+      "id": "a1b2c3d4",
+      "date": "2026-08-27",
+      "title": "Film the pricing story",
+      "note": "Use the invoice screenshot as proof.",
+      "status": "planned",
+      "created": "2026-08-24T09:00:00"
+    }
+  ]
+}

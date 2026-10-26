@@ -1,0 +1,16 @@
+{
+  "id": "second-brain-setup",
+  "title": "Second Brain Setup",
+  "topic": "02",
+  "skill_ids": [
+    "ap-second-brain-setup",
+    "ap-distill",
+    "ap-triage-inbox",
+    "ap-import-ai-exports",
+    "ap-weekly-sweep"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

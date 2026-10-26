@@ -1,0 +1,52 @@
+<!doctype html>
+<!--
+  Jarvis mirror — SHELL ONLY. scripts/build.py writes dashboard/mirror.html from this
+  file by replacing the two placeholders below with the built theme CSS (src/10-theme.js)
+  and the built mirror runtime (src/40-scene.js + src/45-mirror.js, which defines
+  startJarvisMirror). Never edit dashboard/mirror.html by hand; edit this shell or src/.
+  No external resources: this page is served from the dashboard and must render with the
+  network down.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Jarvis · mirror</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #07080C;
+    color: #C8CDD8;
+    overflow: hidden;
+  }
+  #jarvis-mirror {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+<style>__JARVIS_THEME_CSS__</style>
+</head>
+<body>
+<div id="jarvis-mirror"></div>
+<script>__JARVIS_MIRROR_JS__</script>
+<script>
+  var jarvisMirrorOptions = {}
+  try {
+    var jarvisMirrorBoot = JSON.parse(window.name || '{}')
+    if (jarvisMirrorBoot && jarvisMirrorBoot.type === 'hermes-jarvis-mirror') {
+      jarvisMirrorOptions = {
+        profileId: String(jarvisMirrorBoot.profileId || ''),
+        bridgeId: String(jarvisMirrorBoot.bridgeId || ''),
+        parentWsBridge: jarvisMirrorBoot.parentWsBridge === true
+      }
+    }
+  } catch (e) { jarvisMirrorOptions = {} }
+  startJarvisMirror(document.getElementById('jarvis-mirror'), jarvisMirrorOptions)
+</script>
+</body>
+</html>

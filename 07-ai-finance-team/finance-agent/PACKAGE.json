@@ -1,0 +1,13 @@
+{
+  "id": "finance-agent",
+  "title": "Finance Agent",
+  "topic": "07",
+  "skill_ids": [
+    "ap-monthly-close",
+    "ap-weekly-money-report"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

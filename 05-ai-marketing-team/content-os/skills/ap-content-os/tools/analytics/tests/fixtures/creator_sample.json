@@ -1,0 +1,10 @@
+{
+  "creator": "example_account",
+  "recent_views": [12000, 15000, 9000, 20000, 11000],
+  "candidates": [
+    {"label": "post_a_outlier", "views": 64000, "age_days": 5},
+    {"label": "post_b_borderline", "views": 33000, "age_days": 10},
+    {"label": "post_c_normal", "views": 13500, "age_days": 3},
+    {"label": "post_d_stale_outlier", "views": 80000, "age_days": 120}
+  ]
+}

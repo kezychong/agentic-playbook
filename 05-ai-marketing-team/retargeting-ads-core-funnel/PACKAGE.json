@@ -1,0 +1,12 @@
+{
+  "id": "retargeting-ads-core-funnel",
+  "title": "Retargeting Ads Core Funnel",
+  "topic": "05",
+  "skill_ids": [
+    "ap-retargeting-ads-core-funnel"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

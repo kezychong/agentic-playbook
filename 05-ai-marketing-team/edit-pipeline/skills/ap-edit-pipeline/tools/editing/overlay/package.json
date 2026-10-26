@@ -1,0 +1,21 @@
+{
+  "name": "content-os-overlay",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Caption, proof and hook layers rendered as a see-through video, stacked over the approved master by ffmpeg.",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.484",
+    "@remotion/captions": "4.0.484",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.484"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.17",
+    "typescript": "5.9.2"
+  }
+}

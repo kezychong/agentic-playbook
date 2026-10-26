@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agentic Playbook JARVIS Mode"
+  short_description: "Set up a JARVIS command centre in your Hermes Desktop app, on Mac or Windows"
+  default_prompt: "Use $ap-jarvis-mode. Set up JARVIS Mode using my existing Hermes chief of staff. Find my Hermes profile and real sources, ask which information boxes I want, and explain any permission my computer needs."

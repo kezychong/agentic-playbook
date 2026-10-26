@@ -1,0 +1,12 @@
+name: hermes-jarvis
+version: 1.0.0
+manifest_version: 1
+kind: standalone
+description: "Profile-scoped Jarvis display backend, agent tools, and spoken-call guidance."
+author: "Package contributors"
+license: MIT
+provides_tools:
+  - jarvis_show_panel
+  - jarvis_status
+provides_hooks:
+  - pre_llm_call

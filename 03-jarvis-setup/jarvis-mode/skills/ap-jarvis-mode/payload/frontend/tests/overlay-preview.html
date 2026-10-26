@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jarvis mode — overlay preview (SPEC §7.4)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>html,body{margin:0;height:100%;background:#07080C;overflow:hidden}</style>
+</head>
+<body>
+<!-- The REAL files, in the order scripts/build.py concatenates them. The scene
+     belongs to another package: if it is mid-edit and does not define
+     createScene, the overlay draws its own labelled stub and the rail — which
+     is what this page exists to look at — is unaffected. -->
+<script src="../src/05-scope.js"></script>
+<script src="../src/10-theme.js"></script>
+<script src="../src/35-assets.js"></script>
+<script src="../src/40-scene.js"></script>
+<script src="../src/50-overlay.js"></script>
+<script>
+// ---------------------------------------------------------------------------
+// Fixture data (SPEC §7.3 / §7.5 shapes). Everything here is SAMPLE: the page
+// turns demo mode on so the badge says so out loud, exactly as the honesty rule
+// requires of anything that is not a live reading.
+// ---------------------------------------------------------------------------
+const q = new URLSearchParams(location.search)
+const state = q.get('state') || 'running'
+const now = Date.now()
+// SPEC §8 amendment C7 — the overnight window STARTS AT 21:00 THE PREVIOUS
+// EVENING, the same clock the backend reports (§8.3.5 "since 21:00 yesterday
+// in the configured zone). It used to be `now - 11 h`, which made the box print whatever o'clock
+// the page happened to be opened at minus eleven — `since 14:xx` on an
+// afternoon render — and that is not a shape the real reading can ever have.
+const OVERNIGHT_FROM = (function () {
+  const d = new Date(now)
+  d.setDate(d.getDate() - 1)
+  d.setHours(21, 0, 0, 0)
+  return d.getTime()
+})()
+
+const ACTIVITY = {
+  running: {
+    source: 'events', session: 'run-42', focused: true, running: true,
+    startedAt: now - 322000, endedAt: 0, steps: 34, modelCalls: 31,
+    lastEventAt: now - (Number(q.get('quiet')) || 48) * 1000,
+    tool: {
+      name: 'terminal', label: 'running a command',
+      detail: 'python3 scripts/build.py --check', startedAt: now - 48000
+    },
+    lastTool: { name: 'read_file', label: 'reading a file', detail: 'SPEC.md', ms: 420, ok: true },
+    thought: 'the receipt is written by the heartbeat, so the peer window needs its own path before two windows fight over one file',
+    saying: '',
+    subagents: [{ id: 'sub-1', label: 'reader', status: 'running', tool: 'read_file' }],
+    needsYou: { kind: 'approval', text: 'redeploy the backend on the mini?' },
+    recent: [
+      { at: now - 52000, label: 'reading a file', detail: 'SPEC.md', ms: 420, ok: true },
+      { at: now - 61000, label: 'searching the web', detail: 'electron openWindow peer', ms: 1900, ok: true },
+      { at: now - 96000, label: 'editing a file', detail: 'src/50-overlay.js', ms: 240, ok: true },
+      { at: now - 140000, label: 'running a command', detail: 'node --test tests/', ms: 6100, ok: false }
+    ],
+    lastTurn: null
+  },
+  quiet: {
+    source: 'events', session: 'run-41', focused: true, running: false,
+    startedAt: 0, endedAt: now - 360000, steps: 0, modelCalls: 0,
+    tool: null, lastTool: null, thought: '', saying: '', subagents: [], needsYou: null, recent: [],
+    lastTurn: { endedAt: now - 360000, seconds: 322, steps: 34, modelCalls: 31, outcome: 'done' }
+  },
+  none: undefined,
+  // the backend half is dark: no activity slice has ever landed here
+  unreachable: undefined
+}
+
+// SPEC §8 amendment A ruling 7 — every row here is INVENTED. No live STATE row,
+// no real calendar title, no real helper goal, no person's name: this page is a
+// picture of the layout, not a picture of Owner's day.
+const AGENT_STATE = {
+  status: 'ok', updatedAt: now - 720000, closedCount: 4, note: null,
+  briefs: { status: 'ok', count: 2, matched: 2, note: null, updatedAt: null, source: 'WAITING-ON-OWNER.md' },
+  rows: [
+    { id: 'demo-switch', where: 'panel drafted', next: 'Owner flips the sample switch before the run goes out',
+      owner: 'Owner', follow_up_at: new Date(now - 190000000).toISOString(), waiting_on_owner: true, overdue: true,
+      brief: {
+        title: 'Flip one sample switch', what: 'one setting on one sample screen',
+        why: 'the sample run cannot start until it is on',
+        do: 'open the sample panel, flip it, say done', takes: 'two minutes',
+        where: 'the sample settings screen', updated: 'a sample stamp'
+      } },
+    { id: 'demo-approve', where: 'draft ready', next: 'Owner approves the sample draft so it can be sent',
+      owner: 'Owner', follow_up_at: new Date(now + 5400000).toISOString(), waiting_on_owner: true, overdue: false,
+      brief: {
+        title: 'Approve the sample draft', what: 'one page of sample copy',
+        why: 'nothing else moves until it is approved',
+        do: 'read it, say yes or say what to change', takes: 'five minutes',
+        where: 'the sample drafts folder', updated: 'a sample stamp'
+      } },
+    { id: 'demo-no-brief', where: 'written in a hurry', next: 'Owner picks one of the two sample options',
+      owner: 'Owner', follow_up_at: null, waiting_on_owner: true, overdue: false, brief: null },
+    { id: 'demo-redeploy', where: 'sample build staged', next: 'redeploy the sample service and restart it',
+      owner: 'Agent', follow_up_at: new Date(now + 86400000).toISOString(), waiting_on_owner: false, overdue: false },
+    { id: 'demo-watch', where: 'sample schedule in place', next: 'watch the sample weekly run for a refusal',
+      owner: 'Agent', follow_up_at: new Date(now + 259200000).toISOString(), waiting_on_owner: false, overdue: false },
+    { id: 'demo-draft', where: 'sample draft in the folder', next: 'second pass on the sample opening line',
+      owner: 'Agent', follow_up_at: null, waiting_on_owner: false, overdue: false }
+  ]
+}
+
+// ?rows=max — the worst case the rail has to survive: more waiting rows than
+// the box holds, five in flight, and the longest ONE LEVER sentence.
+if (q.get('rows') === 'max') {
+  AGENT_STATE.rows = []
+  for (let i = 0; i < 6; i += 1) {
+    AGENT_STATE.rows.push({
+      id: 'demo-waiting-' + i, where: 'x',
+      next: 'Owner reads the sample draft, decides the one thing that changes, and says which way to go on sample item ' + i,
+      owner: 'Owner', follow_up_at: new Date(now + (i - 2) * 3600000).toISOString(),
+      waiting_on_owner: true, overdue: i < 2,
+      brief: {
+        title: 'Sample decision number ' + i + ' with a title long enough to need an ellipsis on the glass',
+        what: 'one sample choice between two sample options, written out at the length Agent actually writes at',
+        why: 'the sample run after it cannot start until this one is decided',
+        do: 'read the two sample options, pick one, say which', takes: 'about five minutes',
+        where: 'the sample folder', updated: 'a sample stamp'
+      }
+    })
+  }
+  for (let i = 0; i < 5; i += 1) {
+    AGENT_STATE.rows.push({
+      id: 'demo-flight-' + i, where: 'x',
+      next: 'a long in-flight line that has to ellipsise rather than push the rail past the bottom of the screen ' + i,
+      owner: 'Agent', follow_up_at: new Date(now + (i + 1) * 86400000).toISOString(),
+      waiting_on_owner: false, overdue: false
+    })
+  }
+}
+
+// ---------------------------------------------------------------------------
+// The six v3 blocks (SPEC §8.4 item 11), each in three states:
+//   ?blocks=ok      a full, busy reading (the default)
+//   ?blocks=empty   the real empty answers: no meeting, no helper, nothing failed
+//   ?blocks=stale   unreachable / missing / stale, one of each
+// Every goal, title, job and model name below is INVENTED (ruling 7).
+// ---------------------------------------------------------------------------
+const blocks = q.get('blocks') || 'ok'
+const iso = ms => new Date(ms).toISOString()
+const head = (status, note) => ({ status: status, note: note || null, updatedAt: iso(now), source: 'a sample source', stale: false })
+
+const BLOCKS = {
+  ok: {
+    agentHelpers: Object.assign(head('ok'), {
+      running: [
+        { id: 'demo-deleg-1', goal: 'Read the sample folder and list what changed this week', model: 'a-sample-model', startedAt: iso(now - 114000), seconds: 114, origin: 'chat' },
+        { id: 'demo-deleg-2', goal: 'Draft the sample summary for the sample review', model: 'a-sample-model', startedAt: iso(now - 38000), seconds: 38, origin: 'cron' }
+      ],
+      recent: [
+        { id: 'demo-deleg-0', goal: 'Check the sample numbers against the sample file', state: 'completed', startedAt: iso(now - 480000), endedAt: iso(now - 366000), seconds: 114, summary: 'Found two sample rows that disagree; both are in the sample note.', delivered: true, origin: 'chat' },
+        { id: 'demo-deleg-x', goal: 'Sweep the sample inbox', state: 'error', startedAt: iso(now - 900000), endedAt: iso(now - 880000), seconds: 20, summary: 'The sample sweep stopped on a sample permission.', delivered: false, origin: 'telegram' }
+      ],
+      runningCount: 2, todayCount: 6
+    }),
+    nextMeeting: Object.assign(head('ok'), {
+      next: { title: 'Sample stand-up with the sample team', start: iso(now + 42 * 60000), end: iso(now + 72 * 60000), calendar: 'sample calendar', allDay: false, minutesUntil: 42 },
+      later: [
+        { title: 'Sample review call', start: iso(now + 5 * 3600000), end: iso(now + 6 * 3600000), calendar: 'sample calendar', allDay: false, minutesUntil: 300 },
+        { title: 'Sample all-day block', start: iso(now + 26 * 3600000), end: iso(now + 50 * 3600000), calendar: 'sample calendar', allDay: true, minutesUntil: 1560 }
+      ],
+      windowHours: 36
+    }),
+    todayPlan: Object.assign(head('ok'), {
+      date: new Date(now).toISOString().slice(0, 10), isToday: true,
+      headline: 'Ship the sample thing end to end, then write the sample lesson.',
+      items: [
+        { kind: 'build', task: 'Finish the sample rail and look at it at four sizes', status: 'in progress', next: 'measure the sample rail' },
+        { kind: 'content', task: 'Write the sample lesson from this week', status: 'not started', next: 'open the sample draft' },
+        { kind: 'momentum', task: 'Send the two sample replies', status: 'done', next: '' }
+      ],
+      lever: { text: 'Ship the sample thing so it is useful on its own display', source: 'STATE.md' },
+      fileUpdatedAt: iso(now - 3600000)
+    }),
+    overnightJobs: Object.assign(head('ok'), {
+      window: { from: iso(OVERNIGHT_FROM), to: iso(now) }, total: 25, ok: 23,
+      failed: [
+        { id: 'demo-job-a', name: 'Sample nightly sweep', lastRunAt: iso(now - 6 * 3600000), lastStatus: 'error', error: 'the sample source answered 500 twice in a row' },
+        { id: 'demo-job-b', name: 'Sample digest', lastRunAt: iso(now - 5 * 3600000), lastStatus: 'timeout', error: 'the sample digest ran past its sample budget' }
+      ],
+      pausedCount: 1,
+      nextUp: [{ name: 'Sample morning sweep', nextRunAt: iso(now + 2 * 3600000) }]
+    }),
+    streaks: Object.assign(head('ok'), {
+      buildStreak: 12, contentStreak: 3, bestBuildStreak: 14, lessonsShipped: 26,
+      lastDays: [0, 1, 2, 3, 4, 5, 6].map(i => ({
+        date: new Date(now - i * 86400000).toISOString().slice(0, 10),
+        build: i !== 4, content: i % 2 === 0, note: null
+      })),
+      fileUpdatedAt: iso(now - 7200000), staleDays: 0
+    }),
+    spend: Object.assign(head('ok'), {
+      today: {
+        byModel: [
+          { model: 'a-sample-model', calls: 142, inputTokens: 980000, outputTokens: 42000, cacheReadTokens: 7400000, costUsd: null },
+          { model: 'another-sample-model', calls: 31, inputTokens: 120000, outputTokens: 9000, cacheReadTokens: 310000, costUsd: null }
+        ],
+        totalCalls: 173, totalTokens: 1151000, costUsd: null, costKnown: false
+      }
+    })
+  },
+  empty: {
+    agentHelpers: Object.assign(head('ok'), { running: [], recent: [], runningCount: 0, todayCount: 0 }),
+    nextMeeting: Object.assign(head('ok', 'nothing in the next 36 h'), { next: null, later: [], windowHours: 36 }),
+    todayPlan: Object.assign(head('ok', 'no date in the front matter'), {
+      date: null, isToday: false, headline: null, items: [], lever: null, fileUpdatedAt: iso(now - 86400000)
+    }),
+    overnightJobs: Object.assign(head('ok'), {
+      window: { from: iso(OVERNIGHT_FROM), to: iso(now) }, total: 0, ok: 0, failed: [], pausedCount: 0, nextUp: []
+    }),
+    streaks: Object.assign(head('ok'), {
+      buildStreak: 0, contentStreak: 0, bestBuildStreak: 14, lessonsShipped: 26,
+      lastDays: [], fileUpdatedAt: iso(now - 7200000), staleDays: 0
+    }),
+    spend: Object.assign(head('ok', 'Hermes did not report a cost for today'), {
+      today: { byModel: [], totalCalls: 0, totalTokens: 0, costUsd: null, costKnown: false }
+    })
+  },
+  stale: {
+    agentHelpers: Object.assign(head('missing', 'not found: ~/…/state.db'), { running: [], recent: [], runningCount: 0, todayCount: 0 }),
+    nextMeeting: Object.assign(head('unreachable', 'calendar could not be read: a sample timeout'), { next: null, later: [], windowHours: 36, stale: true }),
+    todayPlan: Object.assign(head('ok', 'set 2 days ago, not today'), {
+      date: new Date(now - 2 * 86400000).toISOString().slice(0, 10), isToday: false,
+      headline: 'A sample card that was set two days ago and never replaced.',
+      items: [{ kind: 'build', task: 'The sample task from two days ago', status: 'not started', next: '' }],
+      lever: { text: 'Ship the sample thing so it is useful on its own display', source: 'STATE.md' },
+      fileUpdatedAt: iso(now - 2 * 86400000)
+    }),
+    overnightJobs: Object.assign(head('unreachable', 'the cron file is not readable JSON'), {
+      window: { from: iso(OVERNIGHT_FROM), to: iso(now) }, total: 0, ok: 0, failed: [], pausedCount: 0, nextUp: []
+    }),
+    streaks: Object.assign(head('stale', 'no dated line since 2026-07-25'), {
+      buildStreak: 4, contentStreak: 0, bestBuildStreak: 14, lessonsShipped: 26,
+      lastDays: [{ date: '2026-07-25', build: true, content: false, note: null }],
+      fileUpdatedAt: iso(now - 56 * 86400000), staleDays: 56
+    }),
+    spend: Object.assign(head('missing', 'not found: ~/…/state.db'), {
+      today: { byModel: [], totalCalls: 0, totalTokens: 0, costUsd: null, costKnown: false }
+    })
+  }
+}
+const BLOCK = BLOCKS[blocks] || BLOCKS.ok
+
+const DATA = {
+  connection: { id: 'sample-connection', profile: 'sample-agent', targetProfile: 'sample-agent', gateway: 'open', model: 'sample-model', backend: 'ok', note: '' },
+  settings: {
+    schema_version: 1, profile_id: 'sample-agent', agent_name: 'Sample Agent', owner_label: 'Sample Owner',
+    timezone: 'UTC',
+    enabled_sources: ['agent_state','agent_helpers','next_meeting','today_plan','overnight_jobs','one_thing_scoreboard','spend','lever','brains','scoreboard','log'],
+    brains: [{ id: 'brain-1', label: 'Brain 1' }, { id: 'brain-2', label: 'Brain 2' }, { id: 'brain-3', label: 'Brain 3' }],
+    enabled_boxes: ['agent_helpers','waiting_on_you','agent_in_flight','overnight_jobs','next_meeting','today','spend','scoreboard','fleet']
+  },
+  brains: [
+    { id: 'brain-1', label: 'Brain 1', status: 'ok', note: 'configured · mirror 18 Sep' },
+    { id: 'brain-2', label: 'Brain 2', status: 'ok', note: 'configured' },
+    { id: 'brain-3', label: 'Brain 3', status: 'unknown', note: 'disabled' }
+  ],
+  senses: [{ id: 'screenpipe', status: 'ok' }, { id: 'plaud', status: 'ok' }, { id: 'gcal', status: 'unknown' }],
+  fleet: [
+    { id: 'sample-agent', label: 'Sample Agent', busy: true, sessions: 3 },
+    { id: 'helper-1', label: 'Helper 1', busy: false, sessions: null },
+    { id: 'helper-2', label: 'Helper 2', busy: false, sessions: null },
+    { id: 'helper-3', label: 'Helper 3', busy: true, sessions: null }
+  ],
+  jobs: [
+    { id: 'j1', label: 'weekly mirror · Brain 2', status: 'running', since: now - 90000 },
+    { id: 'j2', label: 'loop-capture nightly', status: 'queued', since: null }
+  ],
+  lever: { text: 'Ship Jarvis mode v2 so the command centre is useful on its own display', source: 'STATE.md' },
+  events: [
+    { at: now - 9000, type: 'tool.start', text: 'terminal · build.py --check' },
+    { at: now - 21000, type: 'message.start', text: 'agent' },
+    { at: now - 42000, type: 'tool.complete', text: 'read_file · SPEC.md' }
+  ],
+  panel: null, scoreboard: null, logLine: null,
+  health: { brains: 'ok', senses: 'ok', fleet: 'ok', jobs: 'ok', lever: 'ok', panel: 'ok', events: 'ok', connection: 'ok' },
+  activity: ACTIVITY[state],
+  agentState: state === 'dark' ? undefined : AGENT_STATE,
+  // §8.4 item 1 — the six v3 blocks, plus the call clock Jarvis measures itself
+  agentHelpers: BLOCK.agentHelpers,
+  nextMeeting: BLOCK.nextMeeting,
+  todayPlan: BLOCK.todayPlan,
+  overnightJobs: BLOCK.overnightJobs,
+  streaks: BLOCK.streaks,
+  spend: BLOCK.spend,
+  voiceToday: blocks === 'empty' ? { seconds: 0, calls: 0, date: '' } : { seconds: 1380, calls: 4, date: '' },
+  updatedAt: now
+}
+
+// ?boxes=today,next_meeting — show only named, supported boxes. This changes
+// the sample settings frame, so it exercises the same visibility path as a
+// member selection while keeping NOW and voice (the two core controls) present.
+const PREVIEW_BOXES = ['agent_helpers','waiting_on_you','agent_in_flight','overnight_jobs','next_meeting','today','spend','scoreboard','fleet']
+if (q.has('boxes')) {
+  const seen = new Set()
+  DATA.settings.enabled_boxes = String(q.get('boxes') || '')
+    .split(',')
+    .map(id => id.trim())
+    .filter(id => PREVIEW_BOXES.includes(id) && !seen.has(id) && seen.add(id))
+}
+
+// ?state=unreachable — the honest dark fixture (SPEC §7.4): the backend does
+// not answer, so every box that reads it says so instead of showing old rows.
+if (state === 'unreachable') {
+  DATA.connection = { id: 'local', profile: 'agent', gateway: 'closed', model: null, backend: 'off' }
+  DATA.health = {
+    brains: 'unreachable', senses: 'unreachable', fleet: 'unreachable', jobs: 'unreachable',
+    lever: 'unreachable', panel: 'unreachable', events: 'unreachable', connection: 'unreachable'
+  }
+  DATA.brains = []
+  DATA.senses = []
+  DATA.fleet = []
+  DATA.jobs = []
+  DATA.lever = null
+  DATA.events = []
+  DATA.agentState = { status: 'unreachable', rows: [], closedCount: 0, updatedAt: 0, note: 'backend /state did not answer' }
+  // the old-backend law from the other side: this Hermes answers nothing at
+  // all, so every v3 box says which reading it has not got
+  const dark = name => ({ status: 'unreachable', note: 'backend has no ' + name + ' yet', updatedAt: null, source: '', stale: false })
+  DATA.agentHelpers = Object.assign(dark('agent_helpers'), { running: [], recent: [], runningCount: 0, todayCount: 0 })
+  DATA.nextMeeting = Object.assign(dark('next_meeting'), { next: null, later: [], windowHours: 36 })
+  DATA.todayPlan = Object.assign(dark('today_plan'), { date: '', isToday: false, headline: '', items: [], lever: null, fileUpdatedAt: null })
+  DATA.overnightJobs = Object.assign(dark('overnight_jobs'), { window: { from: null, to: null }, total: 0, ok: 0, failed: [], pausedCount: 0, nextUp: [] })
+  DATA.streaks = Object.assign(dark('one_thing_scoreboard'), { buildStreak: null, contentStreak: null, bestBuildStreak: null, lessonsShipped: null, lastDays: [], fileUpdatedAt: null, staleDays: null })
+  DATA.spend = Object.assign(dark('spend'), { today: { byModel: [], totalCalls: 0, totalTokens: 0, costUsd: null, costKnown: false } })
+}
+
+const PRESENCE = {
+  mode: state === 'running' ? 'thinking' : 'listening',
+  call: 'on', live: 'sample data · demo mode',
+  levels: { voice: 0.2, mic: 0.1 },
+  captions: [
+    { role: 'user', text: 'can you check whether the build is still clean?' },
+    { role: 'assistant', text: 'running it now — the check takes about half a minute' }
+  ],
+  muted: false, sleeping: false,
+  source: { status: 'native', voice: 'native-analyser', mic: 'tap' },
+  demo: true, updatedAt: now
+}
+
+const presence = {
+  get: () => PRESENCE,
+  subscribe: fn => { fn(PRESENCE); return () => {} },
+  isDemo: () => true,
+  canCommand: () => true,
+  command: () => Promise.resolve({ ok: true, via: 'bus', reason: '' }),
+  notice: () => ''
+}
+const data = { get: () => DATA, subscribe: fn => { fn(DATA); return () => {} } }
+
+// the scene is kept so ?measure=rects can ask it where Agent and the brains
+// actually are, instead of the page guessing at the geometry
+let liveScene = null
+const sceneFactory = typeof createScene === 'function'
+  ? (canvas, opts) => { liveScene = createScene(canvas, opts); return liveScene }
+  : null
+
+const overlay = createOverlay({
+  presence: presence,
+  data: data,
+  createScene: sceneFactory,
+  log: m => console.log('[preview]', m)
+})
+overlay.open()
+if (q.get('drawer') === '1') overlay.diagnostics(true)
+
+// ?notice=1 — the §7.2 window notice, showing at its longest. The overlay only
+// writes this line after a real window/full-screen press, which needs a host,
+// so the page puts the text on the element the overlay owns (same node, same
+// class) to check where it LANDS (§7 amendment 3: never on the middle brain).
+if (q.get('notice') === '1') {
+  // the overlay's own door, so the rail gives up its last box for the nine
+  // seconds the line is up (§8.4 item 10: the line never covers a reading)
+  overlay.ownWindow()
+  const n = document.querySelector('.jv-notice')
+  n.textContent = 'Jarvis mode opened in its own window · drag it to the other display, then press ⌃⌥F for full screen'
+  n.style.display = ''
+}
+// a marker the screenshot harness can wait on
+document.title = 'ready · ' + state
+
+// ?measure=rects — print the real screen boxes of every element that shares the
+// bottom band with the quiet line under the orb (SPEC §7.3 ruling 6), so the
+// clearances are measured rather than eyeballed off a screenshot. The scene's
+// FLEET caption is drawn on the canvas, so its band is reported from the same
+// geometry 40-scene.js uses (fleetY = h - 82, caption at fleetY + 14).
+// SPEC §8.4 item 10 — the OVERLAP GATE. It prints every box's real screen
+// rectangle AND checks each one against the things it may never sit on: Agent
+// at his loudest, each brain's ring and label band, the captions column, the
+// VOICE CONTROL buttons, the DEMO badge and the line under the orb. The scene's
+// own geometry is asked for, not guessed: jarvisGeometry() has already solved
+// it for this size and the page reads the same numbers the canvas paints from.
+if (q.get('measure') === 'rects') {
+  setTimeout(() => {
+    const h = window.innerHeight
+    const w = window.innerWidth
+    const boxOf = sel => {
+      const n = document.querySelector(sel)
+      if (!n) return null
+      const r = n.getBoundingClientRect()
+      if (!r.width || !r.height) return null
+      return { name: sel, x0: r.left, y0: r.top, x1: r.right, y1: r.bottom }
+    }
+    const line = b => {
+      if (!b) return 'missing or not shown'
+      if (b.r !== undefined) {
+        return b.name + ' :: circle centre ' + Math.round(b.cx) + ',' + Math.round(b.cy) +
+          ' r ' + Math.round(b.r) + ' :: x ' + Math.round(b.cx - b.r) + '-' + Math.round(b.cx + b.r) +
+          ' :: y ' + Math.round(b.cy - b.r) + '-' + Math.round(b.cy + b.r)
+      }
+      return b.name + ' :: x ' + Math.round(b.x0) + '-' + Math.round(b.x1) +
+        ' :: y ' + Math.round(b.y0) + '-' + Math.round(b.y1) +
+        ' :: from floor ' + Math.round(h - b.y1) + '-' + Math.round(h - b.y0)
+    }
+
+    // What the scene actually drew, from its own solved layout — not an
+    // estimate. Agent and the brains are CIRCLES, so they are checked as
+    // circles; a brain's label is measured with the same font the canvas
+    // paints it in (40-scene.js: 10.5px mono, 0.16em, centred, bottom-aligned
+    // at cy − brainR × 1.34 − 11), so a short label is not treated as a wide
+    // one and the gate neither passes nor fails on a guess.
+    const st = liveScene && liveScene.state ? liveScene.state : null
+    const geo = st && st.geo ? st.geo : null
+    const L = typeof JARVIS_LOOK === 'object' ? JARVIS_LOOK : { brainRing: 1.30, brainLabel: 1.34 }
+    const scene = []
+    const pen = document.createElement('canvas').getContext('2d')
+    pen.font = (Math.min(w, h) < 560 ? '9.5px ' : '10.5px ') + "'JetBrains Mono', ui-monospace, Menlo, monospace"
+    if ('letterSpacing' in pen) pen.letterSpacing = '0.16em'
+    if (geo) {
+      scene.push({ name: 'AGENT (loudest core)', cx: geo.cx, cy: geo.cy, r: geo.rMax })
+      scene.push({ name: 'AGENT ring', cx: geo.cx, cy: geo.cy, r: geo.ringOut })
+      const n = st.brains.length
+      const R = L.brainRing * geo.brainR
+      for (let i = 0; i < n; i += 1) {
+        const pos = jarvisBrainPos(st, i, n, [0, 0])
+        const b = st.brains[i]
+        scene.push({ name: 'BRAIN ' + (b.label || i) + ' ring', cx: pos[0], cy: pos[1], r: R })
+        let text = String(b.label || 'BRAIN').toUpperCase()
+        if (b.status === 'unreachable') text += ' · UNREACHABLE'
+        else if (b.status === 'unknown') text += ' · UNKNOWN'
+        const half = Math.min(pen.measureText(text).width, w * 0.19) / 2
+        const base = pos[1] - geo.brainR * L.brainLabel - 11
+        scene.push({
+          name: 'BRAIN ' + (b.label || i) + ' label "' + text + '"',
+          x0: pos[0] - half, x1: pos[0] + half, y0: base - 13, y1: base + 3
+        })
+      }
+      scene.push({
+        name: 'FLEET caption', x0: geo.fleetX0 - 60, x1: geo.fleetX1 + 60,
+        y0: geo.fleetY - geo.fleetRise - 10, y1: geo.fleetY + 20
+      })
+    }
+
+    const rails = ['.jv-left-rail', '.jv-top-left', '.jv-right', '.jv-voice', '.jv-demo',
+      '.jv-notice', '.jv-underorb', '.jv-bot-left', '.jv-captions', '.jv-mode',
+      '.jv-chips', '.jv-hint', '.jv-ticker'].map(boxOf).filter(Boolean)
+
+    const hits = (a, b) => {
+      if (b.r !== undefined || a.r !== undefined) {
+        const circle = b.r !== undefined ? b : a
+        const box = b.r !== undefined ? a : b
+        // nearest point of the rectangle to the circle's centre
+        const nx = Math.max(box.x0, Math.min(circle.cx, box.x1))
+        const ny = Math.max(box.y0, Math.min(circle.cy, box.y1))
+        const dx = circle.cx - nx
+        const dy = circle.cy - ny
+        return dx * dx + dy * dy < (circle.r - 0.5) * (circle.r - 0.5)
+      }
+      return a.x0 < b.x1 - 0.5 && b.x0 < a.x1 - 0.5 && a.y0 < b.y1 - 0.5 && b.y0 < a.y1 - 0.5
+    }
+    const clashes = []
+    // the rails against everything the scene drew
+    rails.forEach(r => {
+      if (r.name === '.jv-top-left' || r.name === '.jv-bot-left') return   // containers, checked through their children
+      scene.forEach(s => { if (hits(r, s)) clashes.push(r.name + '  ×  ' + s.name) })
+    })
+    // and the pairs of DOM boxes that must never share a pixel either
+    const pairs = [
+      ['.jv-left-rail', '.jv-bot-left'], ['.jv-left-rail', '.jv-underorb'],
+      ['.jv-left-rail', '.jv-right'], ['.jv-left-rail', '.jv-ticker'],
+      ['.jv-left-rail', '.jv-demo'], ['.jv-left-rail', '.jv-notice'],
+      ['.jv-right', '.jv-underorb'], ['.jv-right', '.jv-ticker'],
+      ['.jv-underorb', '.jv-ticker'], ['.jv-underorb', '.jv-hint'],
+      ['.jv-underorb', '.jv-captions'], ['.jv-voice', '.jv-left-rail']
+    ]
+    const byName = {}
+    rails.forEach(r => { byName[r.name] = r })
+    pairs.forEach(p => {
+      const a = byName[p[0]]
+      const b = byName[p[1]]
+      if (a && b && hits(a, b)) clashes.push(p[0] + '  ×  ' + p[1])
+    })
+
+    const out = ['viewport ' + w + 'x' + h]
+      .concat(scene.map(s => 'scene ' + line(s)))
+      .concat(rails.map(line))
+      .concat(['', clashes.length ? 'OVERLAP: ' + clashes.length + '\n' + clashes.join('\n') : 'overlap: none'])
+      .join('\n')
+    document.body.innerHTML = '<pre id="measure" style="color:#fff;font:14px/1.45 monospace;padding:20px">' + out + '</pre>'
+  }, 1600)
+}
+
+// ?measure=cut — the §7 amendment 5 check: walk the rail and name every element
+// whose content is taller than the box drawn for it, i.e. every place a row is
+// being cut. A clean rail prints "no cut".
+//
+// SPEC §8 amendments C5: a line-clamped node is NOT skipped any more. It used
+// to be waved through on the grounds that a clamp is an ellipsis rather than a
+// cut — true of its WIDTH, but it said nothing about its height, and that is
+// exactly how .jv-now-thought came to be 17 px tall with two 13.4 px lines in
+// it: line two sliced through the middle, behind the coral block. A clamped
+// node is measured differently instead of being ignored: its visible height
+// must be a whole number of its own lines, within a pixel of rounding.
+if (q.get('measure') === 'cut') {
+  setTimeout(() => {
+    const out = []
+    const walk = (n, path) => {
+      if (!n || n.nodeType !== 1) return
+      const cs = getComputedStyle(n)
+      const clamp = cs.webkitLineClamp
+      if (clamp && clamp !== 'none') {
+        const lh = parseFloat(cs.lineHeight)
+        if (lh > 0 && n.clientHeight > 0) {
+          const lines = n.clientHeight / lh
+          const part = Math.abs(lines - Math.round(lines)) * lh
+          if (part > 1) {
+            out.push(path + ' :: box ' + n.clientHeight + ' :: line ' + lh.toFixed(2) +
+              ' :: ' + lines.toFixed(2) + ' lines :: part line ' + part.toFixed(1))
+          }
+        }
+      } else {
+        const cut = n.scrollHeight - n.clientHeight
+        if (cut > 1) out.push(path + ' :: box ' + n.clientHeight + ' :: content ' + n.scrollHeight + ' :: cut ' + cut)
+      }
+      ;[...n.children].forEach((kid, i) => walk(kid, path + '>' + (kid.className || kid.tagName) + '[' + i + ']'))
+    }
+    walk(document.querySelector('.jv-right'), 'rail')
+    walk(document.querySelector('.jv-left-rail'), 'left')
+    walk(document.querySelector('.jv-top-left'), 'leftcol')
+    document.body.innerHTML = '<pre id="measure" style="color:#fff;font:15px/1.5 monospace;padding:20px">' +
+      ('viewport ' + window.innerWidth + 'x' + window.innerHeight + '\n' + (out.length ? out.join('\n') : 'no cut')) + '</pre>'
+  }, 1200)
+}
+
+// ?measure=1 — print the rail's real box heights instead of a picture, so the
+// builder tunes against measurements rather than against a guess.
+if (q.get('measure') === '1') {
+  setTimeout(() => {
+    const rail = document.querySelector('.jv-right')
+    const left = document.querySelector('.jv-left-rail')
+    const leftCol = document.querySelector('.jv-top-left')
+    const rows = [['viewport ' + window.innerWidth + 'x' + window.innerHeight, 0, 0], ['rail', rail.clientHeight, rail.scrollHeight]]
+    rail.childNodes.forEach(n => {
+      const name = (n.textContent || '').slice(0, 18).replace(/\s+/g, ' ')
+      rows.push([name, n.getBoundingClientRect().height, n.scrollHeight])
+    })
+    rows.push(['LEFT COLUMN', leftCol.clientHeight, leftCol.scrollHeight])
+    rows.push(['left rail', left.clientHeight, left.scrollHeight])
+    left.childNodes.forEach(n => {
+      const name = 'L ' + (n.textContent || '').slice(0, 16).replace(/\s+/g, ' ')
+      rows.push([name, n.getBoundingClientRect().height, n.scrollHeight])
+    })
+    const out = rows.map(r => r[0] + ' :: box ' + Math.round(r[1]) + ' :: content ' + r[2]).join('\n')
+    document.body.innerHTML = '<pre id="measure" style="color:#fff;font:16px/1.5 monospace;padding:20px">' + out + '</pre>'
+  }, 1200)
+}
+</script>
+</body>
+</html>

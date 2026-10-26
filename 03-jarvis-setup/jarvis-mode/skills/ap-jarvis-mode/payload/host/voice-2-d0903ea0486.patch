@@ -1,0 +1,682 @@
+diff --git a/apps/desktop/electron/main.ts b/apps/desktop/electron/main.ts
+--- a/apps/desktop/electron/main.ts
++++ b/apps/desktop/electron/main.ts
+@@ -7,6 +7,7 @@ import os from 'node:os'
+ import path from 'node:path'
+ import tls from 'node:tls'
+ import { pathToFileURL } from 'node:url'
++import { DesktopTalkAuth } from './talk-auth'
+ 
+ import {
+   app,
+@@ -508,6 +509,7 @@ import { readWslWindowsClipboardImage } from './wsl-clipboard-image'
+ import { resolvePickerDefaultPath, setActiveGatewayProfile, setWslBridgeProfileState } from './wsl-path-bridge'
+ 
+ const USER_DATA_OVERRIDE = process.env.HERMES_DESKTOP_USER_DATA_DIR
++const desktopTalkAuth = new DesktopTalkAuth()
+ 
+ if (USER_DATA_OVERRIDE) {
+   const resolvedUserData = path.resolve(USER_DATA_OVERRIDE)
+@@ -12660,6 +12662,7 @@ async function runPoolBackendStart(profile, entry, opts: { forceLocal?: boolean;
+   assertPoolEntryStillOwned(poolKey, entry)
+ 
+   const token = crypto.randomBytes(32).toString('base64url')
++  const talkToken = crypto.randomBytes(32).toString('base64url')
+ 
+   // Same update mutual exclusion as the primary window's waitForLocalStart
+   // (#73822): pool backends spawn from the same venv, so an ungated respawn
+@@ -12736,6 +12739,7 @@ async function runPoolBackendStart(profile, entry, opts: { forceLocal?: boolean;
+           // can still point at the install dir even when spawn cwd is home.
+           TERMINAL_CWD: hermesCwd,
+           HERMES_DASHBOARD_SESSION_TOKEN: token,
++          HERMES_DESKTOP_TALK_TOKEN: talkToken,
+           // Marks this dashboard backend as desktop-spawned so it runs the cron
+           // scheduler tick loop (the gateway isn't running under the app).
+           HERMES_DESKTOP: '1',
+@@ -12847,6 +12851,8 @@ async function runPoolBackendStart(profile, entry, opts: { forceLocal?: boolean;
+     )
+   }
+ 
++  const revokeTalkAuth = desktopTalkAuth.register(baseUrl, talkToken)
++  child.once('exit', revokeTalkAuth)
+   return {
+     baseUrl,
+     mode: 'local',
+@@ -13189,6 +13195,7 @@ async function runHermesStart() {
+     }
+ 
+     const token = crypto.randomBytes(32).toString('base64url')
++    const talkToken = crypto.randomBytes(32).toString('base64url')
+     // --port 0: the OS assigns an ephemeral port; the child announces it on stdout.
+     const backendArgs = ['serve', '--host', '127.0.0.1', '--port', '0']
+     // Pin the desktop's chosen profile via the global --profile flag. This is
+@@ -13279,6 +13286,7 @@ async function runHermesStart() {
+             ...backend.env,
+             TERMINAL_CWD: hermesCwd,
+             HERMES_DASHBOARD_SESSION_TOKEN: token,
++            HERMES_DESKTOP_TALK_TOKEN: talkToken,
+             // Marks this dashboard backend as desktop-spawned so it runs the cron
+             // scheduler tick loop (the gateway isn't running under the app).
+             HERMES_DESKTOP: '1',
+@@ -13466,6 +13474,8 @@ async function runHermesStart() {
+     // Surface it once (per distinct set of affected plugins) after the window is up; never block boot.
+     setTimeout(() => void showPluginCompatNoticeOnce(), 1500)
+ 
++    const revokeTalkAuth = desktopTalkAuth.register(baseUrl, talkToken)
++    hermesProcess?.once('exit', revokeTalkAuth)
+     return {
+       baseUrl,
+       mode: 'local',
+@@ -16307,7 +16317,7 @@ async function fetchJsonForBackend(
+       method: opts.method,
+       body: opts.body,
+       timeoutMs: opts.timeoutMs,
+-      headers: descriptor.headers
++      headers: { ...descriptor.headers, ...desktopTalkAuth.headers(descriptor, path) }
+     }
+ 
+     return requestWithOauthFallback(descriptor.baseUrl, {
+@@ -16322,7 +16332,7 @@ async function fetchJsonForBackend(
+     body: opts.body,
+     upload: opts.upload,
+     timeoutMs: opts.timeoutMs,
+-    headers: descriptor.headers
++    headers: { ...descriptor.headers, ...desktopTalkAuth.headers(descriptor, path) }
+   })
+ }
+ 
+diff --git a/apps/desktop/electron/talk-auth.test.ts b/apps/desktop/electron/talk-auth.test.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/desktop/electron/talk-auth.test.ts
+@@ -0,0 +1,27 @@
++import { describe, expect, it } from 'vitest'
++import { DesktopTalkAuth } from './talk-auth'
++
++describe('native Talk authentication', () => {
++  it('grants only owned local Talk routes and retires the exited child', () => {
++    const auth = new DesktopTalkAuth()
++    const local = { baseUrl: 'http://127.0.0.1:1234', mode: 'local' }
++    const revoke = auth.register(local.baseUrl, 'temporary')
++    expect(auth.headers(local, '/api/plugins/hermes-talk/status')).toEqual({
++      'x-hermes-desktop-talk-token': 'temporary'
++    })
++    expect(auth.headers(local, '/api/plugins/other/status')).toEqual({})
++    expect(auth.headers({ ...local, mode: 'remote' }, '/api/plugins/hermes-talk/status')).toEqual({})
++    revoke()
++    expect(auth.headers(local, '/api/plugins/hermes-talk/status')).toEqual({})
++  })
++  it('cannot register a remote host or retire a replacement credential', () => {
++    const auth = new DesktopTalkAuth()
++    expect(() => auth.register('http://example.com', 'secret')).toThrow('loopback')
++    const old = auth.register('http://127.0.0.1:1234', 'old')
++    auth.register('http://127.0.0.1:1234', 'new')
++    old()
++    expect(
++      auth.headers({ baseUrl: 'http://127.0.0.1:1234', mode: 'local' }, '/api/plugins/hermes-talk/status')
++    ).toEqual({ 'x-hermes-desktop-talk-token': 'new' })
++  })
++})
+diff --git a/apps/desktop/electron/talk-auth.ts b/apps/desktop/electron/talk-auth.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/desktop/electron/talk-auth.ts
+@@ -0,0 +1,18 @@
++/** Main-process-only credentials. Never exported through the preload bridge. */
++export class DesktopTalkAuth {
++  private readonly owned = new Map<string, string>()
++
++  register(baseUrl: string, token: string): () => void {
++    if (new URL(baseUrl).hostname !== '127.0.0.1') throw new Error('Talk backend must be loopback')
++    this.owned.set(baseUrl, token)
++    return () => {
++      if (this.owned.get(baseUrl) === token) this.owned.delete(baseUrl)
++    }
++  }
++
++  headers(descriptor: { baseUrl: string; mode?: string }, path: string): Record<string, string> {
++    if (descriptor.mode !== 'local' || !path.startsWith('/api/plugins/hermes-talk/')) return {}
++    const token = this.owned.get(descriptor.baseUrl)
++    return token ? { 'x-hermes-desktop-talk-token': token } : {}
++  }
++}
+diff --git a/apps/desktop/src/api/plugins.test.ts b/apps/desktop/src/api/plugins.test.ts
+--- a/apps/desktop/src/api/plugins.test.ts
++++ b/apps/desktop/src/api/plugins.test.ts
+@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
+ 
+ import { setApiRequestConnection, setApiRequestProfile } from '@/hermes'
+ 
+-import { activeConnection } from './plugins'
++import { activeConnection, pluginRest } from './plugins'
+ 
+ // desktop.getConnection/getConnectionFor are IPC round-trips into the main
+ // process with no timeout of their own (#93454). A wedged main-process
+@@ -15,6 +15,22 @@ describe('activeConnection connection timeout (#93454)', () => {
+     vi.useRealTimers()
+   })
+ 
++  it('pins REST receipts and late cleanup to their admitted connection/profile', async () => {
++    const api = vi.fn(async () => ({ ok: true }))
++    Object.defineProperty(window, 'hermesDesktop', { configurable: true, value: { api } })
++    const scope = { connectionId: 'original-host', profile: 'primary' }
++    setApiRequestConnection('different-host')
++    setApiRequestProfile('eve')
++    await pluginRest('hermes-talk', '/close', { method: 'POST', scope })
++    expect(api).toHaveBeenCalledWith(
++      expect.objectContaining({
++        path: '/api/plugins/hermes-talk/close',
++        connectionId: 'original-host',
++        profile: 'primary'
++      })
++    )
++  })
++
+   it('rejects instead of hanging forever when getConnection() wedges', async () => {
+     vi.useFakeTimers()
+     setApiRequestProfile('coder')
+diff --git a/apps/desktop/src/api/plugins.ts b/apps/desktop/src/api/plugins.ts
+--- a/apps/desktop/src/api/plugins.ts
++++ b/apps/desktop/src/api/plugins.ts
+@@ -47,6 +47,8 @@ export interface PluginRestOptions {
+   /** Single-file multipart upload (see HermesApiRequest.upload). */
+   upload?: { filename: string; contentType?: string; bytes: ArrayBuffer }
+   timeoutMs?: number
++  /** Capture an admitted request's original backend, including late cleanup. */
++  scope?: { connectionId: string; profile: string }
+ }
+ 
+ // Normalize `path` to a leading-slash suffix relative to `/api/plugins/<id>`.
+@@ -82,7 +84,8 @@ export async function pluginRest<T>(pluginId: string, path: string, opts: Plugin
+     body: opts.body,
+     upload: opts.upload,
+     timeoutMs: opts.timeoutMs,
+-    ...profileScoped()
++    ...profileScoped(),
++    ...(opts.scope ? { connectionId: opts.scope.connectionId, profile: opts.scope.profile } : {})
+   })
+ }
+ 
+diff --git a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
+--- a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
++++ b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
+@@ -1,12 +1,24 @@
+ import { describe, expect, it, vi } from 'vitest'
+ 
+-import {
+-  acquireMicrophoneLease,
+-  disposeAssistantSubscriptions,
+-  runVoiceControllerCallback
+-} from './use-composer-voice'
++import { acquireMicrophoneLease, disposeAssistantSubscriptions, runVoiceControllerCallback } from './use-composer-voice'
+ 
+ describe('composer voice ownership', () => {
++  it('aborts a granted lease and releases the microphone once on context loss', async () => {
++    const owner = new AbortController()
++    const resume = vi.fn()
++    const lease = await acquireMicrophoneLease({
++      owner: Symbol('lease'),
++      pause: async () => undefined,
++      resume,
++      signal: owner.signal,
++      voiceContextIsCurrent: () => true
++    })
++    expect(lease?.signal.aborted).toBe(false)
++    owner.abort()
++    expect(lease?.signal.aborted).toBe(true)
++    lease?.release()
++    expect(resume).toHaveBeenCalledOnce()
++  })
+   it('keeps ownership and waits for pause settlement when aborted', async () => {
+     let settlePause!: () => void
+     let pauseSettled = false
+@@ -55,7 +67,12 @@ describe('composer voice ownership', () => {
+       })
+ 
+     const resume = vi.fn(() => expect(pauseSettled).toBe(true))
+-    const acquired = acquireMicrophoneLease({ owner: Symbol('owner'), pause, resume, voiceContextIsCurrent: () => true })
++    const acquired = acquireMicrophoneLease({
++      owner: Symbol('owner'),
++      pause,
++      resume,
++      voiceContextIsCurrent: () => true
++    })
+ 
+     settlePause()
+     const lease = await acquired
+diff --git a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
+--- a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
++++ b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
+@@ -1,5 +1,16 @@
+ import { useStore } from '@nanostores/react'
+-import { createContext, createElement, type ReactNode, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
++import {
++  createContext,
++  createElement,
++  type ReactNode,
++  useCallback,
++  useContext,
++  useEffect,
++  useLayoutEffect,
++  useMemo,
++  useRef,
++  useState
++} from 'react'
+ 
+ import { useI18n } from '@/i18n'
+ import { chatMessageText, collectUnspokenTurnSpeech } from '@/lib/chat-messages'
+@@ -14,7 +25,7 @@ import { $gateway } from '@/store/gateway'
+ import { notify, notifyError } from '@/store/notifications'
+ import { $voiceLiveStatus, refreshVoiceLiveStatus, selectedVoiceChatMode } from '@/store/voice-live'
+ import { $autoSpeakReplies, $voiceStopPhrase, setAutoSpeakReplies } from '@/store/voice-prefs'
+-import { resumeWakeAfterVoice } from '@/store/wake-word'
++import { resumeWakeAfterVoice, stopClientCapture } from '@/store/wake-word'
+ 
+ import { pinFloatingComposerCapture } from '../floating-target'
+ import type { ComposerTarget } from '../focus'
+@@ -40,6 +51,8 @@ interface UseComposerVoiceArgs {
+   onSubmit: ChatBarProps['onSubmit']
+   onTranscribeAudio: ChatBarProps['onTranscribeAudio']
+   sessionId: string | null | undefined
++  voiceOwner?: ChatBarProps['voiceOwner']
++  onPrepareVoiceSession?: ChatBarProps['onPrepareVoiceSession']
+   /** This composer's focus-bus key — voice toggles targeting another
+    *  composer (or the active one, when not us) are ignored. */
+   target: ComposerTarget
+@@ -53,10 +66,16 @@ export interface ComposerVoiceAssistant {
+ 
+ export interface ComposerVoiceLease {
+   release: () => void
++  signal: AbortSignal
+ }
+ 
+ export interface ComposerVoiceController {
+-  acquire: (signal?: AbortSignal) => Promise<ComposerVoiceLease | null>
++  acquire: (options?: AbortSignal | { signal?: AbortSignal }) => Promise<ComposerVoiceLease | null>
++  capabilities: { microphoneLease: 1; pinnedRest: 1; prepareSession: 0 | 1 }
++  owner: { connectionId: string; profile: string; sessionId: string | null; storedSessionId: string | null }
++  signal?: AbortSignal
++  stop: () => void
++  prepareSession: () => Promise<ComposerVoiceController['owner']>
+   interrupt: () => boolean
+   latestAssistant: () => ComposerVoiceAssistant | null
+   submitText: (text: string) => boolean
+@@ -135,14 +154,18 @@ export async function acquireMicrophoneLease({
+   }
+ 
+   let released = false
++  const lifetime = new AbortController()
+ 
+-  return {
++  const lease = {
++    signal: lifetime.signal,
+     release: () => {
+       if (released) {
+         return
+       }
+ 
+       released = true
++      lifetime.abort()
++      signal?.removeEventListener('abort', lease.release)
+ 
+       if (microphoneOwner === owner) {
+         microphoneOwner = null
+@@ -150,6 +173,8 @@ export async function acquireMicrophoneLease({
+       }
+     }
+   }
++  signal?.addEventListener('abort', lease.release, { once: true })
++  return lease
+ }
+ 
+ export async function runVoiceControllerCallback(
+@@ -177,6 +202,8 @@ export function useComposerVoice({
+   onInterrupt,
+   onSubmit,
+   onTranscribeAudio,
++  voiceOwner,
++  onPrepareVoiceSession,
+   sessionId,
+   target
+ }: UseComposerVoiceArgs) {
+@@ -194,18 +221,22 @@ export function useComposerVoice({
+   const disabledRef = useRef(disabled)
+   disabledRef.current = disabled
+   const voiceContextEpochRef = useRef(0)
+-  const voiceContextIdentityRef = useRef({ disabled, sessionId, target })
++  const scopeKey = JSON.stringify([voiceOwner?.connectionId, voiceOwner?.profile, voiceOwner?.storedSessionId])
++  const voiceContextIdentityRef = useRef({ disabled, sessionId, target, scopeKey })
+ 
+   if (
+     voiceContextIdentityRef.current.disabled !== disabled ||
+     voiceContextIdentityRef.current.sessionId !== sessionId ||
+-    voiceContextIdentityRef.current.target !== target
++    voiceContextIdentityRef.current.target !== target ||
++    voiceContextIdentityRef.current.scopeKey !== scopeKey
+   ) {
+     voiceContextEpochRef.current += 1
+-    voiceContextIdentityRef.current = { disabled, sessionId, target }
++    voiceContextIdentityRef.current = { disabled, sessionId, target, scopeKey }
+   }
+ 
+   const voiceContextEpoch = voiceContextEpochRef.current
++  const lifetime = useMemo(() => new AbortController(), [voiceContextEpoch])
++  useLayoutEffect(() => () => lifetime.abort(), [lifetime])
+ 
+   const voiceContextIsCurrent = useCallback(
+     () => !disabledRef.current && voiceContextEpochRef.current === voiceContextEpoch,
+@@ -331,6 +362,7 @@ export function useComposerVoice({
+   }, [voiceContextIsCurrent, onInterrupt])
+ 
+   const wakePausedRef = useRef(false)
++  const wakeOwnerGatewayRef = useRef<ReturnType<typeof $gateway.get>>(null)
+   // Resolves once the in-flight wake.pause round-trip completes (mic released by
+   // the wake listener). The conversation awaits this before opening its own mic
+   // so the two never contend for the device — on Windows especially, opening the
+@@ -376,9 +408,9 @@ export function useComposerVoice({
+     busy,
+     consumePendingResponse,
+     enabled: voiceConversationActive && liveEngineActive,
+-    onFatalError: () => setVoiceConversationActive(false),
++    onFatalError: () => setActiveVoiceContextEpoch(null),
+     onInterrupt,
+-    onStopWord: () => setVoiceConversationActive(false),
++    onStopWord: () => setActiveVoiceContextEpoch(null),
+     onSubmit: submitLiveDelegation,
+     pendingResponse: pendingTurnResponse,
+     seedHistory: seedLiveHistory
+@@ -490,7 +522,12 @@ export function useComposerVoice({
+       // Reconcile, don't just resume: the wake word is a persistent setting, so
+       // ending a voice chat must re-arm the listener whenever config says
+       // enabled — including when the raw resume loses the mic-release race.
+-      void resumeWakeAfterVoice()
++      const wakeGateway = wakeOwnerGatewayRef.current
++      if (wakeGateway && wakeGateway === $gateway.get()) {
++        void resumeWakeAfterVoice((method, params) => wakeGateway.request(method, params))
++      } else {
++        void wakeGateway?.request('wake.resume', {}).catch(() => undefined)
++      }
+     }
+ 
+     if (barrier) {
+@@ -504,12 +541,17 @@ export function useComposerVoice({
+   // it guards resumeWakeIfPaused from resuming a detector another surface owns.
+   const pauseWakeForVoice = useCallback(() => {
+     wakePausedRef.current = true
++    stopClientCapture()
++    const wakeGateway = $gateway.get()
++    wakeOwnerGatewayRef.current = wakeGateway
+ 
+     const barrier = (async () => {
+       try {
+-        await $gateway.get()?.request('wake.pause', {})
+-      } catch {
+-        // No wake listener / older backend — nothing held the mic.
++        await wakeGateway?.request('wake.pause', {})
++      } catch (error) {
++        // Missing wake support is safe; a transport failure does not prove
++        // that a listener released its device.
++        if (!/method not found|unknown method|-32601/i.test(String(error))) throw error
+       }
+     })()
+ 
+@@ -556,13 +598,35 @@ export function useComposerVoice({
+ 
+   const voiceController = useMemo<ComposerVoiceController>(
+     () => ({
+-      acquire: (signal?: AbortSignal) =>
++      capabilities: { microphoneLease: 1, pinnedRest: 1, prepareSession: onPrepareVoiceSession || sessionId ? 1 : 0 },
++      owner: {
++        connectionId: voiceOwner?.connectionId || '',
++        profile: voiceOwner?.profile || '',
++        sessionId: sessionId || null,
++        storedSessionId: voiceOwner?.storedSessionId || null
++      },
++      signal: voiceOwner?.storedSessionId ? lifetime.signal : undefined,
++      stop: () => lifetime.abort(),
++      prepareSession: async () => {
++        if (!voiceContextIsCurrent() || lifetime.signal.aborted) throw new Error('Conversation changed')
++        const prepared = onPrepareVoiceSession
++          ? await onPrepareVoiceSession()
++          : sessionId && voiceOwner?.storedSessionId
++            ? { sessionId, storedSessionId: voiceOwner.storedSessionId }
++            : null
++        if (!prepared) throw new Error('Conversation is unavailable')
++        return { ...prepared, connectionId: voiceOwner?.connectionId || '', profile: voiceOwner?.profile || '' }
++      },
++      acquire: (options?: AbortSignal | { signal?: AbortSignal }) =>
+         acquireMicrophoneLease({
+           owner,
+           pause: pauseWakeForVoice,
+           resume: resumeWakeIfPaused,
+-          signal,
+-          voiceContextIsCurrent: () => voiceContextIsCurrent() && !voiceConversationActive
++          signal: AbortSignal.any([
++            lifetime.signal,
++            ...(options ? [('aborted' in options ? options : options.signal) ?? lifetime.signal] : [])
++          ]),
++          voiceContextIsCurrent: () => voiceContextIsCurrent() && !voiceConversationActive && voiceStatus === 'idle'
+         }),
+       interrupt,
+       latestAssistant,
+@@ -597,7 +661,14 @@ export function useComposerVoice({
+       resumeWakeIfPaused,
+       submitText,
+       voiceContextIsCurrent,
+-      voiceConversationActive
++      voiceConversationActive,
++      lifetime,
++      voiceOwner?.connectionId,
++      voiceOwner?.profile,
++      voiceOwner?.storedSessionId,
++      sessionId,
++      onPrepareVoiceSession,
++      voiceStatus
+     ]
+   )
+ 
+@@ -693,7 +764,9 @@ export function useComposerVoice({
+ 
+   return {
+     conversation,
+-    dictate,
++    dictate: () => {
++      if (microphoneOwner === null) dictate()
++    },
+     endConversation,
+     handleToggleAutoSpeak,
+     startConversation,
+diff --git a/apps/desktop/src/app/chat/composer/index.tsx b/apps/desktop/src/app/chat/composer/index.tsx
+--- a/apps/desktop/src/app/chat/composer/index.tsx
++++ b/apps/desktop/src/app/chat/composer/index.tsx
+@@ -121,7 +121,9 @@ export function ChatBar({
+   onSteer,
+   onSteerHidden,
+   onSubmit: onSubmitProp,
+-  onTranscribeAudio
++  onTranscribeAudio,
++  onPrepareVoiceSession,
++  voiceOwner
+ }: ChatBarProps) {
+   const hudMode = useStore($hudMode)
+   const hudWindowing = window.hermesDesktop?.hud?.windowing
+@@ -1060,6 +1062,8 @@ export function ChatBar({
+     onInterrupt: haltRun,
+     onSubmit,
+     onTranscribeAudio,
++    onPrepareVoiceSession,
++    voiceOwner,
+     sessionId,
+     target: scope.target
+   })
+diff --git a/apps/desktop/src/app/chat/composer/types.ts b/apps/desktop/src/app/chat/composer/types.ts
+--- a/apps/desktop/src/app/chat/composer/types.ts
++++ b/apps/desktop/src/app/chat/composer/types.ts
+@@ -45,6 +45,8 @@ export interface ChatBarProps {
+   gateway?: HermesGateway | null
+   queueSessionKey?: string | null
+   sessionId?: string | null
++  voiceOwner?: { connectionId: string; profile: string; storedSessionId: string | null }
++  onPrepareVoiceSession?: () => Promise<{ sessionId: string; storedSessionId: string }>
+   cwd?: string | null
+   onCancel: () => Promise<void> | void
+   onAddContextRef?: (refText: string, label?: string, detail?: string) => void
+diff --git a/apps/desktop/src/app/chat/index.tsx b/apps/desktop/src/app/chat/index.tsx
+--- a/apps/desktop/src/app/chat/index.tsx
++++ b/apps/desktop/src/app/chat/index.tsx
+@@ -8,6 +8,7 @@ import { memo, Suspense, useCallback, useEffect, useId, useMemo, useRef, useStat
+ import { useLocation } from 'react-router'
+ 
+ import type { SubmitTextOptions } from '@/app/session/hooks/use-prompt-actions/utils'
++import { ambientOwnerConnectionId } from '@/api/client'
+ import { sessionShouldHaveTranscript } from '@/app/session/hooks/use-session-actions/utils'
+ import { Thread } from '@/components/assistant-ui/thread'
+ import { TranscriptWindowProvider } from '@/components/assistant-ui/thread/transcript-window'
+@@ -112,6 +113,7 @@ interface ChatViewProps extends Omit<React.ComponentProps<'div'>, 'onSubmit'> {
+   onRestoreToMessage?: (messageId: string, target?: { text?: string; userOrdinal?: number | null }) => Promise<void>
+   onRetryResume: (sessionId: string) => void
+   onTranscribeAudio?: (audio: Blob) => Promise<string>
++  onPrepareVoiceSession?: () => Promise<{ sessionId: string; storedSessionId: string }>
+   onDismissError?: (messageId: string) => void
+ }
+ 
+@@ -257,9 +259,10 @@ export function ChatRuntimeBoundary({
+   const ownerConnection = ownerRoute?.connectionId
+   const ownerProfile = ownerRoute?.targetProfile || ownerRoute?.profile
+ 
+-  const tailProfile = useMemo(() => ownerProfile
+-    ? { connectionId: ownerConnection, profile: ownerProfile }
+-    : undefined, [ownerConnection, ownerProfile])
++  const tailProfile = useMemo(
++    () => (ownerProfile ? { connectionId: ownerConnection, profile: ownerProfile } : undefined),
++    [ownerConnection, ownerProfile]
++  )
+ 
+   const history = useHistoryWindow({
+     scopeKey: JSON.stringify([runtimeId, storedId, tailProfile, connectionId, activeProfile, suppressMessages]),
+@@ -321,7 +324,9 @@ export function ChatRuntimeBoundary({
+   const expandWindow = useCallback(
+     async (beforePrepend?: () => void) => {
+       // A historical page is not the live tail: never backfill into its store.
+-      if (history.page) {return false}
++      if (history.page) {
++        return false
++      }
+ 
+       // Network latency is not scroll intent. Capture at arrival, immediately
+       // before the store prepend, and only grow a window that has a page to show.
+@@ -377,9 +382,18 @@ export function ChatRuntimeBoundary({
+   const newerAvailable = history.page?.newerAvailable ?? false
+   const { revealRow, returnToLatest } = history
+ 
+-  const transcriptWindow = useMemo(() => ({
+-    olderAvailable, expandWindow, revealRow, returnToLatest, currentMessages, isHistorical, newerAvailable
+-  }), [expandWindow, olderAvailable, revealRow, returnToLatest, currentMessages, isHistorical, newerAvailable])
++  const transcriptWindow = useMemo(
++    () => ({
++      olderAvailable,
++      expandWindow,
++      revealRow,
++      returnToLatest,
++      currentMessages,
++      isHistorical,
++      newerAvailable
++    }),
++    [expandWindow, olderAvailable, revealRow, returnToLatest, currentMessages, isHistorical, newerAvailable]
++  )
+ 
+   const runtime = useIncrementalExternalStoreRuntime<ThreadMessage>({
+     messageRepository: runtimeMessageRepository,
+@@ -447,6 +461,7 @@ const ChatViewContent = memo(function ChatViewContent({
+   onRestoreToMessage,
+   onRetryResume,
+   onTranscribeAudio,
++  onPrepareVoiceSession,
+   onDismissError
+ }: ChatViewProps) {
+   const location = useLocation()
+@@ -821,6 +836,12 @@ const ChatViewContent = memo(function ChatViewContent({
+                 onSteerHidden={onSteerHidden}
+                 onSubmit={onSubmit}
+                 onTranscribeAudio={onTranscribeAudio}
++                onPrepareVoiceSession={onPrepareVoiceSession}
++                voiceOwner={{
++                  connectionId: modelOptionsOwnerConnectionId || ambientOwnerConnectionId() || '',
++                  profile: modelOptionsProfile || activeGatewayProfile || '',
++                  storedSessionId: selectedSessionId
++                }}
+                 queueSessionKey={queueSessionKey}
+                 sessionId={activeSessionId}
+                 state={chatBarState}
+diff --git a/apps/desktop/src/app/contrib/latest-actions.ts b/apps/desktop/src/app/contrib/latest-actions.ts
+--- a/apps/desktop/src/app/contrib/latest-actions.ts
++++ b/apps/desktop/src/app/contrib/latest-actions.ts
+@@ -53,7 +53,8 @@ export function latestChatActions(actions: ChatActions): ChatActions {
+     onSubmit: (...args) => actions.onSubmit(...args),
+     onThreadMessagesChange: (...args) => actions.onThreadMessagesChange(...args),
+     onToggleSelectedPin: (...args) => actions.onToggleSelectedPin(...args),
+-    onTranscribeAudio: latestOptional(() => actions.onTranscribeAudio)
++    onTranscribeAudio: latestOptional(() => actions.onTranscribeAudio),
++    onPrepareVoiceSession: latestOptional(() => actions.onPrepareVoiceSession)
+   }
+ }
+ 
+diff --git a/apps/desktop/src/app/contrib/types.ts b/apps/desktop/src/app/contrib/types.ts
+--- a/apps/desktop/src/app/contrib/types.ts
++++ b/apps/desktop/src/app/contrib/types.ts
+@@ -51,6 +51,7 @@ export type ChatActions = Pick<
+   | 'onThreadMessagesChange'
+   | 'onToggleSelectedPin'
+   | 'onTranscribeAudio'
++  | 'onPrepareVoiceSession'
+ >
+ 
+ /**
+diff --git a/apps/desktop/src/app/contrib/wiring.tsx b/apps/desktop/src/app/contrib/wiring.tsx
+--- a/apps/desktop/src/app/contrib/wiring.tsx
++++ b/apps/desktop/src/app/contrib/wiring.tsx
+@@ -252,9 +252,9 @@ export function ContribWiring({ children }: { children: ReactNode }) {
+         return
+       }
+ 
+-      void window.hermesDesktop?.recycleBackend?.(normalizeProfileKey($activeGatewayProfile.get())).catch(err =>
+-        notifyError(err, translateNow('notifications.errors.restartHermesFailed'))
+-      )
++      void window.hermesDesktop
++        ?.recycleBackend?.(normalizeProfileKey($activeGatewayProfile.get()))
++        .catch(err => notifyError(err, translateNow('notifications.errors.restartHermesFailed')))
+     }
+   }, [backendRestartRequest])
+ 
+@@ -1192,6 +1192,19 @@ export function ContribWiring({ children }: { children: ReactNode }) {
+     onThreadMessagesChange: handleThreadMessagesChange,
+     onToggleSelectedPin: toggleSelectedPin,
+     onTranscribeAudio: transcribeVoiceAudio,
++    onPrepareVoiceSession: async () => {
++      const routeToken = getRouteToken()
++      const stored = getRoutedStoredSessionId() || selectedStoredSessionIdRef.current
++      if (stored && !activeSessionIdRef.current) {
++        await resumeSession(stored)
++      }
++      const runtime = activeSessionIdRef.current || (!stored ? await createBackendSessionForSend() : null)
++      const durable = selectedStoredSessionIdRef.current
++      if (!runtime || !durable || (stored && durable !== stored) || (stored && getRouteToken() !== routeToken)) {
++        throw new Error('The selected conversation could not be prepared. Reopen it and try again.')
++      }
++      return { sessionId: runtime, storedSessionId: durable }
++    },
+     onTriggerCronJob: jobId =>
+       triggerAndRefreshCronJobs(jobId, profileScope === ALL_PROFILES ? 'all' : profileScope)
+         .then(() => undefined)
+@@ -1319,7 +1332,10 @@ export function ContribWiring({ children }: { children: ReactNode }) {
+           />
+         )}
+         {!isHudWindow() && customWindowControls && (
+-          <WslgWindowControls isFullscreen={Boolean(connection?.isFullscreen)} isMaximized={Boolean(connection?.isMaximized)} />
++          <WslgWindowControls
++            isFullscreen={Boolean(connection?.isFullscreen)}
++            isMaximized={Boolean(connection?.isMaximized)}
++          />
+         )}
+         {children}
+       </div>

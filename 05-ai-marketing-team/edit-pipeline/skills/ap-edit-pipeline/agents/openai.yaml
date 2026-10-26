@@ -1,0 +1,7 @@
+interface:
+  display_name: "Edit Pipeline"
+  short_description: "Film in one go, say your marker word when you fumble, get back a clean master and the three sizes."
+  default_prompt: "Use $ap-edit-pipeline. Ask me for the recording and the word I said when I fumbled, show me the cut list before you cut anything, and stop at a master for me to watch. Export nothing until I have watched it, and never post anything anywhere."
+
+policy:
+  allow_implicit_invocation: true

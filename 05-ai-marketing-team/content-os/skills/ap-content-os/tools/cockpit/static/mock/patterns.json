@@ -1,0 +1,122 @@
+{
+  "generated_at": "2026-08-24T06:00:00+00:00",
+  "as_of_date": "2026-08-24",
+  "last_confirmed_snapshot": "2026-08-22",
+  "provisional": false,
+  "freshness": {
+    "w2_last_success": "2026-08-24T06:00:00+00:00"
+  },
+  "corpus": {
+    "analysis_coverage": 0.82,
+    "selection_funnel": {
+      "admitted_total": 40,
+      "admitted_fresh": 28,
+      "admitted_new_fresh": 22,
+      "transcript_available": 20,
+      "analyzed": 18
+    }
+  },
+  "quality": {
+    "patterns_evaluated": 9,
+    "rising_overflow": 0
+  },
+  "patterns": [
+    {
+      "record_id": "diagnosis-challenge::all",
+      "pattern_id": "diagnosis-challenge",
+      "scope": "all watchlist",
+      "pattern": {
+        "label": "Challenge the diagnosis first",
+        "is_visual": false
+      },
+      "windows": {
+        "days_14": {
+          "creator_coverage": 0.36,
+          "distinct_creator_count": 4,
+          "eligible_reel_count": 7,
+          "distinct_family_count": 2,
+          "supporting_shortcodes": [
+            "CxKq1TgOo9r"
+          ]
+        }
+      },
+      "comparison": {
+        "reference_creator_coverage": 0.18,
+        "creator_coverage_delta": 0.18,
+        "coverage_ratio": 2.0,
+        "coverage_ratio_state": "higher"
+      },
+      "quality": {
+        "clean_support_share": 0.9,
+        "visual_evidence_mode": "observed_frames_ocr",
+        "pending_maturation_excluded": 1
+      },
+      "momentum_state": "rising",
+      "confidence": "moderate",
+      "supporting_shortcodes": [
+        "CxKq1TgOo9r"
+      ],
+      "evidence_refs": [
+        {
+          "shortcode": "CxKq1TgOo9r",
+          "creator": "a-nearby-account",
+          "reel_url": "https://example.com/p/CxKq1TgOo9r/",
+          "mechanism_entry_path": "library/2026-08-18 - a-nearby-account - challenge-the-diagnosis.md"
+        }
+      ]
+    }
+  ],
+  "views": {
+    "rising": [
+      "diagnosis-challenge::all"
+    ],
+    "proven": [],
+    "persistent": [],
+    "cooling": []
+  },
+  "test_next": [
+    {
+      "snapshot_date": "2026-08-22",
+      "abstract_pattern_name": "Challenge the diagnosis, then show the receipt",
+      "owner_angle": "",
+      "state": {
+        "momentum": "rising",
+        "evidence": "moderate",
+        "persistent": false,
+        "confidence": "moderate",
+        "scope": "all watchlist"
+      },
+      "evidence_counts": {
+        "creators": 4,
+        "reels": 7,
+        "families": 2
+      },
+      "why_worth_testing": "Four separate accounts landed above their own normal with the same opening move in the last fortnight.",
+      "compatible_content_jobs": [
+        "reach",
+        "authority"
+      ],
+      "compatible_formats": [
+        "talking to camera",
+        "demonstration"
+      ],
+      "do_not_copy_warning": "Never copy the wording. Use the shape only, about something you actually believe.",
+      "source_record_ids": [
+        "diagnosis-challenge::all"
+      ],
+      "evidence_refs": [
+        {
+          "shortcode": "CxKq1TgOo9r",
+          "creator": "a-nearby-account",
+          "reel_url": "https://example.com/p/CxKq1TgOo9r/"
+        },
+        {
+          "shortcode": "CwQ0aBcDeFg",
+          "creator": "mine",
+          "reel_url": "https://example.com/p/CwQ0aBcDeFg/"
+        }
+      ]
+    }
+  ],
+  "collecting_evidence": []
+}

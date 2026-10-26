@@ -1,0 +1,28 @@
+{
+  "theme": "Studio",
+  "owner_label": "project owner",
+  "project_label": "current project",
+  "state_labels": {
+    "done": "done",
+    "in_progress": "in progress",
+    "blocked": "blocked",
+    "next": "next",
+    "unanswered": "Unanswered"
+  },
+  "storage": {
+    "page_folder": "review-pages",
+    "page_pattern": "YYYY-MM-DD-short-name.html",
+    "sidecar_pattern": "YYYY-MM-DD-short-name.md"
+  },
+  "fonts": {
+    "sans": "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+    "serif": "Georgia, Times New Roman, serif",
+    "mono": "ui-monospace, SF Mono, Menlo, Monaco, Consolas, monospace",
+    "optional_source": "none"
+  },
+  "optional_sharing": {
+    "enabled": false,
+    "requires_explicit_approval": true,
+    "offline_first": true
+  }
+}

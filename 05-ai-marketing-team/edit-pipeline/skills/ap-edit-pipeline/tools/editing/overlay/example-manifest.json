@@ -1,0 +1,26 @@
+{
+  "_comment": "Example overlay manifest. It documents every field render_overlays.py reads. Copy it into the recording's folder in the media workspace and edit the copy, never this file. Every proof image path must live in the media workspace (~/ContentStudio by default), because the content-os workspace holds text only and images are staged into the app by file name before the render. Times are in SECONDS and match the words JSON. The paths here are examples, so this file stays honest as a sample.",
+
+  "hook_text": "The mistake I see in eight out of ten of these",
+
+  "captions": {
+    "enabled": true,
+    "font_size_px": 72,
+    "active_color": "#FFFFFF",
+    "inactive_color": "#B8B8B8",
+    "bottom_margin_px": 320,
+    "max_words_per_group": 4
+  },
+
+  "hook_duration_seconds": 2.0,
+
+  "proof_assets": [
+    {
+      "path": "~/ContentStudio/proof/example-screenshot.png",
+      "start": 3.8,
+      "end": 6.0,
+      "position": "center",
+      "caption": "the actual report, names removed"
+    }
+  ]
+}

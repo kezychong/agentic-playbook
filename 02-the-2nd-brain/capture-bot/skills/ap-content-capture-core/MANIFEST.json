@@ -1,0 +1,21 @@
+{
+  "name": "ap-content-capture-core",
+  "version": "0.1.0",
+  "description": "Generic Hermes content capture skill pack for articles, Instagram Reels, X/Twitter, YouTube, and documents.",
+  "skills": [
+    "ap-content-capture-core",
+    "ap-instagram-reel-capture",
+    "ap-x-twitter-capture",
+    "ap-youtube-video-capture",
+    "ap-web-article-capture",
+    "ap-document-capture"
+  ],
+  "student_safe": true,
+  "contains_secrets": false,
+  "api_key_guide": "API_KEYS_AND_ALTERNATIVES.md",
+  "updated": "2026-10-08",
+  "maintainer": "Kezy",
+  "runtime_status": "untested",
+  "support_location": ".",
+  "skill_location": "canonical sibling folders"
+}

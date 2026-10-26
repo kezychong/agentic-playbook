@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Detox"
+  short_description: "Interview me, back up my agent's instruction files, then cut them down to the few lines that matter"
+  default_prompt: "Use $ap-agent-detox. Find my agent's instruction files and show me their size, then interview me one question at a time. Back up every file before changing it, and ask me YES or CHANGE before applying anything."

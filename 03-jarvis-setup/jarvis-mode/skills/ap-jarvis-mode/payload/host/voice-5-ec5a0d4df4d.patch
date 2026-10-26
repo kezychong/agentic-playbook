@@ -1,0 +1,620 @@
+diff --git a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
+--- a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
++++ b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
+@@ -1,5 +1,5 @@
+-import { describe, expect, it, vi } from 'vitest'
+-import { act, renderHook } from '@testing-library/react'
++import { afterEach, describe, expect, it, vi } from 'vitest'
++import { act, cleanup, renderHook } from '@testing-library/react'
+ import { StrictMode } from 'react'
+ 
+ import {
+@@ -7,9 +7,78 @@ import {
+   disposeAssistantSubscriptions,
+   releaseComposerVoiceLeases,
+   runVoiceControllerCallback,
+-  useComposerVoiceLifetime
++  useComposerVoice,
++  useComposerVoiceLifetime,
++  VOICE_LINK_GRACE_MS
+ } from './use-composer-voice'
+ 
++// The hook under test owns voice OWNERSHIP, not the engines: the two
++// conversation hooks, the recorder, the wake listener and the TTS lease are
++// seams, so they are stubbed and the assertions read the ownership surface
++// (`voiceConversationActive`, the controller, the engine's `enabled` flag).
++const stubs = vi.hoisted(() => ({
++  conversation: {
++    end: vi.fn(async () => undefined),
++    level: 0,
++    muted: false,
++    start: vi.fn(async () => undefined),
++    status: 'idle',
++    stopTurn: vi.fn(),
++    toggleMute: vi.fn()
++  },
++  chainedArgs: [] as { enabled: boolean }[],
++  messages: { get: () => [] as unknown[], subscribe: () => () => undefined }
++}))
++
++vi.mock('@/i18n', () => ({
++  useI18n: () => ({
++    t: {
++      assistant: { thread: { readAloudFailed: 'read aloud failed' } },
++      notifications: {
++        voice: { liveUnavailable: () => 'live unavailable', sayStopToEnd: () => 'say stop to end' }
++      },
++      settings: { config: { autosaveFailed: 'autosave failed' } }
++    }
++  })
++}))
++
++vi.mock('@/lib/haptics', () => ({ triggerHaptic: vi.fn() }))
++vi.mock('@/lib/tts-lease', () => ({
++  CONVERSATION_LEASE: 'conversation',
++  READ_ALOUD_LEASE: 'read-aloud',
++  syncTtsLease: vi.fn(async () => undefined)
++}))
++vi.mock('@/lib/wake-indicator', () => ({
++  clearWakeIndicator: vi.fn(),
++  syncWakeIndicatorWithVoice: vi.fn(() => false)
++}))
++vi.mock('@/store/notifications', () => ({ notify: vi.fn(), notifyError: vi.fn() }))
++vi.mock('@/store/voice-live', () => ({
++  $voiceLiveStatus: { get: () => null },
++  refreshVoiceLiveStatus: vi.fn(async () => undefined),
++  selectedVoiceChatMode: () => 'chained'
++}))
++vi.mock('@/store/wake-word', () => ({
++  resumeWakeAfterVoice: vi.fn(async () => undefined),
++  stopClientCapture: vi.fn()
++}))
++vi.mock('../scope', () => ({
++  useComposerScope: () => ({ $messages: stubs.messages, target: 'main' }),
++  useComposerSurfaceId: () => null
++}))
++vi.mock('./use-auto-speak-replies', () => ({ useAutoSpeakReplies: vi.fn() }))
++vi.mock('./use-voice-recorder', () => ({
++  useVoiceRecorder: () => ({ dictate: vi.fn(), voiceActivityState: 'idle', voiceStatus: 'idle' })
++}))
++vi.mock('./use-voice-conversation', () => ({
++  useVoiceConversation: (args: { enabled: boolean }) => {
++    stubs.chainedArgs.push(args)
++
++    return stubs.conversation
++  }
++}))
++vi.mock('./use-voice-live-conversation', () => ({ useVoiceLiveConversation: () => stubs.conversation }))
++
+ describe('composer voice ownership', () => {
+   it('keeps the plugin lifetime live through replay, then aborts on conversation replacement and unmount', async () => {
+     const hook = renderHook(({ epoch }) => useComposerVoiceLifetime(epoch), {
+@@ -159,4 +228,244 @@ describe('composer voice ownership', () => {
+     expect(second).toHaveBeenCalledOnce()
+     expect(disposers.size).toBe(0)
+   })
++
++  it('holds a job behind the link gate, then runs it once — or drops it when the gate refuses', async () => {
++    const callback = vi.fn()
++    let openLink!: (open: boolean) => void
++
++    const gate = () =>
++      new Promise<boolean>(resolve => {
++        openLink = resolve
++      })
++
++    const held = runVoiceControllerCallback(() => true, callback, gate)
++
++    expect(callback).not.toHaveBeenCalled()
++    openLink(true)
++    await held
++    expect(callback).toHaveBeenCalledOnce()
++
++    await runVoiceControllerCallback(() => true, callback, () => Promise.resolve(false))
++    expect(callback).toHaveBeenCalledOnce()
++  })
++})
++
++interface VoiceProps {
++  disabled: boolean
++  sessionId: string | null
++  storedSessionId: string | null
++}
++
++/**
++ * One composer's voice ownership, driven the way the host drives it: `disabled`
++ * is the gateway socket, `sessionId` the runtime id the host rebinds, and
++ * `storedSessionId` the chat the user is actually in.
++ */
++function renderVoice(initial: Partial<VoiceProps> = {}) {
++  const submitted: { sessionId: string | null; text: string }[] = []
++  const initialProps: VoiceProps = { disabled: false, sessionId: 'runtime-1', storedSessionId: 'stored-1', ...initial }
++
++  const hook = renderHook(
++    (props: VoiceProps) =>
++      useComposerVoice({
++        busy: false,
++        clearDraft: () => undefined,
++        disabled: props.disabled,
++        focusInput: () => undefined,
++        insertText: () => undefined,
++        maxRecordingSeconds: 60,
++        // Bound to THIS render's runtime id, exactly like the host's onSubmit.
++        onSubmit: (text: string) => {
++          submitted.push({ sessionId: props.sessionId, text })
++
++          return true
++        },
++        onTranscribeAudio: undefined,
++        sessionId: props.sessionId,
++        target: 'main',
++        voiceOwner: { connectionId: 'conn-1', profile: 'default', storedSessionId: props.storedSessionId }
++      }),
++    { initialProps }
++  )
++
++  let props = initialProps
++
++  const rerender = (patch: Partial<VoiceProps>) => {
++    props = { ...props, ...patch }
++    hook.rerender(props)
++  }
++
++  const start = () => {
++    act(() => hook.result.current.startConversation())
++  }
++
++  return { hook, rerender, start, submitted }
++}
++
++const isActive = (hook: ReturnType<typeof renderVoice>['hook']) => hook.result.current.voiceConversationActive
++
++describe('a voice call through a link blink and a runtime session rebind', () => {
++  afterEach(() => {
++    stubs.chainedArgs.length = 0
++    vi.clearAllMocks()
++    vi.useRealTimers()
++    cleanup()
++  })
++
++  it('survives the runtime session rebinding under the same stored chat', () => {
++    const { hook, rerender, start } = renderVoice()
++
++    start()
++    expect(isActive(hook)).toBe(true)
++    const lifetime = hook.result.current.voiceController.signal
++
++    // Reconnect: the host drops the runtime id and mints a new one for the
++    // SAME stored chat. That is not a new conversation.
++    rerender({ sessionId: null })
++    expect(isActive(hook)).toBe(true)
++    rerender({ sessionId: 'runtime-2' })
++    expect(isActive(hook)).toBe(true)
++    expect(stubs.chainedArgs.at(-1)?.enabled).toBe(true)
++    // The plugin's lifetime must survive it too, or the Talk plugin is unmounted
++    // mid-call.
++    expect(lifetime?.aborted).toBe(false)
++  })
++
++  it('still ends the call the moment the chat itself changes', () => {
++    const { hook, rerender, start } = renderVoice()
++
++    start()
++    expect(isActive(hook)).toBe(true)
++
++    rerender({ storedSessionId: 'stored-2' })
++    expect(isActive(hook)).toBe(false)
++  })
++
++  it('still ends the call on a runtime id change when the chat has no stored id', () => {
++    const { hook, rerender, start } = renderVoice({ storedSessionId: null })
++
++    start()
++    expect(isActive(hook)).toBe(true)
++
++    rerender({ sessionId: 'runtime-2' })
++    expect(isActive(hook)).toBe(false)
++  })
++
++  it('rides out a blink shorter than the grace and ends only when the grace runs out', () => {
++    vi.useFakeTimers()
++    const { hook, rerender, start } = renderVoice()
++
++    start()
++
++    rerender({ disabled: true })
++    act(() => void vi.advanceTimersByTime(VOICE_LINK_GRACE_MS - 1000))
++    expect(isActive(hook)).toBe(true)
++
++    // Link back: the call never noticed, and the next blink gets a full grace.
++    rerender({ disabled: false })
++    expect(isActive(hook)).toBe(true)
++
++    rerender({ disabled: true })
++    act(() => void vi.advanceTimersByTime(VOICE_LINK_GRACE_MS - 1000))
++    expect(isActive(hook)).toBe(true)
++
++    act(() => void vi.advanceTimersByTime(1000))
++    expect(isActive(hook)).toBe(false)
++    expect(stubs.chainedArgs.at(-1)?.enabled).toBe(false)
++  })
++
++  it('applies a closed gateway immediately when no conversation is running', () => {
++    vi.useFakeTimers()
++    const { hook, start } = renderVoice({ disabled: true })
++
++    expect(hook.result.current.voiceController.submitText('hello')).toBe(false)
++
++    start()
++    expect(isActive(hook)).toBe(false)
++
++    act(() => void vi.advanceTimersByTime(VOICE_LINK_GRACE_MS * 2))
++    expect(isActive(hook)).toBe(false)
++  })
++
++  it('runs a job spoken during a blink exactly once, on the session it is rebound to', async () => {
++    vi.useFakeTimers()
++    const { hook, rerender, start, submitted } = renderVoice()
++
++    start()
++    rerender({ disabled: true })
++
++    expect(hook.result.current.voiceController.submitText('what is on my calendar')).toBe(true)
++    act(() => void vi.advanceTimersByTime(2000))
++    expect(submitted).toHaveLength(0)
++
++    // The reconnect rebinds the runtime id before the socket reports open.
++    rerender({ sessionId: 'runtime-2' })
++
++    await act(async () => {
++      rerender({ disabled: false })
++      await Promise.resolve()
++    })
++
++    expect(submitted).toEqual([{ sessionId: 'runtime-2', text: 'what is on my calendar' }])
++
++    act(() => void vi.advanceTimersByTime(VOICE_LINK_GRACE_MS * 2))
++    expect(submitted).toHaveLength(1)
++  })
++
++  it('never runs a held job after a real end', async () => {
++    vi.useFakeTimers()
++    const { hook, rerender, start, submitted } = renderVoice()
++
++    start()
++    rerender({ disabled: true })
++    expect(hook.result.current.voiceController.submitText('never mind')).toBe(true)
++
++    act(() => hook.result.current.endConversation())
++
++    await act(async () => {
++      rerender({ disabled: false })
++      await Promise.resolve()
++    })
++
++    expect(submitted).toHaveLength(0)
++    expect(isActive(hook)).toBe(false)
++  })
++
++  it('drops a held job when the blink outlives the grace', async () => {
++    vi.useFakeTimers()
++    const { hook, rerender, start, submitted } = renderVoice()
++
++    start()
++    rerender({ disabled: true })
++    expect(hook.result.current.voiceController.submitText('too late')).toBe(true)
++
++    await act(async () => {
++      vi.advanceTimersByTime(VOICE_LINK_GRACE_MS + 1)
++      await Promise.resolve()
++    })
++
++    expect(submitted).toHaveLength(0)
++    expect(isActive(hook)).toBe(false)
++  })
++
++  it('clears the grace and the held jobs on unmount', async () => {
++    vi.useFakeTimers()
++    const { hook, rerender, start, submitted } = renderVoice()
++
++    start()
++    rerender({ disabled: true })
++    expect(hook.result.current.voiceController.submitText('unmounted')).toBe(true)
++    expect(vi.getTimerCount()).toBeGreaterThan(0)
++
++    hook.unmount()
++
++    expect(vi.getTimerCount()).toBe(0)
++
++    await act(async () => {
++      vi.advanceTimersByTime(VOICE_LINK_GRACE_MS * 2)
++      await Promise.resolve()
++    })
++
++    expect(submitted).toHaveLength(0)
++  })
+ })
+diff --git a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
+--- a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
++++ b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
+@@ -131,6 +131,20 @@ export function ComposerVoiceControllerProvider({
+   return createElement(ComposerVoiceControllerContext.Provider, { value: controller }, children)
+ }
+ 
++/**
++ * How long a closed gateway link is treated as a BLINK rather than the end of a
++ * running voice conversation.
++ *
++ * The voice itself runs this machine ↔ the speech vendor; the gateway is needed
++ * only for delegated turns. A Wi-Fi hiccup therefore drops the socket (`disabled`
++ * flips true for a second or two) while the call is perfectly alive. Ending on
++ * that first frame is what dropped live calls. Inside this window the raw
++ * flag is held; only a link that stays down for the whole window becomes a hard
++ * disable and ends the call the old way. With NO conversation running the flag
++ * still applies immediately.
++ */
++export const VOICE_LINK_GRACE_MS = 15_000
++
+ let microphoneOwner: symbol | null = null
+ 
+ async function waitForPause(signal: AbortSignal | undefined, pause: () => Promise<void>): Promise<boolean> {
+@@ -204,12 +218,28 @@ export async function acquireMicrophoneLease({
+ 
+ export async function runVoiceControllerCallback(
+   isCurrent: () => boolean,
+-  callback: () => Promise<unknown> | unknown
++  callback: () => Promise<unknown> | unknown,
++  /** Optional link gate — see `VOICE_LINK_GRACE_MS`. Resolves true when the
++   *  gateway is open (run the job), false when the blink outlived the grace or
++   *  the conversation really ended (drop it, exactly as today). */
++  awaitLinkOpen?: () => Promise<boolean>
+ ): Promise<void> {
+   if (!isCurrent()) {
+     return
+   }
+ 
++  // A spoken job that lands mid-blink waits for the socket instead of dying on
++  // it, then runs EXACTLY once — the gate resolves at most once per job.
++  if (awaitLinkOpen) {
++    if (!(await awaitLinkOpen())) {
++      return
++    }
++
++    if (!isCurrent()) {
++      return
++    }
++  }
++
+   await callback()
+ 
+   if (!isCurrent()) {
+@@ -243,31 +273,133 @@ export function useComposerVoice({
+   const ownsWakeIndicatorRef = useRef(false)
+   const busyRef = useRef(busy)
+   busyRef.current = busy
++  // RAW gateway-closed flag, exactly as the host renders it. Only the link gate
++  // below reads it directly; ownership reads `hardDisabledRef`.
+   const disabledRef = useRef(disabled)
+   disabledRef.current = disabled
++  // A job that waits out a blink must submit into the session that is live when
++  // it finally runs, not the one that was live when the user spoke.
++  const sessionIdRef = useRef(sessionId)
++  sessionIdRef.current = sessionId
++  const onSubmitRef = useRef(onSubmit)
++  onSubmitRef.current = onSubmit
++  const onInterruptRef = useRef(onInterrupt)
++  onInterruptRef.current = onInterrupt
+   const voiceContextEpochRef = useRef(0)
++  const [linkGraceExpired, setLinkGraceExpired] = useState(false)
++
++  // Was a conversation live under the identity we last committed? That — not the
++  // socket — decides whether a closed link is a blink or a plain disable.
++  const conversationEngaged =
++    activeVoiceContextEpoch !== null && activeVoiceContextEpoch === voiceContextEpochRef.current
++
++  const hardDisabled = disabled && (!conversationEngaged || linkGraceExpired)
++  const hardDisabledRef = useRef(hardDisabled)
++  hardDisabledRef.current = hardDisabled
+   const scopeKey = JSON.stringify([voiceOwner?.connectionId, voiceOwner?.profile, voiceOwner?.storedSessionId])
+-  const voiceContextIdentityRef = useRef({ disabled, sessionId, target, scopeKey })
++  // The runtime session id rebinds under the SAME stored chat on every gateway
++  // reconnect and again at the first job after one. That is not a change of
++  // chat, so it must not bump the epoch. With no stored id the runtime id is the
++  // only identity this chat has, so it stays in — unchanged from before.
++  const identitySessionId = voiceOwner?.storedSessionId ? null : sessionId
++  const voiceContextIdentityRef = useRef({ hardDisabled, sessionId: identitySessionId, target, scopeKey })
+ 
+   if (
+-    voiceContextIdentityRef.current.disabled !== disabled ||
+-    voiceContextIdentityRef.current.sessionId !== sessionId ||
++    voiceContextIdentityRef.current.hardDisabled !== hardDisabled ||
++    voiceContextIdentityRef.current.sessionId !== identitySessionId ||
+     voiceContextIdentityRef.current.target !== target ||
+     voiceContextIdentityRef.current.scopeKey !== scopeKey
+   ) {
+     voiceContextEpochRef.current += 1
+-    voiceContextIdentityRef.current = { disabled, sessionId, target, scopeKey }
++    voiceContextIdentityRef.current = { hardDisabled, sessionId: identitySessionId, target, scopeKey }
+   }
+ 
+   const voiceContextEpoch = voiceContextEpochRef.current
+   const lifetime = useComposerVoiceLifetime(voiceContextEpoch)
+   const pluginLeasesRef = useRef(new Set<ComposerVoiceLease>())
++  const linkBlinkStartedAtRef = useRef<number | null>(null)
++  const linkWaitersRef = useRef(new Set<(open: boolean) => void>())
+ 
+   const voiceContextIsCurrent = useCallback(
+-    () => !disabledRef.current && voiceContextEpochRef.current === voiceContextEpoch,
++    () => !hardDisabledRef.current && voiceContextEpochRef.current === voiceContextEpoch,
+     [voiceContextEpoch]
+   )
+ 
++  const flushLinkWaiters = useCallback((open: boolean) => {
++    const waiters = [...linkWaitersRef.current]
++
++    linkWaitersRef.current.clear()
++
++    for (const waiter of waiters) {
++      waiter(open)
++    }
++  }, [])
++
++  // ONE timer per blink. Raw `disabled` turning true during a live conversation
++  // starts it; the link coming back cancels it and releases the held jobs; only
++  // the full grace elapsing promotes the blip to a hard disable. The cleanup
++  // clears the timer on unmount and on a real end (the conversation leaving the
++  // engaged state), which also drops whatever was still waiting.
++  // eslint-disable-next-line no-restricted-syntax -- blink stopwatch, not an atom mirror
++  useEffect(() => {
++    if (!disabled || !conversationEngaged) {
++      linkBlinkStartedAtRef.current = null
++      setLinkGraceExpired(false)
++      flushLinkWaiters(!disabled)
++
++      return
++    }
++
++    if (linkGraceExpired) {
++      return
++    }
++
++    linkBlinkStartedAtRef.current = Date.now()
++
++    const timer = setTimeout(() => {
++      setLinkGraceExpired(true)
++      flushLinkWaiters(false)
++    }, VOICE_LINK_GRACE_MS)
++
++    return () => clearTimeout(timer)
++  }, [conversationEngaged, disabled, flushLinkWaiters, linkGraceExpired])
++
++  useEffect(() => () => flushLinkWaiters(false), [flushLinkWaiters])
++
++  /** Hold a spoken job while the link blinks: true → the gateway reopened in
++   *  time, false → the rest of the grace ran out or the call ended, so drop it
++   *  exactly as a job during a closed gateway is dropped today. */
++  const awaitLinkOpen = useCallback((): Promise<boolean> => {
++    if (!disabledRef.current) {
++      return Promise.resolve(true)
++    }
++
++    if (hardDisabledRef.current) {
++      return Promise.resolve(false)
++    }
++
++    const startedAt = linkBlinkStartedAtRef.current
++    // No start stamp yet means the blink began in this very tick (the timer
++    // effect has not run), so the whole grace is still ahead.
++    const remaining = startedAt === null ? VOICE_LINK_GRACE_MS : VOICE_LINK_GRACE_MS - (Date.now() - startedAt)
++
++    if (remaining <= 0) {
++      return Promise.resolve(false)
++    }
++
++    return new Promise<boolean>(resolve => {
++      const settle = (open: boolean) => {
++        clearTimeout(timer)
++        linkWaitersRef.current.delete(settle)
++        resolve(open)
++      }
++
++      const timer = setTimeout(() => settle(false), remaining)
++
++      linkWaitersRef.current.add(settle)
++    })
++  }, [])
++
+   const ownerRef = useRef<{ epoch: number; token: symbol }>({
+     epoch: voiceContextEpoch,
+     token: Symbol('composer-voice-controller')
+@@ -352,9 +484,18 @@ export function useComposerVoice({
+     }
+ 
+     triggerHaptic('submit')
+-    resetBrowseState(sessionId)
+     clearDraft()
+-    await runVoiceControllerCallback(voiceContextIsCurrent, () => onSubmit(text))
++    // The session reset and the submit itself read the refs, so a turn that
++    // waited out a blink lands in the session the chat is bound to NOW.
++    await runVoiceControllerCallback(
++      voiceContextIsCurrent,
++      () => {
++        resetBrowseState(sessionIdRef.current)
++
++        return onSubmitRef.current(text)
++      },
++      awaitLinkOpen
++    )
+   }
+ 
+   /** A GPT-Live delegation → Hermes turn. The bubble and the persisted row are
+@@ -383,8 +524,8 @@ export function useComposerVoice({
+     return running && running.type === 'tool-call' ? running.toolName : null
+   }
+   const interruptVoiceTurn = useCallback(async () => {
+-    await runVoiceControllerCallback(voiceContextIsCurrent, () => onInterrupt?.())
+-  }, [voiceContextIsCurrent, onInterrupt])
++    await runVoiceControllerCallback(voiceContextIsCurrent, () => onInterruptRef.current?.(), awaitLinkOpen)
++  }, [awaitLinkOpen, voiceContextIsCurrent])
+ 
+   const wakePausedRef = useRef(false)
+   const wakeOwnerGatewayRef = useRef<ReturnType<typeof $gateway.get>>(null)
+@@ -499,8 +640,11 @@ export function useComposerVoice({
+   // The `composer.voice` hotkey (Ctrl+B) toggles the conversation. Starting
+   // with STT unconfigured lets the conversation surface its own "configure
+   // speech-to-text" notice rather than silently no-opping.
++  // Reads `hardDisabled`, not the raw flag: mid-blink the call is still running,
++  // so the hotkey must still be able to END it. With no call the two are equal,
++  // so starting is gated exactly as before.
+   const toggleVoiceConversation = useCallback(() => {
+-    if (disabled) {
++    if (hardDisabled) {
+       return
+     }
+ 
+@@ -510,7 +654,7 @@ export function useComposerVoice({
+     } else {
+       activateConversation()
+     }
+-  }, [activateConversation, conversation, disabled, voiceConversationActive])
++  }, [activateConversation, conversation, hardDisabled, voiceConversationActive])
+ 
+   useEffect(
+     () => onComposerVoiceToggleRequest(toggled => toggled === target && toggleVoiceConversation()),
+@@ -602,13 +746,20 @@ export function useComposerVoice({
+       }
+ 
+       triggerHaptic('submit')
+-      resetBrowseState(sessionId)
+       clearDraft()
+-      void runVoiceControllerCallback(voiceContextIsCurrent, () => onSubmit(text))
++      void runVoiceControllerCallback(
++        voiceContextIsCurrent,
++        () => {
++          resetBrowseState(sessionIdRef.current)
++
++          return onSubmitRef.current(text)
++        },
++        awaitLinkOpen
++      )
+ 
+       return true
+     },
+-    [clearDraft, onSubmit, sessionId, voiceContextIsCurrent]
++    [awaitLinkOpen, clearDraft, voiceContextIsCurrent]
+   )
+ 
+   const interrupt = useCallback((): boolean => {
+@@ -616,10 +767,10 @@ export function useComposerVoice({
+       return false
+     }
+ 
+-    void runVoiceControllerCallback(voiceContextIsCurrent, onInterrupt)
++    void runVoiceControllerCallback(voiceContextIsCurrent, () => onInterruptRef.current?.(), awaitLinkOpen)
+ 
+     return true
+-  }, [onInterrupt, voiceContextIsCurrent])
++  }, [awaitLinkOpen, onInterrupt, voiceContextIsCurrent])
+ 
+   const voiceController = useMemo<ComposerVoiceController>(
+     () => ({

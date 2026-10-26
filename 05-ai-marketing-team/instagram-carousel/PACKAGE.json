@@ -1,0 +1,12 @@
+{
+  "id": "instagram-carousel",
+  "title": "Instagram Carousel",
+  "topic": "05",
+  "skill_ids": [
+    "ap-instagram-carousel"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

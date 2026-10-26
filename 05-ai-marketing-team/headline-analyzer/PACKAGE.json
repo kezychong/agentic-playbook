@@ -1,0 +1,12 @@
+{
+  "id": "headline-analyzer",
+  "title": "Headline Analyzer",
+  "topic": "05",
+  "skill_ids": [
+    "ap-headline-analyzer"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "capture-router",
+  "title": "Capture Router",
+  "topic": "02",
+  "skill_ids": [
+    "ap-capture-router"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

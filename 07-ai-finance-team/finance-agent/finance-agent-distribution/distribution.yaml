@@ -1,0 +1,9 @@
+name: ap-finance-agent
+version: 0.1.0
+description: Uninstalled read-only Finance Agent template
+maintainer: Kezy
+runtime_status: untested
+host_requirement: Verify current profile schema before installation
+skills:
+  - ap-monthly-close
+  - ap-weekly-money-report

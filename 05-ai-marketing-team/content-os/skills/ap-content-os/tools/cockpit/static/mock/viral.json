@@ -1,0 +1,114 @@
+{
+  "generated_at": "2026-08-24T09:00:00+00:00",
+  "entries": [
+    {
+      "title": "Challenge the diagnosis first",
+      "creator": "a-nearby-account",
+      "family": "a nearby niche",
+      "mechanism_family": "challenge_belief",
+      "cls": "Tells the viewer the thing they blame is not the cause.",
+      "multiple": 4.2,
+      "views": null,
+      "reel_url": "https://example.com/p/CxKq1TgOo9r/",
+      "shortcode": "CxKq1TgOo9r",
+      "filed": "2026-08-18",
+      "own": false,
+      "card_path": "library/2026-08-18 - a-nearby-account - sample.md",
+      "admission_valid": true,
+      "admission_labels": [
+        "4.2 times their normal",
+        "a nearby niche"
+      ],
+      "admission_raw": "a nearby niche",
+      "velocity": {
+        "method": "collecting",
+        "is_resurging": false,
+        "snapshot_count": 1,
+        "view_gain": null,
+        "interval_days": null,
+        "recent_views_per_day": null,
+        "baseline_views_per_day": null
+      },
+      "posted": "2026-08-19",
+      "posted_precision": "estimated",
+      "posted_flag": "",
+      "posted_windows": [
+        7,
+        14,
+        30
+      ],
+      "posted_boundary_uncertain": [],
+      "thumb": null
+    },
+    {
+      "title": "The number nobody checks",
+      "creator": "mine",
+      "family": "my own results",
+      "mechanism_family": "hidden_number",
+      "cls": "Opens on a figure from your own books, then explains it.",
+      "multiple": 3.1,
+      "views": null,
+      "reel_url": "https://example.com/p/CwQ0aBcDeFg/",
+      "shortcode": "CwQ0aBcDeFg",
+      "filed": "2026-08-12",
+      "own": true,
+      "card_path": "library/2026-08-12 - mine - sample.md",
+      "admission_valid": true,
+      "admission_labels": [
+        "proved with your audience",
+        "3.1 times their normal"
+      ],
+      "admission_raw": "my own results",
+      "velocity": {
+        "method": "collecting",
+        "is_resurging": false,
+        "snapshot_count": 1,
+        "view_gain": null,
+        "interval_days": null,
+        "recent_views_per_day": null,
+        "baseline_views_per_day": null
+      },
+      "posted": "2026-08-12",
+      "posted_precision": "exact",
+      "posted_flag": "",
+      "posted_windows": [
+        14,
+        30
+      ],
+      "posted_boundary_uncertain": [],
+      "thumb": null
+    },
+    {
+      "title": "A five second before and after",
+      "creator": "a-competitor",
+      "family": "unrecorded",
+      "mechanism_family": "result_on_screen",
+      "cls": "Shows the finished result before saying a word.",
+      "multiple": null,
+      "views": null,
+      "reel_url": null,
+      "shortcode": null,
+      "filed": "2026-06-02",
+      "own": false,
+      "card_path": "library/2026-06-02 - a-competitor - sample.md",
+      "admission_valid": false,
+      "admission_labels": [],
+      "admission_raw": "unrecorded",
+      "velocity": {
+        "method": "collecting",
+        "is_resurging": false,
+        "snapshot_count": 1,
+        "view_gain": null,
+        "interval_days": null,
+        "recent_views_per_day": null,
+        "baseline_views_per_day": null
+      },
+      "posted": "2026-06-02",
+      "posted_precision": "filed_fallback",
+      "posted_flag": "Posting date unavailable, so this shows the filing date.",
+      "posted_windows": [],
+      "posted_boundary_uncertain": [],
+      "thumb": null
+    }
+  ]
+}

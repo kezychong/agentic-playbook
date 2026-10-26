@@ -1,0 +1,61 @@
+{
+  "id": "skill-security-auditor",
+  "title": "Skill Security Auditor",
+  "topic": "09",
+  "topic_title": "AI Security Team",
+  "skill_ids": [
+    "skill-security-auditor"
+  ],
+  "skill_paths": {
+    "skill-security-auditor": "."
+  },
+  "version": "0.1.0",
+  "adaptation_owner": "Kezy Chong",
+  "package_kind": "original-instructions-adapter-for-external-python-scanner",
+  "runtime_status": "prepared; engine not installed or runtime-tested",
+  "activation": "manual-only",
+  "default_execution": "static-only-in-network-denied-os-sandbox",
+  "required_skill_ids": [],
+  "optional_skill_ids": [],
+  "required_software": [
+    "Separately approved external engine compatible with inspected interface 2.13.1",
+    "Python >=3.12,<3.15 and engine dependencies prepared separately",
+    "Independently verified OS sandbox and process-tree supervisor"
+  ],
+  "engine_bundled": false,
+  "engine_installation_performed": false,
+  "dependencies_installed": false,
+  "scan_executed": false,
+  "model_call_performed": false,
+  "target_execution_performed": false,
+  "installation_executed": false,
+  "runtime_scripts_included": false,
+  "scope": [
+    "new-skill-import",
+    "staged-changed-skill-version"
+  ],
+  "first_trial_proposal": {
+    "max_scanner_invocations": 1,
+    "max_concurrent_scanner_invocations": 1,
+    "max_automatic_retries": 0,
+    "max_inventory_entries": 200,
+    "max_regular_files": 100,
+    "max_total_source_bytes": 5000000,
+    "max_source_file_bytes": 500000,
+    "max_total_wall_seconds": 180,
+    "max_scanner_seconds": 150,
+    "closeout_reserve_seconds": 30,
+    "scanner_model_calls": 0,
+    "internal_analyzer_concurrency": "not controlled by verified CLI"
+  },
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "INSTALL.md",
+    "GUIDE.md",
+    "USE-TERMS.md",
+    "PACKAGE.json",
+    "references/ENGINE-INTERFACE.md",
+    "references/APPROVAL-AND-REPORT.md"
+  ]
+}

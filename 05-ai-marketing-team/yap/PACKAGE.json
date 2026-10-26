@@ -1,0 +1,12 @@
+{
+  "id": "yap",
+  "title": "Yap",
+  "topic": "05",
+  "skill_ids": [
+    "ap-yap"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

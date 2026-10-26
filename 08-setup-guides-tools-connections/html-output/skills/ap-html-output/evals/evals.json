@@ -1,0 +1,63 @@
+{
+  "skill": "ap-html-output",
+  "version": "2.0.0",
+  "cases": [
+    {
+      "id": "demo-exact-content",
+      "request": "Use the included fictional demo brief to make a page.",
+      "expected": [
+        "one offline HTML file",
+        "title What should we fix first?",
+        "persistent fictional-data notice",
+        "6, 4, and 2 hours per week charted from zero",
+        "three distinct option sketches",
+        "2 of 5 steps and fictional 40% progress",
+        "three unanswered Confirm, Veto, Edit cards",
+        "working verdict and prompt copy controls"
+      ]
+    },
+    {
+      "id": "unknown-progress-and-missing-data",
+      "request": "Make a project page when the source has no measured completion and is missing a safe time input.",
+      "expected": [
+        "show Progress: not measured",
+        "do not invent a percentage",
+        "show the exact missing-data field and why it matters",
+        "show what blank means",
+        "include the immediate next action"
+      ]
+    },
+    {
+      "id": "partial-decisions-clipboard-refusal-hostile-note",
+      "request": "Render three decisions when one is Confirmed, one is Edited, one is unanswered, and a note contains quotes, newlines, pipes, and markup. Simulate clipboard refusal.",
+      "expected": [
+        "include all three cards in the output",
+        "keep the unanswered card labeled Unanswered",
+        "JSON-string encode every note",
+        "use textContent or textarea value for untrusted note content",
+        "select the full readonly output on clipboard refusal",
+        "show manual-copy guidance",
+        "do not execute any choice"
+      ]
+    },
+    {
+      "id": "short-answer",
+      "request": "Explain a two-sentence concept.",
+      "expected": [
+        "answer in chat",
+        "do not create an HTML page",
+        "do not add a sidecar"
+      ]
+    },
+    {
+      "id": "template-routing",
+      "request": "Render a status report, a plan, a review, research, options, or a teaching page.",
+      "expected": [
+        "choose the matching shape",
+        "use the matching diagram recipe",
+        "keep summary-first order",
+        "include a glossary when technical terms appear"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,285 @@
+#!/usr/bin/env bash
+# jarvis-mirror — OPTIONAL Mac helper: open the Jarvis mirror page as a
+# second-screen window of its own. Nothing in JARVIS Mode needs it; the mirror
+# page opens in any browser on any platform without it.
+#
+#   jarvis-mirror [--display "Second Display"] [--url URL] [--kiosk] [--dry-run]
+#
+# Opens Google Chrome as an APP WINDOW (--app=<url>: no tabs, no omnibox, no
+# bookmarks bar) showing the mirror page the backend half serves, and moves it
+# onto the named display.
+#
+# ---------------------------------------------------------------------------
+# ONE-TIME SIGN-IN (do this once, then never again)
+#
+# The mirror lives behind the Hermes dashboard's own session auth. Nothing is
+# minted here and no token is stored in this repo — the page is reached with
+# the ordinary sign-in cookie, so the FIRST time you run this you will land on
+# the Hermes sign-in page inside the app window. Sign in there once. The cookie
+# is saved in this script's own Chrome profile directory:
+#
+#     $HERMES_HOME/jarvis/chrome-profile
+#
+# and every later run opens straight onto the mirror. That directory is the
+# reason for --user-data-dir: it keeps the mirror's cookies, windows and
+# extensions completely separate from the member's everyday Chrome, which this
+# script never touches, never fronts and never restarts.
+#
+# ---------------------------------------------------------------------------
+# HOW THE DISPLAY IS FOUND (and its honest limit)
+#
+# `system_profiler SPDisplaysDataType -json` is the only display list every Mac
+# has without installing anything. It reports each screen's NAME, its logical
+# resolution, and which one is the MAIN display — but it does NOT report where
+# a screen sits in the desktop coordinate space. So:
+#
+#   * main display          -> origin is (0,0) by definition. Placed exactly.
+#   * any other display     -> we ask `displayplacer list` (brew install
+#                              displayplacer), matching on resolution because
+#                              displayplacer prints no screen names.
+#   * neither available     -> the window still opens, on whatever screen macOS
+#                              chooses, and the script SAYS SO. It does not
+#                              print a position it did not actually apply.
+#
+# Overrides for tests / an unusual install:
+#   JARVIS_CHROME        path to the Chrome binary
+#   JARVIS_MIRROR_URL    verified dashboard route or SSH-forward URL (required)
+#   JARVIS_MIRROR_TRANSPORT  direct or ssh-forward (required)
+#   JARVIS_CHROME_PROFILE  the --user-data-dir path
+
+set -uo pipefail
+
+CHROME="${JARVIS_CHROME:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
+PROFILE="${JARVIS_CHROME_PROFILE:-${HERMES_HOME:+$HERMES_HOME/jarvis/chrome-profile}}"
+URL="${JARVIS_MIRROR_URL:-}"
+TRANSPORT="${JARVIS_MIRROR_TRANSPORT:-}"
+FALLBACK_W=1024      # display-setup's kiosk_fallback_size, same convention
+FALLBACK_H=600
+
+display=""
+kiosk=0
+dry=0
+
+usage() {
+    cat <<'USAGE'
+usage: jarvis-mirror [--display "Second Display"] [--url URL] [--transport direct|ssh-forward] [--kiosk] [--dry-run]
+
+  --display NAME  the screen to put the window on, exactly as macOS names it
+                  (System Settings -> Displays). Omit to let macOS choose.
+  --url URL       verified HTTP(S) route selected during setup; may be a
+                  loopback URL only when setup created the SSH forward
+  --transport     direct requires remote HTTPS; ssh-forward requires loopback
+  --kiosk         full-screen, no window chrome at all
+  --dry-run       print the exact command and change nothing
+USAGE
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --display) display="${2:-}"; shift ;;
+        --display=*) display="${1#--display=}" ;;
+        --url) URL="${2:-}"; shift ;;
+        --url=*) URL="${1#--url=}" ;;
+        --transport) TRANSPORT="${2:-}"; shift ;;
+        --transport=*) TRANSPORT="${1#--transport=}" ;;
+        --kiosk) kiosk=1 ;;
+        --dry-run|-n) dry=1 ;;
+        -h|--help) usage; exit 0 ;;
+        *) printf 'jarvis-mirror: unknown option "%s"\n\n' "$1" >&2; usage >&2; exit 64 ;;
+    esac
+    shift
+done
+
+if [ -z "$URL" ]; then
+    printf 'jarvis-mirror: set JARVIS_MIRROR_URL or pass --url with the selected authenticated remote dashboard route.\n' >&2
+    exit 64
+fi
+if [ -z "$PROFILE" ] || [ "${PROFILE#/}" = "$PROFILE" ]; then
+    printf 'jarvis-mirror: set HERMES_HOME to the selected main-device profile home, or set an absolute JARVIS_CHROME_PROFILE.\n' >&2
+    exit 64
+fi
+if ! /usr/bin/env python3 - "$URL" "$TRANSPORT" <<'PY'
+import ipaddress, sys
+from urllib.parse import urlsplit
+parsed = None
+try:
+    parsed = urlsplit(sys.argv[1])
+    host = parsed.hostname or ""
+except ValueError:
+    host = ""
+try:
+    loopback = host.lower() == "localhost" or ipaddress.ip_address(host).is_loopback
+except ValueError:
+    loopback = host.lower() == "localhost"
+transport = sys.argv[2]
+valid_route = ((transport == "direct" and parsed and parsed.scheme == "https" and not loopback)
+               or (transport == "ssh-forward" and parsed
+                   and parsed.scheme in ("http", "https") and loopback))
+if (not valid_route or not host or parsed.username
+        or parsed.password or parsed.fragment):
+    raise SystemExit(1)
+PY
+then
+    printf 'jarvis-mirror: use --transport direct with remote HTTPS, or ssh-forward with an explicitly configured loopback URL.\n' >&2
+    exit 64
+fi
+
+# ---------------------------------------------------------------- displays
+
+# Emits shell assignments: JV_FOUND / JV_MAIN / JV_W / JV_H / JV_NAMES.
+probe_display() {
+    /usr/bin/env python3 - "$1" <<'PY'
+import json, re, shlex, subprocess, sys
+
+want = sys.argv[1]
+names, found = [], None
+try:
+    raw = subprocess.run(
+        ["/usr/sbin/system_profiler", "SPDisplaysDataType", "-json"],
+        capture_output=True, text=True, timeout=25, check=False).stdout
+    doc = json.loads(raw or "{}")
+except Exception:
+    doc = {}
+
+
+def dims(entry):
+    """Logical (point) size — the number Chrome's --window-size speaks in.
+    spdisplays_resolution is the SCALED size; _spdisplays_pixels is the raw
+    panel, which on a Retina screen is twice too big for a window rect."""
+    for key in ("spdisplays_resolution", "_spdisplays_resolution", "spdisplays_pixelresolution", "_spdisplays_pixels"):
+        m = re.search(r"(\d+)\s*x\s*(\d+)", str(entry.get(key, "")))
+        if m:
+            return int(m.group(1)), int(m.group(2))
+    return 0, 0
+
+
+for gpu in doc.get("SPDisplaysDataType", []) or []:
+    for screen in gpu.get("spdisplays_ndrvs", []) or []:
+        name = str(screen.get("_name", "")).strip()
+        if not name:
+            continue
+        names.append(name)
+        if want and name == want and found is None:
+            w, h = dims(screen)
+            found = (screen.get("spdisplays_main") == "spdisplays_yes", w, h)
+
+print("JV_FOUND=%d" % (1 if found else 0))
+print("JV_MAIN=%d" % (1 if (found and found[0]) else 0))
+print("JV_W=%d" % (found[1] if found else 0))
+print("JV_H=%d" % (found[2] if found else 0))
+print("JV_NAMES=%s" % shlex.quote(", ".join(names) if names else "none detected"))
+PY
+}
+
+# `displayplacer list` prints no screen NAMES, so resolution is the only join
+# key available. A unique match is trusted; an ambiguous one is refused rather
+# than guessed at.
+probe_origin() {
+    /usr/bin/env python3 - "$1" "$2" <<'PY'
+import re, subprocess, sys
+
+w, h = sys.argv[1], sys.argv[2]
+try:
+    out = subprocess.run(["displayplacer", "list"], capture_output=True, text=True,
+                         timeout=15, check=False).stdout
+except Exception:
+    out = ""
+
+hits = []
+for block in re.split(r"\n\s*\n", out or ""):
+    res = re.search(r"Resolution:\s*(\d+)x(\d+)", block)
+    org = re.search(r"Origin:\s*\((-?\d+),\s*(-?\d+)\)", block)
+    if res and org and res.group(1) == w and res.group(2) == h:
+        hits.append((org.group(1), org.group(2)))
+
+if len(hits) == 1:
+    print("JV_OX=%s" % hits[0][0])
+    print("JV_OY=%s" % hits[0][1])
+    print("JV_ORIGIN=1")
+else:
+    print("JV_OX=0")
+    print("JV_OY=0")
+    print("JV_ORIGIN=0")
+    print("JV_ORIGIN_WHY=%s" % ("ambiguous" if hits else "nomatch"))
+PY
+}
+
+JV_FOUND=0; JV_MAIN=0; JV_W=0; JV_H=0; JV_NAMES="not checked"
+JV_ORIGIN=0; JV_OX=0; JV_OY=0; JV_ORIGIN_WHY=""
+placement="macOS chose the screen (no --display given)"
+
+if [ -n "$display" ]; then
+    probe_out="$(probe_display "$display" 2>/dev/null)" || probe_out=""
+    if [ -n "$probe_out" ]; then eval "$probe_out"; fi
+
+    if [ "$JV_FOUND" -ne 1 ]; then
+        printf 'jarvis-mirror: no screen called "%s" is connected right now. Connected screens: %s.\n' "$display" "$JV_NAMES" >&2
+        exit 1
+    fi
+    if [ "$JV_W" -le 0 ] || [ "$JV_H" -le 0 ]; then
+        JV_W="$FALLBACK_W"; JV_H="$FALLBACK_H"
+    fi
+
+    if [ "$JV_MAIN" -eq 1 ]; then
+        JV_ORIGIN=1; JV_OX=0; JV_OY=0
+        placement="\"$display\" is the main display, so its corner is (0,0) — placed exactly"
+    elif command -v displayplacer >/dev/null 2>&1; then
+        origin_out="$(probe_origin "$JV_W" "$JV_H" 2>/dev/null)" || origin_out=""
+        if [ -n "$origin_out" ]; then eval "$origin_out"; fi
+        if [ "$JV_ORIGIN" -eq 1 ]; then
+            placement="\"$display\" found at ($JV_OX,$JV_OY) via displayplacer — placed exactly"
+        elif [ "${JV_ORIGIN_WHY:-}" = "ambiguous" ]; then
+            placement="COULD NOT PLACE: displayplacer shows more than one ${JV_W}x${JV_H} screen, so which one is \"$display\" is a guess. The window opens where macOS puts it; drag it over once."
+        else
+            placement="COULD NOT PLACE: displayplacer lists no ${JV_W}x${JV_H} screen to match \"$display\". The window opens where macOS puts it; drag it over once."
+        fi
+    else
+        placement="COULD NOT PLACE: \"$display\" is not the main display, and macOS alone will not say where it sits. Install displayplacer (brew install displayplacer) and re-run, or drag the window over once. The window opens where macOS puts it."
+    fi
+fi
+
+# ------------------------------------------------------------------ launch
+
+args=( "--user-data-dir=$PROFILE" "--app=$URL" "--no-first-run" "--no-default-browser-check" )
+if [ "$JV_ORIGIN" -eq 1 ]; then
+    args+=( "--window-position=${JV_OX},${JV_OY}" "--window-size=${JV_W},${JV_H}" )
+fi
+if [ "$kiosk" -eq 1 ]; then
+    args+=( "--kiosk" )
+fi
+
+if [ "$dry" -eq 1 ]; then
+    printf 'DRY RUN: no window was opened and nothing was changed.\n'
+    printf 'url: %s\n' "$URL"
+    printf 'transport: %s\n' "$TRANSPORT"
+    printf 'display: %s\n' "${display:-<none>}"
+    printf 'placement: %s\n' "$placement"
+    printf 'profile dir: %s\n' "$PROFILE"
+    printf 'kiosk: %s\n' "$( [ "$kiosk" -eq 1 ] && echo yes || echo no )"
+    # Quoted only where a shell would need it, so the line stays readable AND
+    # stays paste-able (%q escapes commas, which made --window-position ugly).
+    quoted() { case "$1" in *[\ \"\'\$\`]*) printf "'%s'" "$1" ;; *) printf '%s' "$1" ;; esac; }
+    printf 'would run: '; quoted "$CHROME"
+    for a in "${args[@]}"; do printf ' '; quoted "$a"; done
+    printf '\n'
+    exit 0
+fi
+
+if [ ! -x "$CHROME" ]; then
+    printf 'jarvis-mirror: Google Chrome is not where this expects it (%s). Install Chrome, or set JARVIS_CHROME to the binary inside the app bundle.\n' "$CHROME" >&2
+    exit 1
+fi
+
+mkdir -p "$PROFILE" 2>/dev/null
+
+# Detached on purpose: whatever launched this must not hold a Terminal window
+# open for as long as the mirror is up.
+nohup "$CHROME" "${args[@]}" >/dev/null 2>&1 &
+disown 2>/dev/null || true
+
+printf 'opened the Jarvis mirror in its own Chrome app window.\n'
+printf '  url:       %s\n' "$URL"
+printf '  placement: %s\n' "$placement"
+printf '  profile:   %s\n' "$PROFILE"
+if [ "$kiosk" -eq 1 ]; then printf '  kiosk:     on (press Cmd+Q in that window to quit it)\n'; fi
+printf 'If a Hermes sign-in page appears instead of the mirror, sign in once in that window — the cookie is kept in the profile above and later runs go straight through.\n'

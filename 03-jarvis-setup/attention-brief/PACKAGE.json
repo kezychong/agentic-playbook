@@ -1,0 +1,12 @@
+{
+  "id": "attention-brief",
+  "title": "Attention Brief",
+  "topic": "03",
+  "skill_ids": [
+    "ap-attention-brief"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

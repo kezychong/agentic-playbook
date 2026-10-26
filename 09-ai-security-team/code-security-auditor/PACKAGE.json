@@ -1,0 +1,20 @@
+{
+  "id": "code-security-auditor",
+  "title": "Code Security Auditor",
+  "topic": "09",
+  "topic_title": "AI Security Team",
+  "skill_ids": ["code-security-auditor"],
+  "skill_paths": {"code-security-auditor": "."},
+  "version": "0.1.0",
+  "adaptation_owner": "Kezy Chong",
+  "runtime_status": "unexecuted-source-draft",
+  "activation": "manual-only",
+  "default_execution": "source-only",
+  "required_skill_ids": [],
+  "optional_skill_ids": [],
+  "required_software": ["Node.js for report validators"],
+  "audit_executed": false,
+  "target_execution_performed": false,
+  "validator_tests_executed": false,
+  "installation_executed": false
+}

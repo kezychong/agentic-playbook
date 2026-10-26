@@ -1,0 +1,10 @@
+{
+  "name": "hermes-jarvis",
+  "label": "Jarvis mode",
+  "description": "Profile-scoped Jarvis display backend.",
+  "icon": "Radar",
+  "version": "1.0.0",
+  "tab": { "path": "/jarvis", "position": "end" },
+  "entry": "dist/index.js",
+  "api": "plugin_api.py"
+}

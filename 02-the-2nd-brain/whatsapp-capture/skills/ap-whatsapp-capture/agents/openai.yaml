@@ -1,0 +1,4 @@
+interface:
+  display_name: "WhatsApp Capture"
+  short_description: "Save new WhatsApp messages into your second brain inbox every two hours, read only"
+  default_prompt: "Use $ap-whatsapp-capture. If WhatsApp Capture is not set up yet, find my always-on machine, link WhatsApp Web with a QR code, ask which chats to exclude and how far back to start, run one test capture, and set the two-hour schedule."

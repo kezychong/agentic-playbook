@@ -1,0 +1,156 @@
+{
+  "generated_at": "2026-08-24T09:00:00",
+  "agent_mode": "copy",
+  "jobs": [],
+  "columns": [
+    {
+      "id": "inbox",
+      "title": "Inbox",
+      "cards": [
+        {
+          "id": "ideas/inbox/2026-08-23-0915-onboarding-call.md",
+          "title": "What every onboarding call keeps revealing",
+          "score": null,
+          "score_max": 14,
+          "age": "1 day old",
+          "needs_angle": true,
+          "card_path": "ideas/inbox/2026-08-23-0915-onboarding-call.md",
+          "kind": "idea",
+          "actions": [
+            {
+              "id": "score",
+              "label": "Score idea",
+              "kind": "agent"
+            },
+            {
+              "id": "promote",
+              "label": "Move to On deck",
+              "kind": "instant"
+            },
+            {
+              "id": "park",
+              "label": "Park for later",
+              "kind": "instant"
+            }
+          ]
+        },
+        {
+          "id": "ideas/inbox/2026-08-21-1730-refund-policy.md",
+          "title": "The refund policy that made us more money",
+          "score": 8,
+          "score_max": 14,
+          "age": "3 days old",
+          "needs_angle": false,
+          "card_path": "ideas/inbox/2026-08-21-1730-refund-policy.md",
+          "kind": "idea",
+          "actions": [
+            {
+              "id": "score",
+              "label": "Score it again",
+              "kind": "agent"
+            },
+            {
+              "id": "promote",
+              "label": "Move to On deck",
+              "kind": "instant"
+            },
+            {
+              "id": "park",
+              "label": "Park for later",
+              "kind": "instant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "on_deck",
+      "title": "On deck",
+      "cards": [
+        {
+          "id": "ideas/qualified/2026-08-20-1410-slow-month-pricing.md",
+          "title": "Why our slowest month taught us the pricing lesson",
+          "score": 11,
+          "score_max": 14,
+          "age": "4 days old",
+          "needs_angle": false,
+          "card_path": "ideas/qualified/2026-08-20-1410-slow-month-pricing.md",
+          "kind": "idea",
+          "actions": [
+            {
+              "id": "interview",
+              "label": "Start the interview",
+              "kind": "agent"
+            },
+            {
+              "id": "park",
+              "label": "Park for later",
+              "kind": "instant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "interviewed",
+      "title": "Interviewed",
+      "cards": [
+        {
+          "id": "scripts/2026-08-19-quiet-quota.md",
+          "title": "quiet quota",
+          "score": null,
+          "score_max": null,
+          "age": "5 days old",
+          "needs_angle": false,
+          "card_path": "scripts/2026-08-19-quiet-quota.md",
+          "kind": "script",
+          "actions": [
+            {
+              "id": "talking_map",
+              "label": "Build the talking map",
+              "kind": "agent"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "map_ready",
+      "title": "Map ready",
+      "cards": []
+    },
+    {
+      "id": "record_edit",
+      "title": "Record / Edit",
+      "cards": []
+    },
+    {
+      "id": "posted_learning",
+      "title": "Posted & learning",
+      "cards": [
+        {
+          "id": "scripts/2026-08-12-number-nobody-checks.md",
+          "title": "number nobody checks",
+          "score": null,
+          "score_max": null,
+          "age": "12 days old",
+          "needs_angle": false,
+          "card_path": "scripts/2026-08-12-number-nobody-checks.md",
+          "kind": "script",
+          "actions": [
+            {
+              "id": "weekly_review",
+              "label": "Run the weekly review",
+              "kind": "agent"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "parked",
+      "title": "Parked",
+      "cards": []
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+CuaDriver dependency notice
+
+Hands are an optional JARVIS Mode extra for a Mac main device. JARVIS Mode is
+complete without them and the core install never waits on them.
+
+The optional helper installs CuaDriver release 0.23.2 for the configured Apple
+desktop after
+validating this pinned archive:
+
+URL: https://github.com/trycua/cua/releases/download/cua-driver-rs-v0.23.2/cua-driver-rs-0.23.2-darwin-universal.tar.gz
+SHA-256: 9e521b16c8606896f20003f4d20ae62070a1cb3c8d33152d9d0593f62234fbb0
+Signing team: YCK386LBJ7
+License: MIT
+License text: https://raw.githubusercontent.com/trycua/cua/cua-driver-rs-v0.23.2/LICENSE.md
+
+The member package does not bundle the app. Run install-cua-driver.sh with no
+arguments to review the plan; --apply is the explicit install action and
+--undo restores the recorded backup.

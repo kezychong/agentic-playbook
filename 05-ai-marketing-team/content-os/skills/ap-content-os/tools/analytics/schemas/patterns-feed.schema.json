@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "content-os/patterns-feed-v1",
+  "title": "Content OS patterns feed",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_at",
+    "as_of_date",
+    "provisional",
+    "last_confirmed_snapshot",
+    "scope_note",
+    "freshness",
+    "corpus",
+    "patterns",
+    "views",
+    "test_next",
+    "collecting_evidence",
+    "quality"
+  ],
+  "properties": {
+    "schema_version": {"const": "patterns-feed-v1"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "as_of_date": {"type": "string", "format": "date"},
+    "provisional": {"type": "boolean"},
+    "last_confirmed_snapshot": {"type": ["string", "null"]},
+    "scope_note": {"type": "string"},
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["w2_last_success", "baseline_as_of"],
+      "properties": {
+        "w2_last_success": {"type": ["string", "null"]},
+        "baseline_as_of": {"type": ["string", "null"]}
+      }
+    },
+    "corpus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eligible_recent", "active_entries", "creators", "selection_funnel", "analysis_coverage"],
+      "properties": {
+        "eligible_recent": {"type": "integer", "minimum": 0},
+        "active_entries": {"type": "integer", "minimum": 0},
+        "creators": {"type": "integer", "minimum": 0},
+        "selection_funnel": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["admitted_total", "admitted_fresh", "admitted_new_fresh", "transcript_available", "analyzed"],
+          "properties": {
+            "admitted_total": {"type": "integer", "minimum": 0},
+            "admitted_fresh": {"type": "integer", "minimum": 0},
+            "admitted_new_fresh": {"type": "integer", "minimum": 0},
+            "transcript_available": {"type": "integer", "minimum": 0},
+            "analyzed": {"type": "integer", "minimum": 0}
+          }
+        },
+        "analysis_coverage": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "record_id", "pattern_id", "pattern", "scope", "scope_label", "snapshot_date",
+          "provisional", "windows", "references", "comparison", "momentum_state",
+          "evidence_state", "persistent", "confidence", "confidence_ingredients",
+          "gate_receipt", "scan_coverage", "selection_funnel", "analysis_coverage",
+          "quality", "supporting_shortcodes", "evidence_refs", "own_proven",
+          "own_evidence_shortcodes"
+        ],
+        "properties": {
+          "record_id": {"type": "string", "pattern": "pattern-[0-9a-f]{20}"},
+          "pattern_id": {"type": "string"},
+          "pattern": {
+            "type": "object",
+            "required": ["kind", "label", "dimensions", "is_visual"],
+            "properties": {
+              "kind": {"enum": ["atomic", "composite"]},
+              "label": {"type": "string"},
+              "dimensions": {
+                "type": "array", "minItems": 1, "maxItems": 2,
+                "items": {
+                  "type": "object",
+                  "required": ["dimension", "value"],
+                  "properties": {
+                    "dimension": {"enum": ["mechanism_class", "format", "proof", "cta", "visual_open", "topic"]},
+                    "value": {"type": "string"}
+                  }
+                }
+              },
+              "is_visual": {"type": "boolean"}
+            }
+          },
+          "scope": {"type": "string"},
+          "scope_label": {"type": "string"},
+          "snapshot_date": {"type": "string", "format": "date"},
+          "provisional": {"type": "boolean"},
+          "windows": {
+            "type": "object",
+            "required": ["days_7", "days_14", "days_30"],
+            "properties": {
+              "days_7": {"type": "object"},
+              "days_14": {"type": "object"},
+              "days_30": {"type": "object"}
+            }
+          },
+          "references": {
+            "type": "object",
+            "required": ["reference_a", "reference_b"],
+            "properties": {
+              "reference_a": {"type": "object"},
+              "reference_b": {"type": "object"}
+            }
+          },
+          "comparison": {
+            "type": "object",
+            "required": ["reference_creator_coverage", "creator_coverage_delta", "coverage_ratio", "coverage_ratio_state", "reference_analyzed_winner_share", "reference_performance_signal"],
+            "properties": {
+              "reference_creator_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+              "creator_coverage_delta": {"type": "number", "minimum": -1, "maximum": 1},
+              "coverage_ratio": {"type": ["number", "null"], "minimum": 0},
+              "coverage_ratio_state": {"enum": ["comparable", "new_in_sample"]},
+              "reference_analyzed_winner_share": {"type": "number", "minimum": 0, "maximum": 1},
+              "reference_performance_signal": {"type": ["number", "null"], "minimum": 0}
+            }
+          },
+          "momentum_state": {"enum": ["insufficient_data", "emerging", "rising", "stable", "cooling"]},
+          "evidence_state": {"enum": ["observed", "recurring", "proven"]},
+          "persistent": {"type": "boolean"},
+          "confidence": {"enum": ["Low", "Medium", "High"]},
+          "confidence_ingredients": {"type": "object"},
+          "gate_receipt": {"type": "object"},
+          "scan_coverage": {"type": "object"},
+          "selection_funnel": {"type": "object"},
+          "analysis_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+          "quality": {
+            "type": "object",
+            "required": ["clean_support_share", "visual_evidence_mode", "pending_maturation_excluded"],
+            "properties": {
+              "clean_support_share": {"type": "number", "minimum": 0, "maximum": 1},
+              "visual_evidence_mode": {"enum": ["observed_frames_ocr", "not_applicable"]},
+              "pending_maturation_excluded": {"type": "integer", "minimum": 0}
+            }
+          },
+          "supporting_shortcodes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+          "evidence_refs": {
+            "type": "array", "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "required": ["shortcode", "reel_url", "creator_id", "family", "published_at", "mechanism_entry_path", "source_extraction_path", "source_run_id", "scanner_gap_exception"],
+              "properties": {
+                "shortcode": {"type": "string"},
+                "reel_url": {"type": "string"},
+                "creator_id": {"type": "string"},
+                "family": {"type": "string"},
+                "published_at": {"type": ["string", "null"]},
+                "mechanism_entry_path": {"type": ["string", "null"]},
+                "source_extraction_path": {"type": ["string", "null"]},
+                "source_run_id": {"type": ["string", "null"]},
+                "scanner_gap_exception": {"type": "boolean"}
+              }
+            }
+          },
+          "own_proven": {"type": "boolean"},
+          "own_evidence_shortcodes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+        }
+      }
+    },
+    "views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["emerging", "rising", "proven", "persistent", "cooling"],
+      "properties": {
+        "emerging": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "rising": {"type": "array", "uniqueItems": true, "maxItems": 5, "items": {"type": "string"}},
+        "proven": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "persistent": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "cooling": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      }
+    },
+    "test_next": {
+      "type": "array", "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["experiment_id", "snapshot_date", "abstract_pattern_name", "state", "why_worth_testing", "compatible_content_jobs", "compatible_formats", "evidence_refs", "evidence_counts", "freshness", "observed_vs_inferred", "do_not_copy_warning", "source_record_ids", "owner_angle"],
+        "properties": {
+          "experiment_id": {"type": "string"},
+          "snapshot_date": {"type": ["string", "null"]},
+          "abstract_pattern_name": {"type": "string"},
+          "state": {"type": "object"},
+          "why_worth_testing": {"type": "string"},
+          "compatible_content_jobs": {"type": "array", "items": {"type": "string"}},
+          "compatible_formats": {"type": "array", "items": {"type": "string"}},
+          "evidence_refs": {"type": "array", "minItems": 2, "maxItems": 5, "items": {"type": "object"}},
+          "evidence_counts": {"type": "object"},
+          "freshness": {"type": "string"},
+          "observed_vs_inferred": {"enum": ["observed_frames_ocr", "canonical_non_visual_analysis"]},
+          "do_not_copy_warning": {"type": "string"},
+          "source_record_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "owner_angle": {"const": ""}
+        }
+      }
+    },
+    "collecting_evidence": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quarantined", "pending_maturation", "visual_observed", "patterns_evaluated", "atomic_patterns_evaluated", "composite_patterns_evaluated", "rising_overflow", "scan_coverage", "scan_exceptions", "selection_funnel", "analysis_coverage", "baseline_age_days", "current_window_cost_usd", "expansion"],
+      "properties": {
+        "quarantined": {"type": "integer", "minimum": 0},
+        "pending_maturation": {"type": "integer", "minimum": 0},
+        "visual_observed": {"type": "integer", "minimum": 0},
+        "patterns_evaluated": {"type": "integer", "minimum": 0},
+        "atomic_patterns_evaluated": {"type": "integer", "minimum": 0},
+        "composite_patterns_evaluated": {"type": "integer", "minimum": 0},
+        "rising_overflow": {"type": "integer", "minimum": 0},
+        "scan_coverage": {"type": "object"},
+        "scan_exceptions": {"type": "array", "items": {"type": "string"}},
+        "selection_funnel": {"type": "object"},
+        "analysis_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "baseline_age_days": {"type": ["integer", "null"]},
+        "current_window_cost_usd": {"type": ["number", "null"], "minimum": 0},
+        "expansion": {"type": "object"}
+      }
+    }
+  }
+}

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Choose your launch date</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f5f1;color:#232723;font:18px/1.5 system-ui,sans-serif}
+main{max-width:820px;margin:auto;padding:24px}h1{font-size:clamp(28px,5vw,40px);line-height:1.15}h2{font-size:24px}
+.dec{background:white;border:1px solid #747c74;border-radius:12px;padding:24px;margin:24px 0}
+label{display:block;padding:8px 0}textarea{display:block;width:100%;font:inherit;min-height:84px;padding:10px}
+button{font:inherit;background:#243e32;color:white;border:0;border-radius:8px;padding:14px;cursor:pointer}
+:focus-visible{outline:3px solid #986d00;outline-offset:3px}a{color:#234f3b}small{font-size:15px}
+#output{min-height:180px;margin-top:12px}input{width:20px;height:20px;vertical-align:middle}
+</style>
+</head>
+<body><main>
+<p>Fictional example · Created September 5, 2026 · Expires September 12, 2026</p>
+<h1>Choose your launch date</h1>
+<p>Read the card, choose your answer, then copy it into your agent chat.</p>
+<p id="expiry"></p>
+<section class="dec" data-id="D1">
+<h2>D1 · Which date should the coaching workshop launch?</h2>
+<p>This fictional workshop is ready for rehearsal on October 3, 2026.</p>
+<p>October 6 leaves three rehearsal days. October 13 leaves ten rehearsal days.</p>
+<p>No invitations have been sent. Both dates remain available in this fictional example.</p>
+<p><b>Confirm means:</b> choose a planning date. It does not send invitations.</p>
+<p><b>Veto costs:</b> the planning date stays open until another date is chosen.</p>
+<fieldset><legend>Your choice</legend>
+<label><input type="radio" name="D1" value="A"> A · October 13 (recommended): ten rehearsal days.</label>
+<label><input type="radio" name="D1" value="B"> B · October 6: launch seven days sooner.</label>
+<label><input type="radio" name="D1" value="Veto"> Veto · Keep both dates unapproved.</label>
+<label><input type="radio" name="D1" value="Edit"> Edit · Describe another date below.</label>
+</fieldset>
+<label for="note-D1">Optional note</label><textarea id="note-D1"></textarea>
+<p><small>Expires September 12, 2026. Silence never chooses a date.</small></p>
+</section>
+<button id="copy">Copy my verdicts</button>
+<p id="status" role="status" aria-live="polite"></p>
+<label for="output">Your answer block</label><textarea id="output" readonly></textarea>
+<p>Source: <a href="example-card.html">example-card.html</a></p>
+<p><a href="example-card.md">Card notes and source details</a></p>
+<script>
+const source='example-card.html';
+function localDate(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
+function verdictBlock(){
+ const unanswered=[];const lines=[`# My verdicts (${localDate()})`];
+ document.querySelectorAll('.dec').forEach(card=>{
+  const id=card.dataset.id;const picked=card.querySelector('input:checked');
+  const note=card.querySelector('textarea').value;
+  if(!picked)unanswered.push(id);
+  lines.push(`- ${id} | ${picked?picked.value:'Unanswered'} | note: ${JSON.stringify(note)}`);
+ });
+ lines.push(`Unanswered: ${unanswered.length?unanswered.join(', '):'none'}`,`Source: ${source}`);
+ return lines.join('\n')+'\n';
+}
+function parseVerdicts(text){
+ const lines=text.trimEnd().split('\n');const header=/^# My verdicts \((\d{4}-\d{2}-\d{2})\)$/.exec(lines.shift());
+ if(!header)throw Error('Missing date');
+ const rows=[];const ids=new Set();let unanswered=null;let origin=null;
+ for(const line of lines){
+  const match=/^- (D\d+) \| ([^|]+) \| note: (.*)$/.exec(line);
+  if(match){if(ids.has(match[1]))throw Error('Repeated decision');ids.add(match[1]);const note=JSON.parse(match[3]);if(typeof note!=='string')throw Error('Invalid note');rows.push({id:match[1],choice:match[2].trim(),note});}
+  else if(line.startsWith('Unanswered: ')){if(unanswered!==null)throw Error('Repeated unanswered list');unanswered=line.slice(12);}
+  else if(line.startsWith('Source: ')){if(origin!==null)throw Error('Repeated source');origin=line.slice(8);}
+  else throw Error('Unknown line');
+ }
+ if(!origin||unanswered===null)throw Error('Missing source or unanswered list');
+ const expected=rows.filter(row=>row.choice==='Unanswered').map(row=>row.id).join(', ')||'none';
+ if(unanswered!==expected)throw Error('Unanswered list disagrees');
+ return {date:header[1],rows,unanswered,source:origin};
+}
+document.getElementById('copy').onclick=async()=>{
+ const text=verdictBlock();const box=document.getElementById('output');box.value=text;
+ try{await navigator.clipboard.writeText(text);document.getElementById('status').textContent='Copied. Paste this into your agent chat.';}
+ catch{box.focus();box.select();document.getElementById('status').textContent='Copy the selected answer block, then paste it into your agent chat.';}
+};
+document.getElementById('expiry').textContent=localDate()>'2026-09-12'?'This example has expired. Expiry does not choose an answer.':'No option is selected for you.';
+</script>
+</main></body></html>

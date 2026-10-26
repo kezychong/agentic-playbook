@@ -1,0 +1,4 @@
+interface:
+  display_name: "Yap"
+  short_description: "Find today's idea and turn it into a yap script you can film on your phone"
+  default_prompt: "Use $ap-yap. If I have no Yap Profile yet, interview me and build it first. Then tell me today's lane, propose five ideas, and turn the one I pick into a yap map."

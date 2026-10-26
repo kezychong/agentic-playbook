@@ -1,0 +1,12 @@
+{
+  "id": "challenge-offer-creation",
+  "title": "Challenge Offer Creation",
+  "topic": "06",
+  "skill_ids": [
+    "ap-challenge-offer-creation"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

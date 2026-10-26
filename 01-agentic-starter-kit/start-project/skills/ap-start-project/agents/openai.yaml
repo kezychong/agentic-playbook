@@ -1,0 +1,4 @@
+interface:
+  display_name: "Start Project"
+  short_description: "Give any project reliable memory"
+  default_prompt: "Use $ap-start-project to set up or organize this project. Preserve existing work and show me the proposed changes before writing."

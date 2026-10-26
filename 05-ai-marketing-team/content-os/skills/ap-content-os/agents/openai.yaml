@@ -1,0 +1,7 @@
+interface:
+  display_name: "Content OS"
+  short_description: "Turn what you actually know into content, end to end, in your own voice."
+  default_prompt: "Use $ap-content-os. If I have not been set up yet, run the setup interview first, one question at a time. Otherwise route what I asked to the one stage that owns it, leave my angle blank, and never post anything anywhere."
+
+policy:
+  allow_implicit_invocation: true

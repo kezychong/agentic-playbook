@@ -1,0 +1,148 @@
+diff --git a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
+--- a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
++++ b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
+@@ -1,8 +1,55 @@
+ import { describe, expect, it, vi } from 'vitest'
++import { act, renderHook } from '@testing-library/react'
++import { StrictMode } from 'react'
+ 
+-import { acquireMicrophoneLease, disposeAssistantSubscriptions, runVoiceControllerCallback } from './use-composer-voice'
++import {
++  acquireMicrophoneLease,
++  disposeAssistantSubscriptions,
++  releaseComposerVoiceLeases,
++  runVoiceControllerCallback,
++  useComposerVoiceLifetime
++} from './use-composer-voice'
+ 
+ describe('composer voice ownership', () => {
++  it('keeps the plugin lifetime live through replay, then aborts on conversation replacement and unmount', async () => {
++    const hook = renderHook(({ epoch }) => useComposerVoiceLifetime(epoch), {
++      initialProps: { epoch: 0 },
++      wrapper: StrictMode
++    })
++    const initial = hook.result.current
++    await act(async () => {
++      await Promise.resolve()
++    })
++    expect(initial.signal.aborted).toBe(false)
++    hook.rerender({ epoch: 1 })
++    const replacement = hook.result.current
++    await act(async () => {
++      await Promise.resolve()
++    })
++    expect(initial.signal.aborted).toBe(true)
++    expect(replacement.signal.aborted).toBe(false)
++    hook.unmount()
++    await Promise.resolve()
++    expect(replacement.signal.aborted).toBe(true)
++  })
++  it('releases audio on an auth refusal without hiding the mounted plugin error', async () => {
++    const mountedLifetime = new AbortController()
++    let mounted = true
++    mountedLifetime.signal.addEventListener('abort', () => {
++      mounted = false
++    })
++    const lease = await acquireMicrophoneLease({
++      owner: Symbol('auth-refusal'),
++      pause: async () => undefined,
++      resume: vi.fn(),
++      signal: mountedLifetime.signal,
++      voiceContextIsCurrent: () => true
++    })
++    releaseComposerVoiceLeases(new Set(lease ? [lease] : []))
++    expect(lease?.signal.aborted).toBe(true)
++    expect(mounted).toBe(true)
++    expect(mountedLifetime.signal.aborted).toBe(false)
++  })
+   it('aborts a granted lease and releases the microphone once on context loss', async () => {
+     const owner = new AbortController()
+     const resume = vi.fn()
+diff --git a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
+--- a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
++++ b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
+@@ -92,6 +92,31 @@ export function disposeAssistantSubscriptions(disposers: Set<() => void>): void
+ 
+ const ComposerVoiceControllerContext = createContext<ComposerVoiceController | null>(null)
+ 
++export function releaseComposerVoiceLeases(leases: Set<ComposerVoiceLease>): void {
++  for (const lease of leases) lease.release()
++  leases.clear()
++}
++
++export function useComposerVoiceLifetime(epoch: number): AbortController {
++  // Epoch is an ownership boundary, not a cosmetic memo dependency. The
++  // compiler otherwise hoists the signal because its constructor reads no epoch.
++  'use no memo'
++  const lifetime = useMemo(() => new AbortController(), [epoch])
++  const mount = useRef({ generation: 0, lifetime })
++  useLayoutEffect(() => {
++    const generation = ++mount.current.generation
++    mount.current.lifetime = lifetime
++    return () => {
++      // A replayed cleanup/setup is not an unmount. A real unmount or
++      // replaced conversation still aborts before the next task runs.
++      queueMicrotask(() => {
++        if (mount.current.generation === generation || mount.current.lifetime !== lifetime) lifetime.abort()
++      })
++    }
++  }, [lifetime])
++  return lifetime
++}
++
+ export function useComposerVoiceController(): ComposerVoiceController | null {
+   return useContext(ComposerVoiceControllerContext)
+ }
+@@ -235,8 +260,8 @@ export function useComposerVoice({
+   }
+ 
+   const voiceContextEpoch = voiceContextEpochRef.current
+-  const lifetime = useMemo(() => new AbortController(), [voiceContextEpoch])
+-  useLayoutEffect(() => () => lifetime.abort(), [lifetime])
++  const lifetime = useComposerVoiceLifetime(voiceContextEpoch)
++  const pluginLeasesRef = useRef(new Set<ComposerVoiceLease>())
+ 
+   const voiceContextIsCurrent = useCallback(
+     () => !disabledRef.current && voiceContextEpochRef.current === voiceContextEpoch,
+@@ -606,7 +631,9 @@ export function useComposerVoice({
+         storedSessionId: voiceOwner?.storedSessionId || null
+       },
+       signal: voiceOwner?.storedSessionId ? lifetime.signal : undefined,
+-      stop: () => lifetime.abort(),
++      // A rejected REST request must release audio, but must not unmount the
++      // plugin before it can display the refusal or offer a retry.
++      stop: () => releaseComposerVoiceLeases(pluginLeasesRef.current),
+       prepareSession: async () => {
+         if (!voiceContextIsCurrent() || lifetime.signal.aborted) throw new Error('Conversation changed')
+         const prepared = onPrepareVoiceSession
+@@ -617,8 +644,8 @@ export function useComposerVoice({
+         if (!prepared) throw new Error('Conversation is unavailable')
+         return { ...prepared, connectionId: voiceOwner?.connectionId || '', profile: voiceOwner?.profile || '' }
+       },
+-      acquire: (options?: AbortSignal | { signal?: AbortSignal }) =>
+-        acquireMicrophoneLease({
++      acquire: async (options?: AbortSignal | { signal?: AbortSignal }) => {
++        const lease = await acquireMicrophoneLease({
+           owner,
+           pause: pauseWakeForVoice,
+           resume: resumeWakeIfPaused,
+@@ -627,7 +654,18 @@ export function useComposerVoice({
+             ...(options ? [('aborted' in options ? options : options.signal) ?? lifetime.signal] : [])
+           ]),
+           voiceContextIsCurrent: () => voiceContextIsCurrent() && !voiceConversationActive && voiceStatus === 'idle'
+-        }),
++        })
++        if (!lease) return null
++        const tracked = {
++          signal: lease.signal,
++          release: () => {
++            lease.release()
++            pluginLeasesRef.current.delete(tracked)
++          }
++        }
++        pluginLeasesRef.current.add(tracked)
++        return tracked
++      },
+       interrupt,
+       latestAssistant,
+       submitText,

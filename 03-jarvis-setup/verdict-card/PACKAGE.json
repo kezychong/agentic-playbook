@@ -1,0 +1,12 @@
+{
+  "id": "verdict-card",
+  "title": "Verdict Card",
+  "topic": "03",
+  "skill_ids": [
+    "ap-verdict-card"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

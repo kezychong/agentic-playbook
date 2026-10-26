@@ -1,0 +1,13 @@
+{
+  "id": "jarvis-mode",
+  "title": "Jarvis Mode",
+  "topic": "03",
+  "skill_ids": [
+    "ap-jarvis-mode",
+    "ap-macbook-hands"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

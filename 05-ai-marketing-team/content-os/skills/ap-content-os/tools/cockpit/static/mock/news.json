@@ -1,0 +1,122 @@
+{
+  "updated_at": "2026-08-24T07:00:00+00:00",
+  "region_name": "your area",
+  "pillars_set": true,
+  "pillar_names": {
+    "how-owners-price": "How owners price",
+    "hiring-and-teams": "Hiring and teams"
+  },
+  "buckets": {
+    "24h": [
+      {
+        "title": "Small firms rethink pricing as costs settle",
+        "url": "https://example.com/a",
+        "source": "example.com",
+        "pillar": "how-owners-price",
+        "published": "2026-08-24T03:00:00+00:00",
+        "age_hours": 6,
+        "signal": "News search · Example Daily",
+        "summary": "Owners are moving away from discount-first pricing.",
+        "image": null,
+        "item_type": "news",
+        "origin": "news_search"
+      },
+      {
+        "title": "Hiring slows in small services businesses",
+        "url": "https://example.org/b",
+        "source": "example.org",
+        "pillar": "hiring-and-teams",
+        "published": "2026-08-24T01:00:00+00:00",
+        "age_hours": 8,
+        "signal": "News search · Example Wire",
+        "summary": "Fewer roles posted, longer time to fill.",
+        "image": null,
+        "item_type": "news",
+        "origin": "news_search"
+      }
+    ],
+    "3d": [
+      {
+        "title": "What changed in payment terms this quarter",
+        "url": "https://example.net/c",
+        "source": "example.net",
+        "pillar": "how-owners-price",
+        "published": "2026-08-22T09:00:00+00:00",
+        "age_hours": 48,
+        "signal": "News search · Example Net",
+        "summary": "Thirty day terms are becoming the default again.",
+        "image": null,
+        "item_type": "news",
+        "origin": "news_search"
+      }
+    ],
+    "7d": []
+  },
+  "trends": [
+    {
+      "title": "pricing calculator",
+      "url": "https://example.com/trend",
+      "source": "Trending searches",
+      "signal": "about 20K+ trending searches",
+      "item_type": "trend",
+      "age_hours": 5
+    }
+  ],
+  "counts": {
+    "archive_total": 4,
+    "24h": 2,
+    "3d": 1,
+    "7d": 0,
+    "han_dropped": 0,
+    "trends": 1,
+    "date_unknown": 0,
+    "partition_ok": true
+  },
+  "policy": {
+    "exclusive_windows": true,
+    "page_cap": 30,
+    "han_min_count": 1,
+    "han_share_threshold": 0.0
+  },
+  "items": [
+    {
+      "title": "Small firms rethink pricing as costs settle",
+      "url": "https://example.com/a",
+      "source": "example.com",
+      "pillar": "how-owners-price",
+      "published": "2026-08-24T03:00:00+00:00",
+      "age_hours": 6,
+      "signal": "News search · Example Daily",
+      "summary": "Owners are moving away from discount-first pricing.",
+      "image": null,
+      "item_type": "news",
+      "origin": "news_search"
+    },
+    {
+      "title": "Hiring slows in small services businesses",
+      "url": "https://example.org/b",
+      "source": "example.org",
+      "pillar": "hiring-and-teams",
+      "published": "2026-08-24T01:00:00+00:00",
+      "age_hours": 8,
+      "signal": "News search · Example Wire",
+      "summary": "Fewer roles posted, longer time to fill.",
+      "image": null,
+      "item_type": "news",
+      "origin": "news_search"
+    },
+    {
+      "title": "What changed in payment terms this quarter",
+      "url": "https://example.net/c",
+      "source": "example.net",
+      "pillar": "how-owners-price",
+      "published": "2026-08-22T09:00:00+00:00",
+      "age_hours": 48,
+      "signal": "News search · Example Net",
+      "summary": "Thirty day terms are becoming the default again.",
+      "image": null,
+      "item_type": "news",
+      "origin": "news_search"
+    }
+  ]
+}

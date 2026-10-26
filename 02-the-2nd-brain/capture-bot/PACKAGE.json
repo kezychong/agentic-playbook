@@ -1,0 +1,17 @@
+{
+  "id": "capture-bot",
+  "title": "Capture Bot",
+  "topic": "02",
+  "skill_ids": [
+    "ap-content-capture-core",
+    "ap-document-capture",
+    "ap-instagram-reel-capture",
+    "ap-web-article-capture",
+    "ap-x-twitter-capture",
+    "ap-youtube-video-capture"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

@@ -1,0 +1,30 @@
+# JARVIS installation contract
+
+This package uses `scripts/prepare_package.py` as its single preflight. The manifest lists every expected file, its role, its status, size and SHA-256 digest. A present file must match its digest exactly. A missing required component, an unknown file, a symlink, an absolute path, a parent-directory escape, or a cache/private path fails preflight.
+
+This adapted manifest declares `release_state: "unvalidated-repackage"`, `release_ready: false`, and all release gates false. Do not bypass them. The following describes the acceptance contract for a future tested release, not the state of this draft. A valid release has `release_ready: true` and `install_ready: true`, a complete payload and complete mappings. The installer must stop with zero destination writes when `install_ready` is false.
+
+Release command output says `PASS RELEASE`. It must never claim a gate the manifest does not carry.
+
+`scripts/install.py` supports two explicit roles:
+
+- `main` stages the verified main-computer files into a caller-selected existing directory. The main computer may run macOS or Windows.
+- `headless` stages the verified profile files into a caller-selected existing directory and requires the member-selected profile identity. The headless computer may run macOS or Linux.
+
+The destination is never guessed. The Hermes home is `%LOCALAPPDATA%\hermes` on Windows and `~/.hermes` elsewhere, but that is a hint for discovery, never a substitute for the real location read from the member's host and confirmed by the member. The installer does not start, restart or SSH into a service. The default is a dry run. Applying a plan creates atomic file replacements, backs up replaced files, and records installed hashes in a receipt. A rerun is safe when the same verified files are selected. Undo checks that every target still has its recorded installed hash; if a member edited any target, undo stops before writing.
+
+The `main` role also ensures the selected Hermes home has a symlink-free `jarvis` directory with mode `0700` before frontend files are staged. The receipt records whether that directory was created by this transaction. Undo removes an owned directory only when it is still empty; a pre-existing directory keeps its data and original mode, and a newly used directory is preserved.
+
+Configuration validation belongs to the backend's profile-scoped schema. This installer does not duplicate or weaken that validator.
+
+The setup path asks the Hermes host's `profile_matches_home(profile_id, profile_root)` matcher and requires a positive result. The low-level file stager may use a directory-name fallback only when the host matcher is unavailable in an isolated fixture; that fallback is not live profile proof and is never used by the agent-led setup gate. This preserves the `default` profile and custom Hermes homes. Host authentication, websocket/origin checks and configuration compatibility remain installation gates; a fixture pass does not prove those live capabilities.
+
+The agent-led setup entrypoint accepts explicit main-computer and headless profile destinations, discovers the selected host/profile, stages both roles, receives the member's selected source boxes from the agent conversation, and provisions schema-1 profile configuration through the packaged backend validator. The box IDs are `agent_helpers`, `waiting_on_you`, `agent_in_flight`, `overnight_jobs`, `next_meeting`, `today`, `spend`, `scoreboard` and `fleet`; `waiting_on_you` and `agent_in_flight` remain separate display choices even though both read agent state. `today` enables both the today plan and lever reads. Configuration is written atomically under the profile's `jarvis` directory with directory mode `0700` and file mode `0600`. A dry run validates a prospective first-install document without creating the plugin or state directory. A validator or host identity failure restores the previous configuration and undoes staged file roles. If a config receipt cannot be committed, the config is restored before role rollback; if that recovery cannot be proven, a recovery receipt and backup are retained.
+
+Voice in the core install is the stock Hermes Desktop call or the Talk plugin when the member already runs it. No host source change is required and the core install never waits on one. The six call-survival host voice patches are an optional extra for a Mac main computer, offered only after the core install passes its smoke checks; they require the full exact-source compatibility proof and a recoverable app backup, and when that proof is absent the extra is reported as unavailable while the stock call stays in place.
+
+An agent may transfer a hash-verified package through the member's existing trusted SSH route, run the `main` role on macOS or Windows and the `headless` role on macOS or Linux, enable the plugin with the Hermes CLI's documented `hermes -p <profile-id> plugins enable <plugin-name>` form, and restart only the discovered owning dashboard when no call or turn is active. This package does not evaluate SSH commands or restart services itself. The adapted package has not been tested on any host or device; report only newly observed evidence.
+
+The agent should consult [configuration.md](configuration.md) for the profile-scoped schema, and [hands.md](hands.md), [host-compatibility.md](../payload/host/host-compatibility.md) and the [optional hands notice](../payload/hands/cua-driver-notice.txt) before offering either optional extra. Release staging requires the verified software gates and a receipt-guarded undo path; the live checks in [device-acceptance.md](device-acceptance.md) are run on the member's own devices after staging.
+
+For a different package version, use the existing installation receipt to undo the prior version before applying the new one. Never replace or forge the old receipt to bypass a changed-plan refusal. If member edits prevent safe undo, preserve them and report the recovery path. Repeating the exact same verified package remains a safe no-op.

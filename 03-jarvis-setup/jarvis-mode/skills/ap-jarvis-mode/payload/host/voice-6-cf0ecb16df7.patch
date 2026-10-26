@@ -1,0 +1,352 @@
+diff --git a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
+--- a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
++++ b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts
+@@ -1,10 +1,13 @@
+-import { afterEach, describe, expect, it, vi } from 'vitest'
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+ import { act, cleanup, renderHook } from '@testing-library/react'
+ import { StrictMode } from 'react'
+ 
++import type * as ComposerInputHistory from '@/store/composer-input-history'
++
+ import {
+   acquireMicrophoneLease,
+   disposeAssistantSubscriptions,
++  DroppedLiveDelegation,
+   releaseComposerVoiceLeases,
+   runVoiceControllerCallback,
+   useComposerVoice,
+@@ -27,6 +30,16 @@ const stubs = vi.hoisted(() => ({
+     toggleMute: vi.fn()
+   },
+   chainedArgs: [] as { enabled: boolean }[],
++  liveArgs: [] as {
++    enabled: boolean
++    onInterrupt?: () => Promise<void> | void
++    onSubmit: (text: string, voiceContext: string) => Promise<void> | void
++  }[],
++  // Ordered side-effect log: which of the haptic, the browse reset, the draft
++  // clear and the submit itself fired, and in which order.
++  calls: [] as string[],
++  // What `voice.voice_chat_mode` resolves to for the next conversation start.
++  live: { mode: 'chained' as 'chained' | 'gpt-live', status: null as null | { available: boolean } },
+   messages: { get: () => [] as unknown[], subscribe: () => () => undefined }
+ }))
+ 
+@@ -42,7 +55,11 @@ vi.mock('@/i18n', () => ({
+   })
+ }))
+ 
+-vi.mock('@/lib/haptics', () => ({ triggerHaptic: vi.fn() }))
++vi.mock('@/lib/haptics', () => ({ triggerHaptic: vi.fn(() => void stubs.calls.push('haptic')) }))
++vi.mock('@/store/composer-input-history', async importOriginal => ({
++  ...(await importOriginal<typeof ComposerInputHistory>()),
++  resetBrowseState: vi.fn((sessionId: string | null | undefined) => void stubs.calls.push(`reset:${sessionId}`))
++}))
+ vi.mock('@/lib/tts-lease', () => ({
+   CONVERSATION_LEASE: 'conversation',
+   READ_ALOUD_LEASE: 'read-aloud',
+@@ -54,9 +71,9 @@ vi.mock('@/lib/wake-indicator', () => ({
+ }))
+ vi.mock('@/store/notifications', () => ({ notify: vi.fn(), notifyError: vi.fn() }))
+ vi.mock('@/store/voice-live', () => ({
+-  $voiceLiveStatus: { get: () => null },
++  $voiceLiveStatus: { get: () => stubs.live.status },
+   refreshVoiceLiveStatus: vi.fn(async () => undefined),
+-  selectedVoiceChatMode: () => 'chained'
++  selectedVoiceChatMode: () => stubs.live.mode
+ }))
+ vi.mock('@/store/wake-word', () => ({
+   resumeWakeAfterVoice: vi.fn(async () => undefined),
+@@ -77,7 +94,13 @@ vi.mock('./use-voice-conversation', () => ({
+     return stubs.conversation
+   }
+ }))
+-vi.mock('./use-voice-live-conversation', () => ({ useVoiceLiveConversation: () => stubs.conversation }))
++vi.mock('./use-voice-live-conversation', () => ({
++  useVoiceLiveConversation: (args: (typeof stubs.liveArgs)[number]) => {
++    stubs.liveArgs.push(args)
++
++    return stubs.conversation
++  }
++}))
+ 
+ describe('composer voice ownership', () => {
+   it('keeps the plugin lifetime live through replay, then aborts on conversation replacement and unmount', async () => {
+@@ -263,19 +286,22 @@ interface VoiceProps {
+  */
+ function renderVoice(initial: Partial<VoiceProps> = {}) {
+   const submitted: { sessionId: string | null; text: string }[] = []
++  const interrupted: (string | null)[] = []
+   const initialProps: VoiceProps = { disabled: false, sessionId: 'runtime-1', storedSessionId: 'stored-1', ...initial }
+ 
+   const hook = renderHook(
+     (props: VoiceProps) =>
+       useComposerVoice({
+         busy: false,
+-        clearDraft: () => undefined,
++        clearDraft: () => void stubs.calls.push('clearDraft'),
+         disabled: props.disabled,
+         focusInput: () => undefined,
+         insertText: () => undefined,
+         maxRecordingSeconds: 60,
++        onInterrupt: () => void interrupted.push(props.sessionId),
+         // Bound to THIS render's runtime id, exactly like the host's onSubmit.
+         onSubmit: (text: string) => {
++          stubs.calls.push('submit')
+           submitted.push({ sessionId: props.sessionId, text })
+ 
+           return true
+@@ -299,7 +325,21 @@ function renderVoice(initial: Partial<VoiceProps> = {}) {
+     act(() => hook.result.current.startConversation())
+   }
+ 
+-  return { hook, rerender, start, submitted }
++  /** The GPT-Live engine's own seams, as the live session calls them. */
++  const liveEngine = () => {
++    const live = stubs.liveArgs.at(-1)
++
++    if (!live) {
++      throw new Error('the live engine is not mounted')
++    }
++
++    return live
++  }
++
++  const delegate = (text: string) => Promise.resolve(liveEngine().onSubmit(text, `User: ${text}`))
++  const interruptLive = () => Promise.resolve(liveEngine().onInterrupt?.())
++
++  return { delegate, hook, interrupted, interruptLive, liveEngine, rerender, start, submitted }
+ }
+ 
+ const isActive = (hook: ReturnType<typeof renderVoice>['hook']) => hook.result.current.voiceConversationActive
+@@ -307,6 +347,8 @@ const isActive = (hook: ReturnType<typeof renderVoice>['hook']) => hook.result.c
+ describe('a voice call through a link blink and a runtime session rebind', () => {
+   afterEach(() => {
+     stubs.chainedArgs.length = 0
++    stubs.liveArgs.length = 0
++    stubs.calls.length = 0
+     vi.clearAllMocks()
+     vi.useRealTimers()
+     cleanup()
+@@ -469,3 +511,145 @@ describe('a voice call through a link blink and a runtime session rebind', () =>
+     expect(submitted).toHaveLength(0)
+   })
+ })
++
++/**
++ * The GPT-Live engine is the one live calls actually run on, and its turns
++ * reach Hermes through the delegation seam (`onSubmit`) rather than the spoken
++ * submits above. These drive that seam exactly as the live session does.
++ */
++describe('a GPT-Live delegation through a link blink', () => {
++  beforeEach(() => {
++    stubs.live.mode = 'gpt-live'
++    stubs.live.status = { available: true }
++  })
++
++  afterEach(() => {
++    stubs.live.mode = 'chained'
++    stubs.live.status = null
++    stubs.chainedArgs.length = 0
++    stubs.liveArgs.length = 0
++    stubs.calls.length = 0
++    vi.clearAllMocks()
++    vi.useRealTimers()
++    cleanup()
++  })
++
++  it('goes straight out while the link is open, in the same order and with no wait', async () => {
++    vi.useFakeTimers()
++    const { delegate, liveEngine, start, submitted } = renderVoice()
++
++    start()
++    expect(liveEngine().enabled).toBe(true)
++    stubs.calls.length = 0
++
++    const sent = delegate('what is on my calendar')
++
++    // Nothing armed: an open link resolves the gate on a microtask, so the
++    // delegation never waits on a timer.
++    expect(vi.getTimerCount()).toBe(0)
++    await sent
++
++    expect(submitted).toEqual([{ sessionId: 'runtime-1', text: 'what is on my calendar' }])
++    expect(stubs.calls).toEqual(['haptic', 'reset:runtime-1', 'clearDraft', 'submit'])
++  })
++
++  it('holds a delegation spoken into a blink and submits it once, on the rebound session', async () => {
++    vi.useFakeTimers()
++    const { delegate, rerender, start, submitted } = renderVoice()
++
++    start()
++    rerender({ disabled: true })
++    stubs.calls.length = 0
++
++    const sent = delegate('what is on my calendar')
++
++    act(() => void vi.advanceTimersByTime(2000))
++    expect(submitted).toHaveLength(0)
++    // The side effects belong to the submit, so none of them fired yet.
++    expect(stubs.calls).toEqual([])
++
++    // The reconnect rebinds the runtime id before the socket reports open.
++    rerender({ sessionId: 'runtime-2' })
++
++    await act(async () => {
++      rerender({ disabled: false })
++      await Promise.resolve()
++    })
++
++    await sent
++
++    expect(submitted).toEqual([{ sessionId: 'runtime-2', text: 'what is on my calendar' }])
++    expect(stubs.calls).toEqual(['haptic', 'reset:runtime-2', 'clearDraft', 'submit'])
++
++    act(() => void vi.advanceTimersByTime(VOICE_LINK_GRACE_MS * 2))
++    expect(submitted).toHaveLength(1)
++  })
++
++  it('drops a delegation without a submit when the blink outlives the grace', async () => {
++    vi.useFakeTimers()
++    const { delegate, hook, rerender, start, submitted } = renderVoice()
++
++    start()
++    rerender({ disabled: true })
++    stubs.calls.length = 0
++
++    const dropped = expect(delegate('too late')).rejects.toBeInstanceOf(DroppedLiveDelegation)
++
++    await act(async () => {
++      vi.advanceTimersByTime(VOICE_LINK_GRACE_MS + 1)
++      await Promise.resolve()
++    })
++
++    await dropped
++
++    expect(submitted).toHaveLength(0)
++    expect(stubs.calls).toEqual([])
++    expect(isActive(hook)).toBe(false)
++  })
++
++  it('drops a delegation whose call really ended while it waited', async () => {
++    vi.useFakeTimers()
++    const { delegate, hook, rerender, start, submitted } = renderVoice()
++
++    start()
++    rerender({ disabled: true })
++    stubs.calls.length = 0
++
++    const dropped = expect(delegate('never mind')).rejects.toBeInstanceOf(DroppedLiveDelegation)
++
++    act(() => hook.result.current.endConversation())
++
++    await act(async () => {
++      rerender({ disabled: false })
++      await Promise.resolve()
++    })
++
++    await dropped
++
++    expect(submitted).toHaveLength(0)
++    expect(stubs.calls).toEqual([])
++    expect(isActive(hook)).toBe(false)
++  })
++
++  it('holds the live interrupt on the same gate and fires it once when the link returns', async () => {
++    vi.useFakeTimers()
++    const { interrupted, interruptLive, rerender, start } = renderVoice()
++
++    start()
++    rerender({ disabled: true })
++
++    const held = interruptLive()
++
++    act(() => void vi.advanceTimersByTime(2000))
++    expect(interrupted).toHaveLength(0)
++
++    await act(async () => {
++      rerender({ disabled: false })
++      await Promise.resolve()
++    })
++
++    await held
++
++    expect(interrupted).toEqual(['runtime-1'])
++  })
++})
+diff --git a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
+--- a/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
++++ b/apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts
+@@ -145,6 +145,15 @@ export function ComposerVoiceControllerProvider({
+  */
+ export const VOICE_LINK_GRACE_MS = 15_000
+ 
++/**
++ * A live delegation the link gate dropped (the blink outlived the grace, or the
++ * call really ended while the turn waited). It carries NO message on purpose:
++ * the live engine already has one failure path for a delegation — the rejected
++ * `onSubmit` — and an empty message leaves its toast on the existing
++ * `notifications.voice.liveDelegationFailed` copy, so nothing new is worded.
++ */
++export class DroppedLiveDelegation extends Error {}
++
+ let microphoneOwner: symbol | null = null
+ 
+ async function waitForPause(signal: AbortSignal | undefined, pause: () => Promise<void>): Promise<boolean> {
+@@ -499,12 +508,37 @@ export function useComposerVoice({
+   }
+ 
+   /** A GPT-Live delegation → Hermes turn. The bubble and the persisted row are
+-   *  what the user said; the transcript window rides the model input only. */
++   *  what the user said; the transcript window rides the model input only.
++   *
++   *  This is the job path of the LIVE engine, so it waits out a link blink on
++   *  the same gate as the spoken submits above: the call itself survives the
++   *  blink, and the turn spoken into it must survive with it. The haptic, the
++   *  browse reset and the draft clear belong to a submit that really goes out,
++   *  so they fire AFTER the wait, against the session id that is current then.
++   */
+   const submitLiveDelegation = async (text: string, voiceContext: string) => {
+-    triggerHaptic('submit')
+-    resetBrowseState(sessionId)
+-    clearDraft()
+-    await onSubmit(text, { surface: 'voice-live', voiceContext })
++    let submitted = false
++
++    await runVoiceControllerCallback(
++      voiceContextIsCurrent,
++      () => {
++        submitted = true
++        triggerHaptic('submit')
++        resetBrowseState(sessionIdRef.current)
++        clearDraft()
++
++        return onSubmitRef.current(text, { surface: 'voice-live', voiceContext })
++      },
++      awaitLinkOpen
++    )
++
++    if (!submitted) {
++      // Dropped without a submit: the grace ran out, or the call really ended
++      // while the turn waited. Rejecting hands it to the live engine's OWN
++      // delegation-failure path, which tells the voice and clears the turn
++      // instead of leaving it stuck on "thinking".
++      throw new DroppedLiveDelegation()
++    }
+   }
+ 
+   /** Recent text turns of this chat, as GPT-Live startup history. */
+@@ -575,7 +609,11 @@ export function useComposerVoice({
+     consumePendingResponse,
+     enabled: voiceConversationActive && liveEngineActive,
+     onFatalError: () => setActiveVoiceContextEpoch(null),
+-    onInterrupt,
++    // The other live path that talks to the gateway mid-call: a newer request
++    // superseding an in-flight turn. It took the raw handler, so it died on a
++    // closed socket; it now rides the same gate as the delegation, exactly as
++    // the chained engine already did.
++    onInterrupt: interruptVoiceTurn,
+     onStopWord: () => setActiveVoiceContextEpoch(null),
+     onSubmit: submitLiveDelegation,
+     pendingResponse: pendingTurnResponse,

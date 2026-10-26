@@ -1,0 +1,50 @@
+{
+  "_comment": "A made-up transcript for the tests: 3 takes and 2 markers. The word strings copy what a real engine produces, leading spaces, trailing punctuation, and marker words in different casing ('cut', 'Cut,') so the matching is exercised properly. What is under test: each marker deletes the bad take BEFORE it plus the marker itself, so only the final take survives and there is exactly ONE keep window.",
+  "language": "en",
+  "engine": "fixture",
+  "text": " Most owners post every single day by hand. cut cut Most owners post every day manually. Cut, cut. The smartest owner builds machines that make content while you sleep.",
+  "segments": [
+    {
+      "id": 0,
+      "seek": 0,
+      "start": 0.0,
+      "end": 10.5,
+      "text": " Most owners post every single day by hand. cut cut Most owners post every day manually. Cut, cut. The smartest owner builds machines that make content while you sleep.",
+      "words": [
+        {"word": " Most", "start": 0.00, "end": 0.20, "probability": 0.98},
+        {"word": " owners", "start": 0.20, "end": 0.40, "probability": 0.97},
+        {"word": " post", "start": 0.40, "end": 0.60, "probability": 0.97},
+        {"word": " every", "start": 0.60, "end": 0.95, "probability": 0.96},
+        {"word": " single", "start": 0.95, "end": 1.25, "probability": 0.96},
+        {"word": " day", "start": 1.25, "end": 1.70, "probability": 0.95},
+        {"word": " by", "start": 1.70, "end": 1.90, "probability": 0.95},
+        {"word": " hand.", "start": 1.90, "end": 2.40, "probability": 0.94},
+
+        {"word": " cut", "start": 2.80, "end": 3.05, "probability": 0.90},
+        {"word": " cut", "start": 3.05, "end": 3.35, "probability": 0.90},
+
+        {"word": " Most", "start": 3.80, "end": 4.00, "probability": 0.98},
+        {"word": " owners", "start": 4.00, "end": 4.20, "probability": 0.97},
+        {"word": " post", "start": 4.20, "end": 4.40, "probability": 0.97},
+        {"word": " every", "start": 4.40, "end": 4.75, "probability": 0.96},
+        {"word": " day", "start": 4.75, "end": 5.05, "probability": 0.96},
+        {"word": " manually.", "start": 5.05, "end": 5.60, "probability": 0.94},
+
+        {"word": " Cut,", "start": 6.00, "end": 6.28, "probability": 0.88},
+        {"word": " cut.", "start": 6.28, "end": 6.60, "probability": 0.88},
+
+        {"word": " The", "start": 7.00, "end": 7.20, "probability": 0.98},
+        {"word": " smartest", "start": 7.20, "end": 7.65, "probability": 0.96},
+        {"word": " owner", "start": 7.65, "end": 7.95, "probability": 0.96},
+        {"word": " builds", "start": 7.95, "end": 8.25, "probability": 0.96},
+        {"word": " machines", "start": 8.25, "end": 8.75, "probability": 0.95},
+        {"word": " that", "start": 8.75, "end": 8.95, "probability": 0.96},
+        {"word": " make", "start": 8.95, "end": 9.20, "probability": 0.96},
+        {"word": " content", "start": 9.20, "end": 9.65, "probability": 0.95},
+        {"word": " while", "start": 9.65, "end": 9.90, "probability": 0.96},
+        {"word": " you", "start": 9.90, "end": 10.10, "probability": 0.97},
+        {"word": " sleep.", "start": 10.10, "end": 10.50, "probability": 0.96}
+      ]
+    }
+  ]
+}

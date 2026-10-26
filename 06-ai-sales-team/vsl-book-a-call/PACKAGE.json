@@ -1,0 +1,12 @@
+{
+  "id": "vsl-book-a-call",
+  "title": "Vsl Book A Call",
+  "topic": "06",
+  "skill_ids": [
+    "ap-vsl-book-a-call"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

@@ -1,0 +1,189 @@
+diff --git a/hermes_cli/dashboard_task_context.py b/hermes_cli/dashboard_task_context.py
+new file mode 100644
+--- /dev/null
++++ b/hermes_cli/dashboard_task_context.py
+@@ -0,0 +1,70 @@
++"""Verified dashboard caller and exact profile ownership for task integrations.
++
++Identity headers are never authority. OAuth/native sessions come from the
++existing auth middleware; local desktop tokens use its canonical verifier.
++"""
++from dataclasses import dataclass, field
++import hashlib
++import json
++from pathlib import Path
++import time
++
++from fastapi import HTTPException
++from hermes_cli.dashboard_auth.base import Session
++from hermes_constants import get_hermes_home, get_default_hermes_root
++
++
++@dataclass(frozen=True, slots=True)
++class DashboardTaskContext:
++    principal_id: str
++    principal_kind: str
++    profile_name: str
++    profile_home: Path = field(repr=False)
++    store_id: str = field(repr=False)
++
++
++def _digest(parts):
++    return hashlib.sha256(json.dumps(parts, separators=(",", ":")).encode()).hexdigest()
++
++
++def _principal(request):
++    session = getattr(request.state, "session", None)
++    if isinstance(session, Session) and session.user_id and session.provider and session.expires_at > time.time():
++        return "session", _digest(["session", session.provider, session.org_id, session.user_id])
++    if not getattr(request.app.state, "auth_required", False):
++        from hermes_cli import web_server
++        if web_server._has_valid_session_token(request):
++            return "desktop", _digest(["desktop", web_server._SESSION_TOKEN])
++    raise HTTPException(status_code=401, detail="Unauthorized")
++
++
++def resolve_dashboard_task_context(request, *, profile=None):
++    """Mirror authenticated dashboard profile management, with exact store binding.
++
++    Dashboard identities already manage all live profiles under this server's
++    root. Explicit query/argument disagreement is denied rather than letting a
++    cached task integration silently authorize a different requested store.
++    """
++    kind, principal = _principal(request)
++    from hermes_cli.profiles import get_profile_dir, normalize_profile_name, profile_exists, validate_profile_name
++    root = get_default_hermes_root().resolve(strict=True)
++    current_home = get_hermes_home().resolve(strict=True)
++    current = "default" if current_home == root else current_home.name
++    query = request.query_params.get("profile")
++    if profile is not None and query is not None and profile != query:
++        raise HTTPException(status_code=403, detail="Profile denied")
++    selected = profile if profile is not None else query if query is not None else current
++    if not isinstance(selected, str) or not selected or normalize_profile_name(selected) != selected:
++        raise HTTPException(status_code=403, detail="Profile denied")
++    try:
++        validate_profile_name(selected)
++        if not profile_exists(selected):
++            raise ValueError("Profile missing")
++        home = get_profile_dir(selected).resolve(strict=True)
++        expected = root if selected == "default" else root / "profiles" / selected
++        if expected.resolve(strict=True) != home or not home.is_dir():
++            raise ValueError("Profile outside server root")
++        home.relative_to(root)
++    except (OSError, RuntimeError, ValueError):
++        raise HTTPException(status_code=403, detail="Profile denied") from None
++    return DashboardTaskContext(principal, kind, selected, home, _digest(["store", str(home)]))
+diff --git a/tests/hermes_cli/test_dashboard_task_context.py b/tests/hermes_cli/test_dashboard_task_context.py
+new file mode 100644
+--- /dev/null
++++ b/tests/hermes_cli/test_dashboard_task_context.py
+@@ -0,0 +1,109 @@
++"""Task ownership comes from verified auth and the exact bound profile."""
++import time
++from pathlib import Path
++from types import SimpleNamespace
++
++import pytest
++from fastapi import HTTPException
++from starlette.requests import Request
++from hermes_cli.dashboard_auth.base import Session
++
++
++@pytest.fixture
++def home(tmp_path, monkeypatch):
++    monkeypatch.setattr(Path, "home", lambda: tmp_path)
++    root = tmp_path / ".hermes"
++    primary = root / "profiles" / "primary"
++    primary.mkdir(parents=True)
++    (primary / "config.yaml").write_text("model: test\n")
++    monkeypatch.setenv("HERMES_HOME", str(primary))
++    return primary
++
++
++def request(session=None, headers=(), query=b""):
++    value = Request({"type": "http", "path": "/api/plugins/hermes-talk/status", "headers": list(headers),
++                     "query_string": query, "app": SimpleNamespace(state=SimpleNamespace(auth_required=True))})
++    if session is not None:
++        value.state.session = session
++    return value
++
++
++def session():
++    return Session("user-a", "", "", "org-a", "nous", int(time.time()) + 100, "secret", "secret-refresh")
++
++
++def test_verified_session_binds_exact_profile_and_stable_identity(home):
++    from hermes_cli.dashboard_task_context import resolve_dashboard_task_context
++    first = resolve_dashboard_task_context(request(session()), profile="primary")
++    second = resolve_dashboard_task_context(request(session()), profile="primary")
++    assert first == second
++    assert first.profile_home == home.resolve()
++    assert first.profile_name == "primary"
++    assert first.principal_kind == "session"
++    assert "secret" not in first.principal_id + first.store_id
++
++
++@pytest.mark.parametrize("profile", [None, "primary", "../primary", "/tmp", "default", "eve"])
++def test_unverified_headers_cannot_authorize_any_profile(home, profile):
++    from hermes_cli.dashboard_task_context import resolve_dashboard_task_context
++    with pytest.raises(HTTPException) as denied:
++        resolve_dashboard_task_context(request(headers=[(b"x-principal-id", b"owner")]), profile=profile)
++    assert denied.value.status_code == 401
++
++
++@pytest.mark.parametrize("profile", ["../primary", "/tmp", "eve"])
++def test_verified_session_cannot_escape_bound_profile(home, profile):
++    from hermes_cli.dashboard_task_context import resolve_dashboard_task_context
++    with pytest.raises(HTTPException) as denied:
++        resolve_dashboard_task_context(request(session()), profile=profile)
++    assert denied.value.status_code == 403
++
++
++def test_default_backend_can_select_live_primary_without_inheriting_home(home, monkeypatch):
++    from hermes_cli.dashboard_task_context import resolve_dashboard_task_context
++    monkeypatch.setenv("HERMES_HOME", str(home.parent.parent))
++    value = request(session(), query=b"profile=primary")
++    context = resolve_dashboard_task_context(value, profile="primary")
++    assert context.profile_name == "primary"
++    assert context.profile_home == home.resolve()
++    with pytest.raises(HTTPException) as denied:
++        resolve_dashboard_task_context(value, profile="default")
++    assert denied.value.status_code == 403
++
++
++def test_symlink_cannot_escape_server_profile_root(home, tmp_path):
++    from hermes_cli.dashboard_task_context import resolve_dashboard_task_context
++    outside = tmp_path / "outside"
++    outside.mkdir()
++    (outside / "config.yaml").write_text("model: test\n")
++    (home.parent / "escape").symlink_to(outside)
++    with pytest.raises(HTTPException) as denied:
++        resolve_dashboard_task_context(request(session()), profile="escape")
++    assert denied.value.status_code == 403
++
++
++def test_local_desktop_requires_canonical_session_token(home, monkeypatch):
++    from hermes_cli import web_server
++    from hermes_cli.dashboard_task_context import resolve_dashboard_task_context
++    monkeypatch.setattr(web_server, "_SESSION_TOKEN", "verified-local-secret")
++    value = request(headers=[(b"authorization", b"Bearer verified-local-secret")])
++    value.app.state.auth_required = False
++    context = resolve_dashboard_task_context(value, profile="primary")
++    assert context.principal_kind == "desktop"
++    assert "verified-local-secret" not in repr(context)
++    forged = request(headers=[(b"authorization", b"Bearer forged")])
++    forged.app.state.auth_required = False
++    with pytest.raises(HTTPException) as denied:
++        resolve_dashboard_task_context(forged, profile="primary")
++    assert denied.value.status_code == 401
++
++
++def test_expired_session_and_flag_without_verified_token_are_rejected(home):
++    from hermes_cli.dashboard_task_context import resolve_dashboard_task_context
++    expired = Session("user", "", "", "", "nous", 1, "at", "rt")
++    value = request(expired)
++    value.state.token_authenticated = True
++    value.state.token_principal = SimpleNamespace(principal="forged", provider="forged")
++    with pytest.raises(HTTPException) as denied:
++        resolve_dashboard_task_context(value, profile="primary")
++    assert denied.value.status_code == 401

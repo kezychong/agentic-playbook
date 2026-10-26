@@ -1,0 +1,356 @@
+{
+  "schema_version": 2,
+  "package_component": "host-voice-and-talk",
+  "state": "captured-full-voice-chain-replay",
+  "public_base": {
+    "commit": "e83b1d51f13a08b424636f0b519db86a35aa7bd7",
+    "repository": "https://github.com/NousResearch/hermes-agent",
+    "note": "The six voice commits replay onto this public base without the unrelated billing carry."
+  },
+  "excluded_private_carry": {
+    "commit": "8d7362fa908579bded9f94f187521e3f4c0cf881",
+    "reason": "Its changed files are outside this voice chain and are intentionally not packaged."
+  },
+  "privacy": {
+    "sanitized_comments_and_test_fixtures": true,
+    "removed_diff_index_metadata": true,
+    "banned_strings_checked": true
+  },
+  "levels": {
+    "base": {
+      "files": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": "55d4eb42653c42ee79b51dec80dd244a467ef119269888222b7d1dd6099dcab8",
+        "apps/desktop/src/app/chat/composer/index.tsx": "15737d6cbb2e7391a5bee0aa1a3b8d522157a41cef12fed17638a7e07f63baab",
+        "apps/desktop/src/sdk/index.ts": "8c75a36750287623f5acd63de81d1560552108baeb3f51bba50df5be459e928e",
+        "apps/desktop/electron/main.ts": "82c2c1f2ec67117c8ba92ea780441968c75201ee3c83c4890f85320041eb0e33",
+        "apps/desktop/src/api/plugins.test.ts": "d04ecd8090c7a1013cecef0297b2321af1c72ef2489478b7f02be57102c9c5b7",
+        "apps/desktop/src/api/plugins.ts": "17c163a7e5122adc28c3cdac9f4c4fa189dcd5c720b062b7c89dedb834d32fb7",
+        "apps/desktop/src/app/chat/composer/types.ts": "cd819bcde56e8de6b21d80ded88f229b30d85614d08f796e5fca1dfbbe7beccf",
+        "apps/desktop/src/app/chat/index.tsx": "c1dbcd0b6de9ca6873d485e19e0c6326addbbc0fed6e8d02ca2721742c5342ab",
+        "apps/desktop/src/app/contrib/latest-actions.ts": "6c042a945a7ea6f3de1d5b51b2a72caf95f1cf80ca7eee2e9b720764e4187e0b",
+        "apps/desktop/src/app/contrib/types.ts": "c81f03d4b6c2d630d64a0100dac24e2bd20a90ea622ec3d1c21e55db8e802970",
+        "apps/desktop/src/app/contrib/wiring.tsx": "a5e2cf2d05364891b74ac778cf4cecd192bbad4cd7e786997fa7e2c28e130ed6"
+      },
+      "absent": [
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts",
+        "apps/desktop/electron/talk-auth.test.ts",
+        "apps/desktop/electron/talk-auth.ts",
+        "hermes_cli/dashboard_task_context.py",
+        "tests/hermes_cli/test_dashboard_task_context.py"
+      ]
+    },
+    "voice-1": {
+      "files": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts": "5c00cfe9ff3b2b8a936563d637f7c8716a6070507ea2a394227a2a697e4314e1",
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": "d891f69119561e8abd38c0ea519feb2be1568f0a125731db78be384fac673b6c",
+        "apps/desktop/src/app/chat/composer/index.tsx": "40f1cc5ff19c592a155f95444c51e67b6bceff11ba2bd310b7d613685448a115",
+        "apps/desktop/src/sdk/index.ts": "cff05982a5ee46037defc85ab20634bf0efae6e2ce1499e9cc86471b8c4489c4",
+        "apps/desktop/electron/main.ts": "82c2c1f2ec67117c8ba92ea780441968c75201ee3c83c4890f85320041eb0e33",
+        "apps/desktop/src/api/plugins.test.ts": "d04ecd8090c7a1013cecef0297b2321af1c72ef2489478b7f02be57102c9c5b7",
+        "apps/desktop/src/api/plugins.ts": "17c163a7e5122adc28c3cdac9f4c4fa189dcd5c720b062b7c89dedb834d32fb7",
+        "apps/desktop/src/app/chat/composer/types.ts": "cd819bcde56e8de6b21d80ded88f229b30d85614d08f796e5fca1dfbbe7beccf",
+        "apps/desktop/src/app/chat/index.tsx": "c1dbcd0b6de9ca6873d485e19e0c6326addbbc0fed6e8d02ca2721742c5342ab",
+        "apps/desktop/src/app/contrib/latest-actions.ts": "6c042a945a7ea6f3de1d5b51b2a72caf95f1cf80ca7eee2e9b720764e4187e0b",
+        "apps/desktop/src/app/contrib/types.ts": "c81f03d4b6c2d630d64a0100dac24e2bd20a90ea622ec3d1c21e55db8e802970",
+        "apps/desktop/src/app/contrib/wiring.tsx": "a5e2cf2d05364891b74ac778cf4cecd192bbad4cd7e786997fa7e2c28e130ed6"
+      },
+      "absent": [
+        "apps/desktop/electron/talk-auth.test.ts",
+        "apps/desktop/electron/talk-auth.ts",
+        "hermes_cli/dashboard_task_context.py",
+        "tests/hermes_cli/test_dashboard_task_context.py"
+      ]
+    },
+    "voice-2": {
+      "files": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts": "37a7577318d5e71d5621a41e036e6d556bfe1ca636e37478e122a174a9bbac64",
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": "f31bdec22577537150bcb5b1c86c3a891b41e12dccc159366e0f5d8852f649a5",
+        "apps/desktop/src/app/chat/composer/index.tsx": "6e97458aa16290c4508aff68ddc8e8792646b6f3363d7e0309f45c8b170917a8",
+        "apps/desktop/src/sdk/index.ts": "cff05982a5ee46037defc85ab20634bf0efae6e2ce1499e9cc86471b8c4489c4",
+        "apps/desktop/electron/main.ts": "04100d08bf98a60e58e91857aedf443e44cd4ff7e1a7e5e525512aaab33a1990",
+        "apps/desktop/electron/talk-auth.test.ts": "d3facabd3555e19b3a5cb0d0616bdee3f8c92af64e892c2b023637f2527189fc",
+        "apps/desktop/electron/talk-auth.ts": "662a95b6bfd22a8afaff47ddf7b90509aca557643dae0d4082f7036f36bd0421",
+        "apps/desktop/src/api/plugins.test.ts": "5e51ee7f98b887a98258ee7ad9662ee59574f315ed827c93b763b5c3bd631c36",
+        "apps/desktop/src/api/plugins.ts": "bbbeee21b83e278e8ee3a5ff59974a98a81368c56a54c12e2d6053f17e9af57e",
+        "apps/desktop/src/app/chat/composer/types.ts": "3e12c5ff4c6e4b81cbe72f683e38fbaa6bd025cd74898bd205bc0c888eaf016f",
+        "apps/desktop/src/app/chat/index.tsx": "eb055e85bc4db9494d5a57925d5ec29796c6a9dd59ca9f348b6970992058a00c",
+        "apps/desktop/src/app/contrib/latest-actions.ts": "5a56de45d7fbbd4d1ba60c8bca6dacd2645f1c8433b4137ccdeeeb94814eb1ad",
+        "apps/desktop/src/app/contrib/types.ts": "ed12ec7b837408bbe574fbbc71ac18d3b56c6c5030cf91e198b22cfb10c2d860",
+        "apps/desktop/src/app/contrib/wiring.tsx": "a25e9bc6b932e0359d5c9c772aba44aef1672b4df15538dd678622414c5def50"
+      },
+      "absent": [
+        "hermes_cli/dashboard_task_context.py",
+        "tests/hermes_cli/test_dashboard_task_context.py"
+      ]
+    },
+    "voice-3": {
+      "files": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts": "b32d63421df2487aa37556127e7df6111132334372dfa87920ee49639c2463f8",
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": "e800f7ee45b075bc59a97d8e67ddfe444b0f276988561ad03b32f05daf38f509",
+        "apps/desktop/src/app/chat/composer/index.tsx": "6e97458aa16290c4508aff68ddc8e8792646b6f3363d7e0309f45c8b170917a8",
+        "apps/desktop/src/sdk/index.ts": "cff05982a5ee46037defc85ab20634bf0efae6e2ce1499e9cc86471b8c4489c4",
+        "apps/desktop/electron/main.ts": "04100d08bf98a60e58e91857aedf443e44cd4ff7e1a7e5e525512aaab33a1990",
+        "apps/desktop/electron/talk-auth.test.ts": "d3facabd3555e19b3a5cb0d0616bdee3f8c92af64e892c2b023637f2527189fc",
+        "apps/desktop/electron/talk-auth.ts": "662a95b6bfd22a8afaff47ddf7b90509aca557643dae0d4082f7036f36bd0421",
+        "apps/desktop/src/api/plugins.test.ts": "5e51ee7f98b887a98258ee7ad9662ee59574f315ed827c93b763b5c3bd631c36",
+        "apps/desktop/src/api/plugins.ts": "bbbeee21b83e278e8ee3a5ff59974a98a81368c56a54c12e2d6053f17e9af57e",
+        "apps/desktop/src/app/chat/composer/types.ts": "3e12c5ff4c6e4b81cbe72f683e38fbaa6bd025cd74898bd205bc0c888eaf016f",
+        "apps/desktop/src/app/chat/index.tsx": "eb055e85bc4db9494d5a57925d5ec29796c6a9dd59ca9f348b6970992058a00c",
+        "apps/desktop/src/app/contrib/latest-actions.ts": "5a56de45d7fbbd4d1ba60c8bca6dacd2645f1c8433b4137ccdeeeb94814eb1ad",
+        "apps/desktop/src/app/contrib/types.ts": "ed12ec7b837408bbe574fbbc71ac18d3b56c6c5030cf91e198b22cfb10c2d860",
+        "apps/desktop/src/app/contrib/wiring.tsx": "a25e9bc6b932e0359d5c9c772aba44aef1672b4df15538dd678622414c5def50"
+      },
+      "absent": [
+        "hermes_cli/dashboard_task_context.py",
+        "tests/hermes_cli/test_dashboard_task_context.py"
+      ]
+    },
+    "voice-4": {
+      "files": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts": "b32d63421df2487aa37556127e7df6111132334372dfa87920ee49639c2463f8",
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": "e800f7ee45b075bc59a97d8e67ddfe444b0f276988561ad03b32f05daf38f509",
+        "apps/desktop/src/app/chat/composer/index.tsx": "6e97458aa16290c4508aff68ddc8e8792646b6f3363d7e0309f45c8b170917a8",
+        "apps/desktop/src/sdk/index.ts": "cff05982a5ee46037defc85ab20634bf0efae6e2ce1499e9cc86471b8c4489c4",
+        "apps/desktop/electron/main.ts": "04100d08bf98a60e58e91857aedf443e44cd4ff7e1a7e5e525512aaab33a1990",
+        "apps/desktop/electron/talk-auth.test.ts": "d3facabd3555e19b3a5cb0d0616bdee3f8c92af64e892c2b023637f2527189fc",
+        "apps/desktop/electron/talk-auth.ts": "662a95b6bfd22a8afaff47ddf7b90509aca557643dae0d4082f7036f36bd0421",
+        "apps/desktop/src/api/plugins.test.ts": "5e51ee7f98b887a98258ee7ad9662ee59574f315ed827c93b763b5c3bd631c36",
+        "apps/desktop/src/api/plugins.ts": "bbbeee21b83e278e8ee3a5ff59974a98a81368c56a54c12e2d6053f17e9af57e",
+        "apps/desktop/src/app/chat/composer/types.ts": "3e12c5ff4c6e4b81cbe72f683e38fbaa6bd025cd74898bd205bc0c888eaf016f",
+        "apps/desktop/src/app/chat/index.tsx": "eb055e85bc4db9494d5a57925d5ec29796c6a9dd59ca9f348b6970992058a00c",
+        "apps/desktop/src/app/contrib/latest-actions.ts": "5a56de45d7fbbd4d1ba60c8bca6dacd2645f1c8433b4137ccdeeeb94814eb1ad",
+        "apps/desktop/src/app/contrib/types.ts": "ed12ec7b837408bbe574fbbc71ac18d3b56c6c5030cf91e198b22cfb10c2d860",
+        "apps/desktop/src/app/contrib/wiring.tsx": "a25e9bc6b932e0359d5c9c772aba44aef1672b4df15538dd678622414c5def50",
+        "hermes_cli/dashboard_task_context.py": "45d856a9fb32e5bb7ed20c22dd835995b79a2877cc3f0c502fa23403dbe94424",
+        "tests/hermes_cli/test_dashboard_task_context.py": "2516cddc5f530dd2cd92574a204bc6ae1829fc53327f1f8ff6377318c5b9f0e3"
+      },
+      "absent": []
+    },
+    "voice-5": {
+      "files": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts": "5c11deb41510e2e4a54b2fef6b71d1e27789e2f65a9b28b52add5a2dbffd7895",
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": "2e984adcd446f5a0457d280bf226d79aac78c7f09736cbf60d06ac61d8760050",
+        "apps/desktop/src/app/chat/composer/index.tsx": "6e97458aa16290c4508aff68ddc8e8792646b6f3363d7e0309f45c8b170917a8",
+        "apps/desktop/src/sdk/index.ts": "cff05982a5ee46037defc85ab20634bf0efae6e2ce1499e9cc86471b8c4489c4",
+        "apps/desktop/electron/main.ts": "04100d08bf98a60e58e91857aedf443e44cd4ff7e1a7e5e525512aaab33a1990",
+        "apps/desktop/electron/talk-auth.test.ts": "d3facabd3555e19b3a5cb0d0616bdee3f8c92af64e892c2b023637f2527189fc",
+        "apps/desktop/electron/talk-auth.ts": "662a95b6bfd22a8afaff47ddf7b90509aca557643dae0d4082f7036f36bd0421",
+        "apps/desktop/src/api/plugins.test.ts": "5e51ee7f98b887a98258ee7ad9662ee59574f315ed827c93b763b5c3bd631c36",
+        "apps/desktop/src/api/plugins.ts": "bbbeee21b83e278e8ee3a5ff59974a98a81368c56a54c12e2d6053f17e9af57e",
+        "apps/desktop/src/app/chat/composer/types.ts": "3e12c5ff4c6e4b81cbe72f683e38fbaa6bd025cd74898bd205bc0c888eaf016f",
+        "apps/desktop/src/app/chat/index.tsx": "eb055e85bc4db9494d5a57925d5ec29796c6a9dd59ca9f348b6970992058a00c",
+        "apps/desktop/src/app/contrib/latest-actions.ts": "5a56de45d7fbbd4d1ba60c8bca6dacd2645f1c8433b4137ccdeeeb94814eb1ad",
+        "apps/desktop/src/app/contrib/types.ts": "ed12ec7b837408bbe574fbbc71ac18d3b56c6c5030cf91e198b22cfb10c2d860",
+        "apps/desktop/src/app/contrib/wiring.tsx": "a25e9bc6b932e0359d5c9c772aba44aef1672b4df15538dd678622414c5def50",
+        "hermes_cli/dashboard_task_context.py": "45d856a9fb32e5bb7ed20c22dd835995b79a2877cc3f0c502fa23403dbe94424",
+        "tests/hermes_cli/test_dashboard_task_context.py": "2516cddc5f530dd2cd92574a204bc6ae1829fc53327f1f8ff6377318c5b9f0e3"
+      },
+      "absent": []
+    },
+    "voice-6": {
+      "files": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts": "443e5a297d4b0f4645d63d4da0c830fc764920be7b58736cb4e5d0accf43fbb7",
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": "ff03ed966f5657b65753c320225a6e611213f0237266c9b0f0ca0a927cc83927",
+        "apps/desktop/src/app/chat/composer/index.tsx": "6e97458aa16290c4508aff68ddc8e8792646b6f3363d7e0309f45c8b170917a8",
+        "apps/desktop/src/sdk/index.ts": "cff05982a5ee46037defc85ab20634bf0efae6e2ce1499e9cc86471b8c4489c4",
+        "apps/desktop/electron/main.ts": "04100d08bf98a60e58e91857aedf443e44cd4ff7e1a7e5e525512aaab33a1990",
+        "apps/desktop/electron/talk-auth.test.ts": "d3facabd3555e19b3a5cb0d0616bdee3f8c92af64e892c2b023637f2527189fc",
+        "apps/desktop/electron/talk-auth.ts": "662a95b6bfd22a8afaff47ddf7b90509aca557643dae0d4082f7036f36bd0421",
+        "apps/desktop/src/api/plugins.test.ts": "5e51ee7f98b887a98258ee7ad9662ee59574f315ed827c93b763b5c3bd631c36",
+        "apps/desktop/src/api/plugins.ts": "bbbeee21b83e278e8ee3a5ff59974a98a81368c56a54c12e2d6053f17e9af57e",
+        "apps/desktop/src/app/chat/composer/types.ts": "3e12c5ff4c6e4b81cbe72f683e38fbaa6bd025cd74898bd205bc0c888eaf016f",
+        "apps/desktop/src/app/chat/index.tsx": "eb055e85bc4db9494d5a57925d5ec29796c6a9dd59ca9f348b6970992058a00c",
+        "apps/desktop/src/app/contrib/latest-actions.ts": "5a56de45d7fbbd4d1ba60c8bca6dacd2645f1c8433b4137ccdeeeb94814eb1ad",
+        "apps/desktop/src/app/contrib/types.ts": "ed12ec7b837408bbe574fbbc71ac18d3b56c6c5030cf91e198b22cfb10c2d860",
+        "apps/desktop/src/app/contrib/wiring.tsx": "a25e9bc6b932e0359d5c9c772aba44aef1672b4df15538dd678622414c5def50",
+        "hermes_cli/dashboard_task_context.py": "45d856a9fb32e5bb7ed20c22dd835995b79a2877cc3f0c502fa23403dbe94424",
+        "tests/hermes_cli/test_dashboard_task_context.py": "2516cddc5f530dd2cd92574a204bc6ae1829fc53327f1f8ff6377318c5b9f0e3"
+      },
+      "absent": []
+    }
+  },
+  "patches": [
+    {
+      "id": "voice-1",
+      "commit": "67601e80767ad903503379debe350c77f00ebad1",
+      "file": "payload/host/voice-1-67601e80767.patch",
+      "source_sha256": "76356515fc53a552df63dbd543940916855d0a9e7a759748812b8921bd8bb10f",
+      "package_sha256": "12bd145b04bd65f901f3063932543291041cdcec5661b5095dc7e2e87a641a59",
+      "depends_on": "base",
+      "before_after": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": {
+          "before": "55d4eb42653c42ee79b51dec80dd244a467ef119269888222b7d1dd6099dcab8",
+          "after": "d891f69119561e8abd38c0ea519feb2be1568f0a125731db78be384fac673b6c"
+        },
+        "apps/desktop/src/app/chat/composer/index.tsx": {
+          "before": "15737d6cbb2e7391a5bee0aa1a3b8d522157a41cef12fed17638a7e07f63baab",
+          "after": "40f1cc5ff19c592a155f95444c51e67b6bceff11ba2bd310b7d613685448a115"
+        },
+        "apps/desktop/src/sdk/index.ts": {
+          "before": "8c75a36750287623f5acd63de81d1560552108baeb3f51bba50df5be459e928e",
+          "after": "cff05982a5ee46037defc85ab20634bf0efae6e2ce1499e9cc86471b8c4489c4"
+        },
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts": {
+          "before": null,
+          "after": "5c00cfe9ff3b2b8a936563d637f7c8716a6070507ea2a394227a2a697e4314e1"
+        }
+      }
+    },
+    {
+      "id": "voice-2",
+      "commit": "d0903ea04869306be603f75c8e900d4a8095b46b",
+      "file": "payload/host/voice-2-d0903ea0486.patch",
+      "source_sha256": "038054c1d69330d2da53d0049e25533c6e186ab460c8a6bd837bdb51bd30e93b",
+      "package_sha256": "945a09d36d2724b76831fbd8818285de92e23ef89fe469bac9b9748eb7c393a7",
+      "depends_on": "voice-1",
+      "before_after": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts": {
+          "before": "5c00cfe9ff3b2b8a936563d637f7c8716a6070507ea2a394227a2a697e4314e1",
+          "after": "37a7577318d5e71d5621a41e036e6d556bfe1ca636e37478e122a174a9bbac64"
+        },
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": {
+          "before": "d891f69119561e8abd38c0ea519feb2be1568f0a125731db78be384fac673b6c",
+          "after": "f31bdec22577537150bcb5b1c86c3a891b41e12dccc159366e0f5d8852f649a5"
+        },
+        "apps/desktop/src/app/chat/composer/index.tsx": {
+          "before": "40f1cc5ff19c592a155f95444c51e67b6bceff11ba2bd310b7d613685448a115",
+          "after": "6e97458aa16290c4508aff68ddc8e8792646b6f3363d7e0309f45c8b170917a8"
+        },
+        "apps/desktop/electron/main.ts": {
+          "before": "82c2c1f2ec67117c8ba92ea780441968c75201ee3c83c4890f85320041eb0e33",
+          "after": "04100d08bf98a60e58e91857aedf443e44cd4ff7e1a7e5e525512aaab33a1990"
+        },
+        "apps/desktop/src/api/plugins.test.ts": {
+          "before": "d04ecd8090c7a1013cecef0297b2321af1c72ef2489478b7f02be57102c9c5b7",
+          "after": "5e51ee7f98b887a98258ee7ad9662ee59574f315ed827c93b763b5c3bd631c36"
+        },
+        "apps/desktop/src/api/plugins.ts": {
+          "before": "17c163a7e5122adc28c3cdac9f4c4fa189dcd5c720b062b7c89dedb834d32fb7",
+          "after": "bbbeee21b83e278e8ee3a5ff59974a98a81368c56a54c12e2d6053f17e9af57e"
+        },
+        "apps/desktop/src/app/chat/composer/types.ts": {
+          "before": "cd819bcde56e8de6b21d80ded88f229b30d85614d08f796e5fca1dfbbe7beccf",
+          "after": "3e12c5ff4c6e4b81cbe72f683e38fbaa6bd025cd74898bd205bc0c888eaf016f"
+        },
+        "apps/desktop/src/app/chat/index.tsx": {
+          "before": "c1dbcd0b6de9ca6873d485e19e0c6326addbbc0fed6e8d02ca2721742c5342ab",
+          "after": "eb055e85bc4db9494d5a57925d5ec29796c6a9dd59ca9f348b6970992058a00c"
+        },
+        "apps/desktop/src/app/contrib/latest-actions.ts": {
+          "before": "6c042a945a7ea6f3de1d5b51b2a72caf95f1cf80ca7eee2e9b720764e4187e0b",
+          "after": "5a56de45d7fbbd4d1ba60c8bca6dacd2645f1c8433b4137ccdeeeb94814eb1ad"
+        },
+        "apps/desktop/src/app/contrib/types.ts": {
+          "before": "c81f03d4b6c2d630d64a0100dac24e2bd20a90ea622ec3d1c21e55db8e802970",
+          "after": "ed12ec7b837408bbe574fbbc71ac18d3b56c6c5030cf91e198b22cfb10c2d860"
+        },
+        "apps/desktop/src/app/contrib/wiring.tsx": {
+          "before": "a5e2cf2d05364891b74ac778cf4cecd192bbad4cd7e786997fa7e2c28e130ed6",
+          "after": "a25e9bc6b932e0359d5c9c772aba44aef1672b4df15538dd678622414c5def50"
+        },
+        "apps/desktop/electron/talk-auth.test.ts": {
+          "before": null,
+          "after": "d3facabd3555e19b3a5cb0d0616bdee3f8c92af64e892c2b023637f2527189fc"
+        },
+        "apps/desktop/electron/talk-auth.ts": {
+          "before": null,
+          "after": "662a95b6bfd22a8afaff47ddf7b90509aca557643dae0d4082f7036f36bd0421"
+        }
+      }
+    },
+    {
+      "id": "voice-3",
+      "commit": "ccbf400b47d9077bb8e631f1fb1001d76c20b5ab",
+      "file": "payload/host/voice-3-ccbf400b47d.patch",
+      "source_sha256": "778ed6ae390db23ceb6c328d34e1a9c3afd93b15243a980c4553723dd11b3c1b",
+      "package_sha256": "1d3fd048a1ff07ef9547b5e620b519a878c2eeaaba22801a89f136e19bc6eb99",
+      "depends_on": "voice-2",
+      "before_after": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts": {
+          "before": "37a7577318d5e71d5621a41e036e6d556bfe1ca636e37478e122a174a9bbac64",
+          "after": "b32d63421df2487aa37556127e7df6111132334372dfa87920ee49639c2463f8"
+        },
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": {
+          "before": "f31bdec22577537150bcb5b1c86c3a891b41e12dccc159366e0f5d8852f649a5",
+          "after": "e800f7ee45b075bc59a97d8e67ddfe444b0f276988561ad03b32f05daf38f509"
+        }
+      }
+    },
+    {
+      "id": "voice-4",
+      "commit": "64f012ac0c9e2f2dde5483f52d3bc62fb45c5ea4",
+      "file": "payload/host/voice-4-64f012ac0c.patch",
+      "source_sha256": "46ce67cc6287b714f1fe551e1af7656d752ed16417b3a85ea31717e0def06872",
+      "package_sha256": "e3e1688dad390177dcc8d48e88191a493bcbda5ae57be6c05522c818ef6fe5d0",
+      "depends_on": "voice-3",
+      "before_after": {
+        "hermes_cli/dashboard_task_context.py": {
+          "before": null,
+          "after": "45d856a9fb32e5bb7ed20c22dd835995b79a2877cc3f0c502fa23403dbe94424"
+        },
+        "tests/hermes_cli/test_dashboard_task_context.py": {
+          "before": null,
+          "after": "2516cddc5f530dd2cd92574a204bc6ae1829fc53327f1f8ff6377318c5b9f0e3"
+        }
+      }
+    },
+    {
+      "id": "voice-5",
+      "commit": "ec5a0d4df4ddd4c45f7b2ec473647ba84b4672c8",
+      "file": "payload/host/voice-5-ec5a0d4df4d.patch",
+      "source_sha256": "ad8e85ae87ce315096d206c5b1c19874801e0f873cda70446c50d13e111b51a2",
+      "package_sha256": "96f09bc4a3cdbfbae19c42c4bd32c287e34e8bb93a281921b914ef855273ece7",
+      "depends_on": "voice-4",
+      "before_after": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts": {
+          "before": "b32d63421df2487aa37556127e7df6111132334372dfa87920ee49639c2463f8",
+          "after": "5c11deb41510e2e4a54b2fef6b71d1e27789e2f65a9b28b52add5a2dbffd7895"
+        },
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": {
+          "before": "e800f7ee45b075bc59a97d8e67ddfe444b0f276988561ad03b32f05daf38f509",
+          "after": "2e984adcd446f5a0457d280bf226d79aac78c7f09736cbf60d06ac61d8760050"
+        }
+      }
+    },
+    {
+      "id": "voice-6",
+      "commit": "cf0ecb16df7541b24cb9886d320b2af46624fedc",
+      "file": "payload/host/voice-6-cf0ecb16df7.patch",
+      "source_sha256": "2fb1099b1444ea8bf7f16a3c5db17dbe34178019ab58b9c93b552d7cac926af0",
+      "package_sha256": "3bacee6a8c7d30baa57158758787f3aecb52b89caecc0e304f3232873cf2025a",
+      "depends_on": "voice-5",
+      "before_after": {
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts": {
+          "before": "5c11deb41510e2e4a54b2fef6b71d1e27789e2f65a9b28b52add5a2dbffd7895",
+          "after": "443e5a297d4b0f4645d63d4da0c830fc764920be7b58736cb4e5d0accf43fbb7"
+        },
+        "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts": {
+          "before": "2e984adcd446f5a0457d280bf226d79aac78c7f09736cbf60d06ac61d8760050",
+          "after": "ff03ed966f5657b65753c320225a6e611213f0237266c9b0f0ca0a927cc83927"
+        }
+      }
+    }
+  ],
+  "changed_files": [
+    "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.test.ts",
+    "apps/desktop/src/app/chat/composer/hooks/use-composer-voice.ts",
+    "apps/desktop/src/app/chat/composer/index.tsx",
+    "apps/desktop/src/sdk/index.ts",
+    "apps/desktop/electron/main.ts",
+    "apps/desktop/electron/talk-auth.test.ts",
+    "apps/desktop/electron/talk-auth.ts",
+    "apps/desktop/src/api/plugins.test.ts",
+    "apps/desktop/src/api/plugins.ts",
+    "apps/desktop/src/app/chat/composer/types.ts",
+    "apps/desktop/src/app/chat/index.tsx",
+    "apps/desktop/src/app/contrib/latest-actions.ts",
+    "apps/desktop/src/app/contrib/types.ts",
+    "apps/desktop/src/app/contrib/wiring.tsx",
+    "hermes_cli/dashboard_task_context.py",
+    "tests/hermes_cli/test_dashboard_task_context.py"
+  ],
+  "native_controller": {
+    "status": "kept_in_main_frontend",
+    "note": "These patches do not include or replace the native voice controller."
+  }
+}

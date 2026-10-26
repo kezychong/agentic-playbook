@@ -1,0 +1,12 @@
+{
+  "id": "webinar-architect",
+  "title": "Webinar Architect",
+  "topic": "06",
+  "skill_ids": [
+    "ap-webinar-architect"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

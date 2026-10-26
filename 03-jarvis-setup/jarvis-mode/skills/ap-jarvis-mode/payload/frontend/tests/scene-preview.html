@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jarvis mode scene — preview (SAMPLE DATA)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#111B3F;overflow:hidden}
+  #stage{position:fixed;inset:0;display:block}
+  .chip{position:fixed;font:10px/1.4 'JetBrains Mono', ui-monospace, Menlo, monospace;
+        text-transform:uppercase;letter-spacing:.22em;color:#8A93A6;z-index:3;pointer-events:none}
+  #tag{left:18px;top:16px}
+  #sample{left:18px;bottom:16px;color:#FFB454;border:1px solid rgba(255,180,84,.35);
+          border-radius:6px;padding:5px 9px;background:rgba(255,180,84,.06)}
+  #readout{right:26px;bottom:22px;text-align:right;color:#8A93A6;white-space:pre-line;line-height:1.7}
+  #err{position:fixed;left:18px;top:40px;color:#E85D4F;font:12px/1.5 ui-monospace,Menlo,monospace;z-index:4;white-space:pre}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<div class="chip" id="tag">Jarvis mode scene · preview</div>
+<div class="chip" id="sample">Sample data</div>
+<div class="chip" id="readout">—</div>
+<div id="err"></div>
+
+<!-- 10-theme.js may not exist yet (WP-A owns it) — a failed load is fine,
+     40-scene.js falls back to its own SPEC §3 token table. -->
+<script src="../src/10-theme.js" onerror="void 0"></script>
+<!-- 35-assets.js is GENERATED (scripts/embed-assets.py): the Command Center
+     art as data URIs. It must load BEFORE 40-scene.js, which reads
+     JARVIS_ASSETS. Without it the scene still paints, just without the art. -->
+<script src="../src/35-assets.js" onerror="void 0"></script>
+<script src="../src/40-scene.js"></script>
+<script>
+(function () {
+  var err = document.getElementById('err');
+  if (typeof createScene !== 'function') {
+    err.textContent = 'createScene not found — is src/40-scene.js next to this file?';
+    return;
+  }
+
+  /* ------------------------------------------------- SAMPLE data (labelled) */
+  var DATA = {
+    brains: [
+      { id: 'brain-1',  label: 'Brain 1', status: 'ok' },
+      { id: 'brain-2',   label: 'Brain 2',   status: 'ok' },
+      { id: 'brain-3', label: 'Brain 3', status: 'ok' }
+    ],
+    senses: [
+      'screenpipe','plaud','skool','slack','notion','linear',
+      'stripe','exa','perplexity','context7','higgsfield','sensemaker'
+    ].map(function (id, i) {
+      return { id: id, label: id, status: (i === 4 || i === 9) ? 'unreachable' : 'ok' };
+    }),
+    fleet: [
+      'agent','helper-1','helper-2','helper-3','helper-4','helper-5','helper-6','helper-7',
+      'helper-8','helper-9','helper-10','helper-11','helper-12','helper-13',
+      'helper-14','helper-15'
+    ].map(function (id, i) {
+      return { id: id, label: id, busy: (i === 0 || i === 3 || i === 9) };   /* 3 busy */
+    })
+  };
+
+  /* ------------------------------------------------------------ query params */
+  var Q = {};
+  try {
+    (location.search || '').replace(/^\?/, '').split('&').forEach(function (kv) {
+      if (!kv) return;
+      var p = kv.split('=');
+      Q[decodeURIComponent(p[0])] = decodeURIComponent(p.slice(1).join('=') || '');
+    });
+  } catch (e) { /* a local preview with no query */ }
+
+  var MODES = ['idle', 'listening', 'thinking', 'speaking', 'working', 'muted'];
+  var frozen = !!Q.mode;
+  var reduced = Q.reduced === '1' || Q.reduced === 'true';
+  var canvas = document.getElementById('stage');
+  var scene = createScene(canvas, {
+    dpr: window.devicePixelRatio || 1, warmupMs: 2600, reducedMotion: reduced
+  });
+
+  function size() { scene.setSize(window.innerWidth, window.innerHeight); }
+  size();
+  window.addEventListener('resize', size);
+  scene.setData(DATA);
+
+  /* ------------------------------------------------- synthetic presence pump */
+  var t0 = Date.now();
+  var presence = {
+    call: 'on', mode: 'idle', live: '',
+    levels: { voice: 0, mic: 0 }, captions: [],
+    source: { status: 'bus', voice: 'analyser', mic: 'tap' }, demo: true, updatedAt: 0
+  };
+
+  function clamp01(v) { return v < 0 ? 0 : (v > 1 ? 1 : v); }
+
+  function pump() {
+    var s = (Date.now() - t0) / 1000;
+    var mode, voice = 0, mic = 0;
+    if (frozen) {
+      mode = Q.mode;
+      /* ?mode=speaking with no ?voice should LOOK like speaking, so each mode
+         carries a sane default level. ?voice=0 still forces silence. */
+      var dv = { speaking: 0.72, working: 0.16 }, dm = { listening: 0.7 };
+      voice = Q.voice ? clamp01(parseFloat(Q.voice)) : (dv[mode] || 0);
+      mic = Q.mic ? clamp01(parseFloat(Q.mic)) : (dm[mode] || 0);
+      /* ?pulse=1 keeps the frozen level but syllabifies it — a fast attack
+         about three times a second, the shape real speech has. That is what
+         the SPEC §7.1.2 peak detector is built for, so a screenshot taken
+         with ?pulse=1 can catch a shock ring leaving his rim. */
+      if (Q.pulse) {
+        var syl = (s * 3.1) % 1;
+        var env = syl < 0.55 ? Math.pow(Math.sin(Math.PI * syl / 0.55), 0.42) : 0.08;
+        voice = clamp01(voice * env);
+      }
+      presence.call = (Q.call === 'off') ? 'off' : 'on';
+    } else {
+      mode = MODES[Math.floor(s / 3) % MODES.length];
+      /* synthetic levels that look like speech, not a sine wave */
+      var env = 0.55 + 0.45 * Math.sin(s * 5.1) * Math.sin(s * 1.7) + 0.18 * Math.sin(s * 11.3);
+      env = clamp01(env * 0.75);
+      if (mode === 'speaking') voice = env;
+      else if (mode === 'listening') mic = clamp01(env * 0.9);
+      else if (mode === 'working') voice = env * 0.18;
+      presence.call = 'on';
+    }
+    presence.mode = mode;
+    presence.live = (mode === 'working') ? 'Using web_search…' : '';
+    presence.levels.voice = voice;
+    presence.levels.mic = mic;
+    presence.updatedAt = Date.now();
+    scene.setPresence(presence);
+    /* the readout prints the SPEC §7.1 numbers themselves, so a headless
+       screenshot carries its own proof of the ratios. */
+    var A = scene.snapshotState().agent;
+    document.getElementById('readout').textContent =
+      (frozen ? 'frozen · ' : 'cycling · ') + mode + (reduced ? ' · reduced motion' : '') +
+      ' · voice ' + voice.toFixed(2) + ' · mic ' + mic.toFixed(2) + '\n' +
+      'r/idle ' + (A.radius / (A.idleRadius || 1)).toFixed(3) +
+      ' · bright ' + A.brightness.toFixed(2) +
+      ' · halo ' + A.halo.toFixed(2) + '\n' +
+      'plasma ' + A.plasmaSpeed.toFixed(2) +
+      ' · rings ' + A.rings + ' · arc ' + (A.arc || 'none');
+  }
+  pump();
+  setInterval(pump, 40);
+  scene.start();
+
+  /* a screenshot-friendly hook: window.__jarvisSnap() dumps the scene numbers */
+  window.__jarvisSnap = function () { return scene.snapshotState(); };
+
+  /* ?fps=1 — the 30 fps cap is a law (SPEC §4.3), so the page can measure
+     itself: frames painted per second, read straight off the scene. */
+  if (Q.fps) {
+    var f0 = scene.snapshotState().frames, m0 = Date.now();
+    setInterval(function () {
+      var f = scene.snapshotState().frames, m = Date.now();
+      document.getElementById('tag').textContent =
+        'fps ' + (1000 * (f - f0) / Math.max(1, m - m0)).toFixed(1) + ' · frames ' + f;
+      f0 = f; m0 = m;
+    }, 1000);
+  }
+})();
+</script>
+</body>
+</html>

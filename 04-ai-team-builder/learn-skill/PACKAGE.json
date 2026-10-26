@@ -1,0 +1,15 @@
+{
+  "id": "learn-skill",
+  "title": "Learn Skill",
+  "topic": "04",
+  "skill_ids": [
+    "ap-learn-skill"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": [
+    "ap-orchestrator-astra",
+    "ap-orchestrator-opus"
+  ]
+}

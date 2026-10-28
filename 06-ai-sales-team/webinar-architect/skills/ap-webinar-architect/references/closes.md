@@ -2,7 +2,7 @@
 
 Contents: (1) the response pattern, (2) 53 numbered techniques, (3) an 18-item rehearsal shortlist, (4) 15 supplementary techniques and five persuasion checks, (5) trial closes, (6) the final Q&A.
 
-These are common direct-response closing techniques, explained with newly written examples. Each example is an illustration for a coaching, consulting or course offer, not a claim about a real product. Adapt it to verified terms and audience needs. The mechanism describes the intended effect, not a guaranteed response. Respect a clear no. Never treat financial hardship as a character flaw or hide material answers behind a purchase.
+These are common direct-response closing techniques, explained with newly written examples. Each example is an illustration for a coaching, consulting or program offer, not a claim about a real product. Adapt it to verified terms and audience needs. The mechanism describes the intended effect, not a guaranteed response. Respect a clear no. Never treat financial hardship as a character flaw or hide material answers behind a purchase.
 
 ## 1. The response pattern
 
@@ -24,7 +24,7 @@ Use #21, #47, #1 and #3 as the default planning set. Match the remaining choices
 #### Close #1: Compare the next routes
 - When: The buyer rejects the offer but still wants the outcome.
 - Mechanism: Comparing real alternatives makes the decision more concrete.
-- Example: "If you skip this course, which plan will you follow instead?"
+- Example: "If you skip this program, which plan will you follow instead?"
 
 #### Close #2: Retire the waiting room
 - When: A light touch could help someone voice a decision.
@@ -39,7 +39,7 @@ Use #21, #47, #1 and #3 as the default planning set. Match the remaining choices
 #### Close #4: Check your own reaction
 - When: The facts are clear but the buyer keeps circling them.
 - Mechanism: Reflecting on emotional fit adds information without replacing due diligence.
-- Example: "Looking at the course plan, what feels useful and what still feels wrong?"
+- Example: "Looking at the program plan, what feels useful and what still feels wrong?"
 
 #### Close #5: Choose the next chapter
 - When: Someone thinks their earlier choices fix their future.
@@ -67,7 +67,7 @@ Use #21, #47, #1 and #3 as the default planning set. Match the remaining choices
 - Example: "On a zero-to-ten scale, how ready are you, and what's missing?"
 
 #### Close #10: Shrink the first move
-- When: The full course feels too large to begin.
+- When: The full program feels too large to begin.
 - Mechanism: Focusing on the immediate task reduces perceived effort.
 - Example: "Your first task is choosing one project; the later lessons can wait."
 
@@ -96,7 +96,7 @@ Use #21, #47, #1 and #3 as the default planning set. Match the remaining choices
 #### Close #15: Let fear advise
 - When: Nervousness is being treated as the final decision-maker.
 - Mechanism: Distinguishing an emotion from a choice preserves agency.
-- Example: "Nerves can flag what to check; you still decide whether this course fits."
+- Example: "Nerves can flag what to check; you still decide whether this program fits."
 
 #### Close #16: Examine unfamiliar progress
 - When: The current struggle feels safer than a new routine.
@@ -143,7 +143,7 @@ Use #21, #47, #1 and #3 as the default planning set. Match the remaining choices
 #### Close #24: Compare what the fee buys
 - When: A lower-priced option appears interchangeable with the offer.
 - Mechanism: Comparing actual service differences shifts attention from price alone to suitability.
-- Example: "Compare the feedback and access included in each course before comparing their fees."
+- Example: "Compare the feedback and access included in each program before comparing their fees."
 
 #### Close #25: Choose the resource to spend
 - When: The buyer can invest time or money but has not compared those options.
@@ -158,7 +158,7 @@ Use #21, #47, #1 and #3 as the default planning set. Match the remaining choices
 #### Close #27: Act before the squeeze
 - When: A known problem is worsening and preventive action is feasible.
 - Mechanism: Comparing prevention with later repair highlights avoidable future costs.
-- Example: "Could you address this workload now, before it leaves less room for a course?"
+- Example: "Could you address this workload now, before it leaves less room for a program?"
 
 ### Time: 6 techniques
 
@@ -190,19 +190,19 @@ Use #21, #47, #1 and #3 as the default planning set. Match the remaining choices
 #### Close #33: Make checkout less mysterious
 - When: Checkout friction, rather than fit, is holding someone back.
 - Mechanism: A light walkthrough reduces uncertainty about the next action.
-- Example: "No secret handshake needed: open the course page and review the enrollment steps."
+- Example: "No secret handshake needed: open the program page and review the enrollment steps."
 
 ### Trust and belief: 7 techniques
 
 #### Close #34: Reflect demonstrated ability
 - When: The buyer overlooks strengths they have already shown.
 - Mechanism: Specific evidence of capability supports self-confidence.
-- Example: "You completed the practice task today; that gives you a starting point for the course."
+- Example: "You completed the practice task today; that gives you a starting point for the program."
 
 #### Close #35: Identify the missing condition
 - When: A past attempt lacked a resource this offer genuinely provides.
 - Mechanism: Explaining a situational cause reduces blanket self-blame.
-- Example: "Your last course had no feedback; this program includes reviews of your actual work."
+- Example: "Your last program had no feedback; this program includes reviews of your actual work."
 
 #### Close #36: Connect proof to the method
 - When: The buyer assumes successful students have an inaccessible advantage.
@@ -281,7 +281,7 @@ Use #21, #47, #1 and #3 as the default planning set. Match the remaining choices
 #### Close #50: Welcome the comparison
 - When: The presenter has enough evidence to invite a fair comparison with competitors.
 - Mechanism: Willingness to be compared signals confidence without demanding exclusive trust.
-- Example: "If your budget allows, compare both courses; judge ours by the work it helps you produce."
+- Example: "If your budget allows, compare both programs; judge ours by the work it helps you produce."
 
 ### Logic: 3 techniques
 
@@ -293,12 +293,12 @@ Use #21, #47, #1 and #3 as the default planning set. Match the remaining choices
 #### Close #52: Choose a small serving
 - When: The buyer assumes they must use every included resource immediately.
 - Mechanism: A familiar selection metaphor makes selective participation feel acceptable.
-- Example: "Treat the course menu like lunch: choose what you need rather than filling every plate."
+- Example: "Treat the program menu like lunch: choose what you need rather than filling every plate."
 
 #### Close #53: Inspect before concluding
 - When: A real preview can answer questions that the sales page cannot.
 - Mechanism: Firsthand observation supplies missing information for a reasoned decision.
-- Example: "Open the sample lesson and check its depth before deciding whether the course suits you."
+- Example: "Open the sample lesson and check its depth before deciding whether the program suits you."
 
 ## 3. Rehearsal shortlist: 18 entries
 
@@ -340,9 +340,9 @@ S1-S15 retain the original supplementary order. They sit alongside #1-53 rather 
 - Example: "What would a healthier consulting income let you care for more comfortably?"
 
 ### S2: Compare optional spending
-- When: The course fits within a genuinely discretionary budget.
+- When: The program fits within a genuinely discretionary budget.
 - Mechanism: Comparing optional purchases makes opportunity cost visible.
-- Example: "Within your optional spending budget, where does this course rank against other purchases?"
+- Example: "Within your optional spending budget, where does this program rank against other purchases?"
 
 ### S3: Distinguish money from elapsed time
 - When: The buyer can afford the offer but struggles to compare money and time.
@@ -402,12 +402,12 @@ S1-S15 retain the original supplementary order. They sit alongside #1-53 rather 
 ### S14: Value one useful outcome
 - When: The full package distracts from the buyer's main priority.
 - Mechanism: Evaluating one meaningful benefit simplifies the value judgment.
-- Example: "Suppose the course helped you finish one neglected project; how valuable would that be?"
+- Example: "Suppose the program helped you finish one neglected project; how valuable would that be?"
 
 ### S15: Make the final invitation
 - When: The presentation has answered the material questions and reached its end.
 - Mechanism: A clear next action removes uncertainty about how to proceed.
-- Example: "If the course fits your goals and budget, review the terms and enroll at [offer URL]."
+- Example: "If the program fits your goals and budget, review the terms and enroll at [offer URL]."
 
 ### Five persuasion checks
 

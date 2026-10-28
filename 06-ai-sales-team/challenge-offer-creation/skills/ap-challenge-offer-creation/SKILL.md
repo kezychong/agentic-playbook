@@ -37,7 +37,7 @@ You are a practical strategist, not a hype machine. Every recommendation names t
 Build a challenge when **fulfilment capacity is the bottleneck**. The signals:
 
 - The calendar is full. People say "I want to book but I can't find a slot." Timezones, 1:1 limits, or sheer demand cap how many the person can serve.
-- They're tempted to "just sell a course" but worry a plain DIY product won't get results — because a course drops the principle on the buyer and walks away. That shortfall is real: a program people don't finish can rebound and hurt the reputation of the coaching offer behind it.
+- They're tempted to "just sell a program" but worry a plain DIY product won't get results — because a program drops the principle on the buyer and walks away. That shortfall is real: a program people don't finish can rebound and hurt the reputation of the coaching offer behind it.
 
 A challenge is the fix. **It is a DIY offer packaged with accountability.** Same core content as "here's the program, go run it yourself" — but wrapped in a daily cadence, a live rhythm, and a community, so people actually take action. In the core method's words: "I sell you a program, you watch yourself, versus I sell you a 30-day challenge — it's the same thing, but it's packaged with accountability." Challenges are designed to help people *do the thing*, because there's something to show up for every day.
 
@@ -75,7 +75,7 @@ Read `references/offer-design.md`. Decide:
 - **The name** — built around a concrete outcome + a timeframe. "30-Day Challenge: Lower Your Blood Sugar" beats "Health Reset Program." The outcome must be something a real person wants and can plausibly move on in the window.
 - **The duration** — a deliberate choice, not a default. 30 days, 4 weeks, 6 weeks all work — pick by how long the outcome genuinely needs and how much stamina the audience has. Researched alternatives (5-day, 9-day) are covered in the reference and clearly credited.
 - **The price** — low, relative to the coaching offer behind it. It's the entry offer; its job is action + ascension, not margin.
-- **The accountability layer** — a community + a daily action. This is the ingredient that separates a challenge from a course. Name exactly what the daily action is and where the community lives.
+- **The accountability layer** — a community + a daily action. This is the ingredient that separates a challenge from a program. Name exactly what the daily action is and where the community lives.
 
 ## Move 3 — Funnel parameters
 
@@ -134,4 +134,4 @@ The challenge-offer format is a proven, widely-used model that's been adapted ac
 
 ## Detailed invocation scope
 
-Design and package a challenge offer — a leveraged offer that wraps a DIY program in accountability and a fixed cohort start date — so you know exactly what you're selling and how it's structured. Use this skill whenever the user wants to create a challenge offer, package a course as a challenge, design a 30-day/4-week/6-week challenge, or escape a full calendar — including requests like "create a challenge offer", "package my course as a challenge", "design a 30-day challenge", "my calendar is full, I need a leveraged offer", "turn my program into a challenge", "I need an offer that doesn't eat my time", or "my online course isn't getting people to finish" — even if they never say the words "challenge offer". This skill builds the OFFER itself, not the landing page or launch funnel that sells it.
+Design and package a challenge offer — a leveraged offer that wraps a DIY program in accountability and a fixed cohort start date — so you know exactly what you're selling and how it's structured. Use this skill whenever the user wants to create a challenge offer, package a program as a challenge, design a 30-day/4-week/6-week challenge, or escape a full calendar — including requests like "create a challenge offer", "package my program as a challenge", "design a 30-day challenge", "my calendar is full, I need a leveraged offer", "turn my program into a challenge", "I need an offer that doesn't eat my time", or "my online program isn't getting people to finish" — even if they never say the words "challenge offer". This skill builds the OFFER itself, not the landing page or launch funnel that sells it.

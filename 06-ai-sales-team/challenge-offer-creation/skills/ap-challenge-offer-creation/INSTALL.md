@@ -34,7 +34,7 @@ Just describe what you want in plain language. The skill triggers on things like
 - "My calendar is full and I can't take more 1:1 clients — what do I do?"
 - "Turn my program into a challenge."
 - "I need a leveraged offer."
-- "My online course isn't getting people to finish."
+- "My online program isn't getting people to finish."
 
 You don't have to name the skill. Claude will recognize the situation and start the intake.
 

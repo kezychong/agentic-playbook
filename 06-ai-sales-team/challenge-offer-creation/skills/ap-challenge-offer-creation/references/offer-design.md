@@ -33,17 +33,17 @@ The tradeoff, stated plainly: **shorter = higher completion and easier to fill; 
 
 **[RESEARCHED]** Within "low," paid beats free for the outcome that matters:
 
-- **Paid challenges see ~40–60% completion vs ~5–15% for self-paced courses** — payment is skin in the game (*CommuniPass, Scale For Impact*). Free maximizes raw reach but tanks show-up and completion.
+- **Paid challenges see ~40–60% completion vs ~5–15% for self-paced programs** — payment is skin in the game (*CommuniPass, Scale For Impact*). Free maximizes raw reach but tanks show-up and completion.
 - Practitioner price bands: **$27–$47** attracts serious participants and covers delivery; **$67–$97** signals higher value and pre-qualifies people who can afford the back-end offer. Some coaches report *better* engagement at $97 than $47. Even a $7–$27 entry filters intent versus free (*FunnelKit, CommuniPass*).
 
 Guidance: if the goal is maximum front-end volume from a warm audience, a low paid ticket ($27–$47) is a strong default. If the back-end offer is high-ticket, lean $67–$97 to pre-qualify. Free only if reach is the sole objective and the user accepts lower completion.
 
-## 4. The accountability layer (the ingredient that makes it a challenge, not a course)
+## 4. The accountability layer (the ingredient that makes it a challenge, not a program)
 
 **[CORE METHOD]** A challenge is "a DIY offer packaged with accountability." Two required pieces:
 
 - **A community** — where participants gather, post, and are seen. A hosted community platform or a private group both work.
-- **A daily action** — one thing to show up and do each day. "I'm going to show up every day and do one thing." This is what drives action where a plain course fails.
+- **A daily action** — one thing to show up and do each day. "I'm going to show up every day and do one thing." This is what drives action where a plain program fails.
 
 Name both concretely before moving on: exactly where the community lives, and what the single daily action is.
 

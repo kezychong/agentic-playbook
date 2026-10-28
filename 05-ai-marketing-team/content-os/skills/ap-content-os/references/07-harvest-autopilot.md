@@ -48,7 +48,7 @@ This is the hardest edge in the radar, and the one place an unattended job can q
 
 **A candidate is a moment where YOU speak or write with conviction, teach a mechanism, tell a story that carries a lesson, or take a position.** That bar is not new. It is exactly the bar in `01-capture.md`, and running overnight does not lower it.
 
-What is new is that a second brain is full of other people's words. Members save articles, clip posts, paste transcripts of talks they watched, keep course notes, and file things a colleague sent them. All of that is legitimate material to have saved. None of it is yours to publish.
+What is new is that a second brain is full of other people's words. Members save articles, clip posts, paste transcripts of talks they watched, keep program notes, and file things a colleague sent them. All of that is legitimate material to have saved. None of it is yours to publish.
 
 So:
 

@@ -82,7 +82,7 @@ The audience-psychology instrument that feeds Pain, Gain, story shaping, and clo
 Mine the audience's own language - the Pain Mirror only works with mundane, specific detail in their words:
 
 - Reddit threads + Facebook groups in the niche (complaint posts, "am I the only one who..." posts)
-- Amazon reviews of competing books/courses (1-star = pains and objections; 5-star = desired outcomes)
+- Amazon reviews of competing books/programs (1-star = pains and objections; 5-star = desired outcomes)
 - YouTube comments on competitor content; sales-call recordings and support tickets if available
 - A proven research prompt: "Pretend you're my friend and we're having a drink. Vent to me about all the frustrations, pains, and challenges you have when it comes to [topic]." Then drill any answer with Five Whys - ask "why does that bother you?" five levels down until you reach the identity-level pain (surface: "I hate my accounting" → core: "I'm terrified I'm not actually cut out to run a business").
 

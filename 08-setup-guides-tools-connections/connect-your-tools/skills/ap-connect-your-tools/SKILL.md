@@ -67,7 +67,7 @@ Sort the first list into the five pillars of the business and show it to the mem
 | Operations | Automations | Zapier, Make |
 | Fulfilment | Client chat | WhatsApp, Telegram, email |
 | Fulfilment | Client calls | Zoom, Google Meet |
-| Fulfilment | Courses | Skool, Kajabi, Teachable |
+| Fulfilment | Programs | Skool, Kajabi, Teachable |
 | Fulfilment | Support | Intercom, Zendesk, a help inbox |
 | Fulfilment | Delivery | the member's own tools of the trade |
 | Finance and admin | Books | Xero, QuickBooks |

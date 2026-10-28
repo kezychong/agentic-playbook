@@ -2,7 +2,7 @@
 
 The intake is where the challenge is really decided. The name, the daily arc, the pricing, and the back-end upsell all get assembled from what you pull out here. Do this before designing anything.
 
-**Working rule: extract before you ask.** Read everything the user already gave you (their offers, past launches, audience notes, any existing course) and pre-fill. Then ask only for the gaps — in a short conversation, in phases, never a wall of questions.
+**Working rule: extract before you ask.** Read everything the user already gave you (their offers, past launches, audience notes, any existing program) and pre-fill. Then ask only for the gaps — in a short conversation, in phases, never a wall of questions.
 
 There is no single template for a challenge offer. These questions are what shape THIS particular offer — the name, the duration, the daily rhythm, and the price all come out of the answers, not a fixed formula.
 
@@ -32,7 +32,7 @@ Create these in the user's own project folder (make a folder for the challenge i
 ### Phase 1 — The bottleneck (confirm a challenge is even the answer)
 
 - What's actually capping growth right now? Listen for capacity signals: full calendar, "can't find a slot," timezone limits, 1:1 doesn't scale.
-- Have they considered "just selling a course"? Surface the fear: a plain DIY product where people don't get results can rebound and damage the coaching offer behind it. The challenge exists to solve exactly that — DIY *with* accountability.
+- Have they considered "just selling a program"? Surface the fear: a plain DIY product where people don't get results can rebound and damage the coaching offer behind it. The challenge exists to solve exactly that — DIY *with* accountability.
 - If the bottleneck is NOT capacity (e.g. it's traffic, or a weak core offer), say so. A challenge won't fix a demand problem. It may not be the right build yet.
 
 ### Phase 2 — The outcome (this becomes the name)
@@ -45,7 +45,7 @@ Create these in the user's own project folder (make a folder for the challenge i
 ### Phase 3 — The accountability reality
 
 - Where will the community live? (A group they can host and actually show up in.)
-- Can the user commit to **one live video a day** for the duration? If not, what cadence *can* they sustain? (The daily rhythm is the mechanism; a challenge with no daily action is just a course.)
+- Can the user commit to **one live video a day** for the duration? If not, what cadence *can* they sustain? (The daily rhythm is the mechanism; a challenge with no daily action is just a program.)
 - **What does the person who buys this actually DO, every day?** Not what you deliver to them — what they do with it. One small, concrete action, repeatable daily, that moves them toward the outcome. If the user can't name it per day yet, that's what Move 2 designs.
 
 ### Phase 4 — The back end (know it before you launch)

@@ -142,4 +142,4 @@ When you cannot tell, state your best guess, say what would change it, and proce
 - **The promise-strength lens.** A headline's promise is stronger when it raises the **outcome the reader dreams of** and the **believability that it will happen for them**, while lowering the **time it takes** and the **effort it demands**. When comparing two rewrites that both fit the diagnosis, prefer the one that wins on more of these four levers.
 - **Markets are living things.** Your own ads age the market - every successful campaign moves its readers up an awareness level and the whole niche up the sophistication arc. Re-diagnose on every new test; last quarter's read may already be stale.
 
-Teach all of this in plain words as the program's method. Do not name outside gurus, books, or courses when presenting it.
+Teach all of this in plain words as the program's method. Do not name outside gurus, books, or programs when presenting it.

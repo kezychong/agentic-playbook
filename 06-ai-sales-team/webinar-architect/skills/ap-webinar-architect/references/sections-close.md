@@ -55,7 +55,7 @@ Six elements in order, each mapped to a belief: (1) core training → vehicle; (
 
 **Setup-Payoff-Tie-Down** can take 30 seconds to 3 minutes per item: describe the problem, show the resource, then check its value. Example: "Would solving that one bottleneck justify the fee for you?" This uses supplementary close S14 in `closes.md`.
 
-**Tangible tools over training:** templates, scripts, checklists, and software out-pull courses. More training signals "more work for you"; tools signal "here's the shortcut." The best-performing stack item on record was a two-page phone script - a compact tool can be more immediately useful than another lengthy course.
+**Tangible tools over training:** templates, scripts, checklists, and software out-pull programs. More training signals "more work for you"; tools signal "here's the shortcut." The best-performing stack item on record was a two-page phone script - a compact tool can be more immediately useful than another lengthy program.
 
 ### Price reveal: the routed decision
 

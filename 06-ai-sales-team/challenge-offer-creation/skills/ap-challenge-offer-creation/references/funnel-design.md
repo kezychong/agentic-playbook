@@ -4,15 +4,15 @@
 
 Design the five parts in order.
 
-Legend: **[the course presenter]** = his 2026-07-06 call. **[RESEARCHED]** = credited best practice. the course presenter wins on conflict.
+Legend: **[CORE METHOD]** = the supplied method. **[RESEARCHED]** = credited best practice. the core method wins on conflict.
 
 ## The scarcity engine (why a challenge beats an always-on program)
 
-**[the course presenter]** "A program can be bought anytime, but a challenge starts this day and runs for a set number of days." That fixed cohort start date, plus an enrollment cutoff, is the scarcity — and it's **real**, not manufactured. This holds whether the challenge runs 30 days, 4 weeks, or 6 weeks. This is the mechanism the whole funnel is built to exploit. Everything below serves it.
+**[CORE METHOD]** "A program can be bought anytime, but a challenge starts this day and runs for a set number of days." That fixed cohort start date, plus an enrollment cutoff, is the scarcity — and it's **real**, not manufactured. This holds whether the challenge runs 30 days, 4 weeks, or 6 weeks. This is the mechanism the whole funnel is built to exploit. Everything below serves it.
 
 ## 1. Pre-launch runway (~1–2 weeks)
 
-**[the course presenter]** Heavy pre-event promotion before the start date. Tease relentlessly: "I'm going to launch this challenge, it's going to be awesome, I'm going to teach you this and that" — then "how many people?" and "we cut off at this time." Keep teasing, teasing, teasing. Roughly a **one-to-two-week** window, regardless of how long the challenge itself runs.
+**[CORE METHOD]** Heavy pre-event promotion before the start date. Tease relentlessly: "I'm going to launch this challenge, it's going to be awesome, I'm going to teach you this and that" — then "how many people?" and "we cut off at this time." Keep teasing, teasing, teasing. Roughly a **one-to-two-week** window, regardless of how long the challenge itself runs.
 
 **[RESEARCHED]** The runway is where the cohort fills. Consensus (*CommuniPass*):
 
@@ -34,15 +34,15 @@ This is a brief for whoever builds the registration page — you're specifying w
 - Proof (real before/afters from `audience.md` intake).
 - One clear CTA to register/pay.
 
-**[RESEARCHED] Optional VIP upgrade.** Offer a paid upgrade **immediately after registration** (or as an order bump at checkout). Typical VIP contents: lifetime access to recordings, a printable workbook, live daily Q&A / hot-seat coaching, a VIP-only community channel, sometimes a physical welcome kit. Prices seen: **$27–$100** (order bumps commonly $27–$97). It works because the first transaction has already happened — one cited case had **45% of total sales come from the ~10% who took the VIP first** (*Scale For Impact, ClickFunnels*). Attribute this as researched best practice, not the course presenter teaching; it's optional and layers on top of his model.
+**[RESEARCHED] Optional VIP upgrade.** Offer a paid upgrade **immediately after registration** (or as an order bump at checkout). Typical VIP contents: lifetime access to recordings, a printable workbook, live daily Q&A / hot-seat coaching, a VIP-only community channel, sometimes a physical welcome kit. Prices seen: **$27–$100** (order bumps commonly $27–$97). It works because the first transaction has already happened — one cited case had **45% of total sales come from the ~10% who took the VIP first** (*Scale For Impact, ClickFunnels*). Attribute this as researched best practice, not the core method; it is optional and layers on top of the core model.
 
 ## 3. Cohort start + enrollment cutoff
 
-**[the course presenter]** Announce a headcount and/or a cutoff time, then start the challenge on its chosen date, for its chosen duration. The cutoff is what converts fence-sitters — after this date, the door closes until the next cohort.
+**[CORE METHOD]** Announce a headcount and/or a cutoff time, then start the challenge on its chosen date, for its chosen duration. The cutoff is what converts fence-sitters — after this date, the door closes until the next cohort.
 
 ## 4. Daily delivery cadence
 
-**[the course presenter]** **Drop one video a day** — livestream it, then people can watch the recording. One live video, one recording, one daily action, inside the community.
+**[CORE METHOD]** **Drop one video a day** — livestream it, then people can watch the recording. One live video, one recording, one daily action, inside the community.
 
 **[RESEARCHED]** What makes the daily rhythm complete and convert:
 
@@ -53,7 +53,7 @@ This is a brief for whoever builds the registration page — you're specifying w
 
 ## 5. The back-end upsell path
 
-**[the course presenter]** After the challenge ends, **upsell into something you can fulfil** — coaching, group coaching, or a monthly membership. Design where in the sequence the pitch lands (detailed in `back-end.md`), but wire the path now so the challenge content builds toward it.
+**[CORE METHOD]** After the challenge ends, **upsell into something you can fulfil** — coaching, group coaching, or a monthly membership. Design where in the sequence the pitch lands (detailed in `back-end.md`), but wire the path now so the challenge content builds toward it.
 
 **[RESEARCHED — timing, sources disagree; present both]:**
 

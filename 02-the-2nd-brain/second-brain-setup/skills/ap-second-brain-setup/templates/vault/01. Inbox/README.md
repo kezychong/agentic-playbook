@@ -31,6 +31,6 @@ Some things must never go into any vault folder: IDs, passports, bank or brokera
 
 Every single move out of this folder gets one row in `01. Inbox/WHERE-DID-IT-GO.md`: what moved, what kind it was, where it went, and why. No silent moves, ever. That file is how the owner finds anything that used to be here.
 
-## The exports subfolder
+## The imports subfolder
 
-`exports/` is where converted AI conversations land first, before anyone decides if they're worth keeping. See `01. Inbox/exports/README.md` for how that works.
+`imports/` is where converted AI conversations land first, before anyone decides if they're worth keeping. See `01. Inbox/imports/README.md` for how that works.

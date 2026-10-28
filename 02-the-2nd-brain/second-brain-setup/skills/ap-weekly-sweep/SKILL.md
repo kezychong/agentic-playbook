@@ -24,7 +24,7 @@ Count how many items in `01. Inbox/` are older than 7 days. If there are any, no
 
 ## Step 2: Check for unrouted conversations
 
-Open `01. Inbox/exports/INDEX.md` (the master list from imported ChatGPT and Claude conversations) and count how many conversations still have no destination folder chosen, meaning they were never actually filed anywhere.
+Open `01. Inbox/imports/INDEX.md` (the master list from imported ChatGPT and Claude conversations) and count how many conversations still have no destination folder chosen, meaning they were never actually filed anywhere.
 
 ## Step 3: Spot-check the paper trail
 

@@ -17,6 +17,11 @@ Build a team with clear jobs, bounded delegation and evidence-based review. Begi
 - [ap-skill-levelup](skill-levelup/skills/ap-skill-levelup/README.md)
 - [ap-learn-skill](learn-skill/skills/ap-learn-skill/README.md)
 - [ap-hire-an-agent](hire-an-agent/skills/ap-hire-an-agent/README.md)
+- [ap-handoff](handoff/skills/ap-handoff/README.md)
+- [ap-fusion-council](llm-fusion/skills/ap-fusion-council/README.md)
+- [ap-fusion-build](llm-fusion/skills/ap-fusion-build/README.md)
+- [ap-project-farming](project-farming/skills/ap-project-farming/README.md)
+- [ap-build-a-loop](build-a-loop/skills/ap-build-a-loop/README.md)
 
 ## Prerequisites and limits
 An existing host, a local draft workspace and the supplied task inputs. Scripts, connectors,
@@ -37,3 +42,7 @@ These are browsing entries, not a requirement to install the whole topic. Combin
 - [Skill Levelup](skill-levelup/README.md)
 - [Learn Skill](learn-skill/README.md)
 - [Hire An Agent](hire-an-agent/README.md)
+- [Handoff](handoff/README.md)
+- [LLM Fusion](llm-fusion/README.md)
+- [Project Farming](project-farming/README.md)
+- [Build a Loop](build-a-loop/README.md)

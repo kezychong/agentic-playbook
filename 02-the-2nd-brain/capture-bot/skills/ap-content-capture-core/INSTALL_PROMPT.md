@@ -17,7 +17,7 @@ The Capture bot: the member's first helper, its own Hermes profile on this box, 
 3. **Names are checked before writing.** Speech-to-text garbles names ("Kirk Land" for Kirkland, "neutrino bars" for a brand it cannot spell). Fix every product, brand, company and person name by checking the transcript against the caption, the on-screen text in the frames, and a quick web search for the current names. A name you still cannot confirm is written `[unsure: <what you heard>]`, never guessed.
 4. **Very long sources** (a whole book, a transcript of more than about an hour, a chat export): the full original goes to `08. Sources/captures/<YYYY-MM-DD> <short title>/` and the Inbox note holds the title, link, date, the two lines and a link to it. Still one note.
 5. **A typed idea** is one note, in the member's words.
-6. Capture does not add key points, links or ideas. Later, ap-distill can create small source-linked ideas and ap-triage-inbox can route them. Signal-counting bots are not bundled; do not claim they exist.
+6. Capture does not add key points, links or ideas. Later, ap-distill (five-folder vault) or the Link, Organise and Signal bots (eight-door brain, ap-link-organise-signal-bots) create small source-linked notes and count Signals; capture never does.
 
 Optional: **Nightly chat capture** at an agreed time (23:00 is an example) after explicit approval of source profiles, delivery, costs and schedule. Skip Part D by default.
 

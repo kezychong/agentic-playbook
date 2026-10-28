@@ -39,7 +39,7 @@ Build a challenge when **fulfilment capacity is the bottleneck**. The signals:
 - The calendar is full. People say "I want to book but I can't find a slot." Timezones, 1:1 limits, or sheer demand cap how many the person can serve.
 - They're tempted to "just sell a course" but worry a plain DIY product won't get results — because a course drops the principle on the buyer and walks away. That shortfall is real: a program people don't finish can rebound and hurt the reputation of the coaching offer behind it.
 
-A challenge is the fix. **It is a DIY offer packaged with accountability.** Same core content as "here's the program, go run it yourself" — but wrapped in a daily cadence, a live rhythm, and a community, so people actually take action. As the course presenter puts it: "I sell you a program, you watch yourself, versus I sell you a 30-day challenge — it's the same thing, but it's packaged with accountability." Challenges are designed to help people *do the thing*, because there's something to show up for every day.
+A challenge is the fix. **It is a DIY offer packaged with accountability.** Same core content as "here's the program, go run it yourself" — but wrapped in a daily cadence, a live rhythm, and a community, so people actually take action. In the core method's words: "I sell you a program, you watch yourself, versus I sell you a 30-day challenge — it's the same thing, but it's packaged with accountability." Challenges are designed to help people *do the thing*, because there's something to show up for every day.
 
 Where it sits on the offer ladder: offers come in three shapes — **DIY → done-with-you → done-for-you** (rising in price and hands-on-ness). A challenge is a DIY offer with a done-with-you *feel* bolted on via accountability. It's the entry rung, priced low, and its job is to earn the right to sell the rung above it.
 
@@ -99,15 +99,15 @@ Read `references/generation.md`. The skill's job is to produce the real offer as
 
 ## Move 5 — Back end (where the money compounds)
 
-Read `references/back-end.md`. The challenge is cheap on purpose; the return is the ascension. After the cohort finishes, upsell into **something you can actually fulfil** — 1:1 or group coaching, or a monthly membership/community (a Skool-style continuity offer is the natural step). If continuity is the goal, study how successful communities in the niche *retain* members before building one — retention, not content, is the hard part.
+Read `references/back-end.md`. The challenge is cheap on purpose; the return is the ascension. After the cohort finishes, upsell into **something you can actually fulfil** — 1:1 or group coaching, or a monthly membership/community (a community-membership continuity offer is the natural step). If continuity is the goal, study how successful communities in the niche *retain* members before building one — retention, not content, is the hard part.
 
 ## The honest-expectations rule (read this before quoting any case study)
 
 The reference files cite launches — including one where a creator "made a million dollars in 70 minutes with zero ads." **Always frame these truthfully.** That result was possible because the creator had spent *years* building a large, warm social audience before the challenge — the challenge *monetized* an audience that already existed; it didn't create demand from nothing. A challenge is a launch mechanism, not an audience-generation machine. Set expectations to match the user's actual reach. If they have no audience, the honest first step is building one (or paying for traffic) — the challenge amplifies reach, it doesn't manufacture it.
 
-## What came from the course presenter vs. researched best practice
+## What came from the core method vs. researched best practice
 
-The playbooks tag every element. **the course presenter call** = the spine: the capacity-bottleneck trigger, DIY-packaged-with-accountability, duration as a deliberate choice, one video a day, cohort-cutoff scarcity, the back-end upsell, the audience-first honesty. **Researched best practice** = extends it with credited detail (day-by-day arcs, short-format variants, VIP tiers, pricing ranges, completion mechanics), always attributed to its named source. Where they conflict, **the course presenter framing wins** and the reference says so.
+The playbooks tag every element. **the core method** = the spine: the capacity-bottleneck trigger, DIY-packaged-with-accountability, duration as a deliberate choice, one video a day, cohort-cutoff scarcity, the back-end upsell, the audience-first honesty. **Researched best practice** = extends it with credited detail (day-by-day arcs, short-format variants, VIP tiers, pricing ranges, completion mechanics), always attributed to its named source. Where they conflict, **the core method's framing wins** and the reference says so.
 
 ## Origin & credit
 

@@ -1,0 +1,29 @@
+
+profile:
+  name: media-buyer
+  role: paid-media operator
+model:
+  default: gpt-5.5
+  provider: openai-codex
+  base_url: https://chatgpt.com/backend-api/codex
+providers:
+  openai-codex:
+    request_timeout_seconds: 600
+    stale_timeout_seconds: 300
+ad_platform:
+  default_route: meta_ads_connector
+  mcp_server: meta_ads
+safety:
+  approval_required_for_live_spend: true
+  approval_required_for_platform_writes: true
+  launch_mode: paused_first
+  default_scope: read_only
+workflow:
+  account_review: skills/ap-meta-account-readiness
+  daily_review: skills/ap-daily-performance-review
+  tracker_review: skills/ap-tracker-sheet-review
+  tracker_and_creative_data_update: skills/ap-tracker-and-creative-json-update
+  creative_review: skills/ap-creative-quality-gate
+  launch_planning: skills/ap-paused-launch-planner
+  approved_actions: skills/ap-approval-gated-actions
+  weekly_report: skills/ap-weekly-report-writer

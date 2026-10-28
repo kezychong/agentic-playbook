@@ -1,0 +1,18 @@
+{
+  "id": "link-organise-signal",
+  "title": "Link, Organise and Signal",
+  "topic": "02",
+  "skill_ids": [
+    "ap-link-organise-signal-bots",
+    "ap-dreaming-and-recall",
+    "ap-insights-pass"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [
+    "ap-brain-installer",
+    "ap-digital-twin-builder",
+    "ap-content-capture-core"
+  ],
+  "optional_skill_ids": []
+}

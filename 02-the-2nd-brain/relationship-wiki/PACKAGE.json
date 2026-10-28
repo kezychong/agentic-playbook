@@ -1,0 +1,12 @@
+{
+  "id": "relationship-wiki",
+  "title": "Relationship Wiki",
+  "topic": "02",
+  "skill_ids": [
+    "ap-relationship-wiki"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

@@ -587,8 +587,8 @@ def run(workspace_root: Path) -> int:
         check("that step names the edit stage, then the publish stage",
               status == 200 and "08-edit.md" in prompt and "10-publish.md" in prompt,
               f"got {status}: {prompt[:140]}")
-        check("that step sends the cutting to the Edit Pipeline companion skill",
-              "Edit Pipeline companion skill" in prompt, prompt[:200])
+        check("that step sends the cutting to the ap-edit-pipeline companion skill",
+              "ap-edit-pipeline companion skill" in prompt, prompt[:200])
         check("that step still finishes the piece when the companion skill is missing",
               "by-hand cut" in prompt and "if it is not" in prompt, prompt[:200])
         check("that step ends by logging the post so its numbers start collecting",
@@ -967,8 +967,8 @@ def run_static_page_checks(workspace: Path, root: Path):
           "03-qualify.md" in board_html and "04-script.md" in board_html)
     check("the record and edit column leads with the edit-then-stage-it words",
           "08-edit.md" in board_html and "10-publish.md" in board_html)
-    check("the printed words send the cutting to the Edit Pipeline companion skill",
-          "Edit Pipeline companion skill" in board_html)
+    check("the printed words send the cutting to the ap-edit-pipeline companion skill",
+          "ap-edit-pipeline companion skill" in board_html)
     check("the printed words still finish the piece without the companion skill",
           "by-hand cut" in board_html)
     check("that column's words end with logging the post",

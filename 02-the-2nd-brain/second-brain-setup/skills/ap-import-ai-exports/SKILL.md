@@ -39,7 +39,7 @@ Use the template at `_System/templates/conversation-note.md`. Each note gets:
 
 Filename: `YYYY-MM-DD Short Title.md` using the conversation's own date.
 
-Save ChatGPT notes to `01. Inbox/exports/converted/chatgpt/` and Claude notes to `01. Inbox/exports/converted/claude/`. Create those two folders the first time, they are not part of the starter structure.
+Save ChatGPT notes to `01. Inbox/imports/converted/chatgpt/` and Claude notes to `01. Inbox/imports/converted/claude/`. Create those two folders the first time, they are not part of the starter structure.
 
 ## Step 4: Work in batches, track progress
 
@@ -47,7 +47,7 @@ Process about 25 conversations at a time. After each batch, add one line to `02.
 
 ## Step 5: Build the master list
 
-Create or update `01. Inbox/exports/INDEX.md`, one line per conversation: date, title, a ten-word gist, and a suggested destination (which folder it probably belongs in), or the word "archive" if it looks like throwaway content (a one-off tech support question, testing the AI, etc).
+Create or update `01. Inbox/imports/INDEX.md`, one line per conversation: date, title, a ten-word gist, and a suggested destination (which folder it probably belongs in), or the word "archive" if it looks like throwaway content (a one-off tech support question, testing the AI, etc).
 
 ## Step 6: Catch AI-written claims about the owner
 

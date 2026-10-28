@@ -2,11 +2,11 @@
 
 Four decisions turn a vague idea into a sellable challenge. Make them in order.
 
-Legend: **[the course presenter]** = from his 2026-07-06 call (the spine). **[RESEARCHED]** = credited best practice that extends the spine. Where they conflict, the course presenter wins.
+Legend: **[CORE METHOD]** = the supplied method (the spine). **[RESEARCHED]** = credited best practice that extends the spine. Where they conflict, the core method wins.
 
 ## 1. The name — concrete outcome + timeframe
 
-**[the course presenter]** Name the challenge around a concrete outcome and a timeframe. His example: **"30-Day Challenge: Lower Your Blood Sugar."** The outcome must be:
+**[CORE METHOD]** Name the challenge around a concrete outcome and a timeframe. Example: **"30-Day Challenge: Lower Your Blood Sugar."** The outcome must be:
 
 - Something a real person actively wants (not "get healthier" — "lower your blood sugar").
 - Plausibly movable within the window (you can show measurable progress in the time given).
@@ -16,7 +16,7 @@ Test: read the name to a stranger in the niche. If they instantly know what they
 
 ## 2. The duration
 
-**[the course presenter]** Duration is a deliberate choice, not a default — ask, don't assume. It doesn't have to be 30 days; it could be a 4-week challenge or a 6-week challenge. Pick the length that fits the outcome you're promising and how much stamina the audience has. One video a day, community accountability, then the upsell — that rhythm holds at any length.
+**[CORE METHOD]** Duration is a deliberate choice, not a default — ask, don't assume. It doesn't have to be 30 days; it could be a 4-week challenge or a 6-week challenge. Pick the length that fits the outcome you're promising and how much stamina the audience has. One video a day, community accountability, then the upsell — that rhythm holds at any length.
 
 **[RESEARCHED]** Formats at different lengths trade off predictably — pick by how long the outcome genuinely needs:
 
@@ -29,7 +29,7 @@ The tradeoff, stated plainly: **shorter = higher completion and easier to fill; 
 
 ## 3. The price
 
-**[the course presenter]** Price it **low relative to the coaching offer behind it.** It's the entry rung. Its job is action and ascension, not margin. A cheap challenge into a fulfillable upsell is the whole model.
+**[CORE METHOD]** Price it **low relative to the coaching offer behind it.** It's the entry rung. Its job is action and ascension, not margin. A cheap challenge into a fulfillable upsell is the whole model.
 
 **[RESEARCHED]** Within "low," paid beats free for the outcome that matters:
 
@@ -40,9 +40,9 @@ Guidance: if the goal is maximum front-end volume from a warm audience, a low pa
 
 ## 4. The accountability layer (the ingredient that makes it a challenge, not a course)
 
-**[the course presenter]** A challenge is "a DIY offer packaged with accountability." Two required pieces:
+**[CORE METHOD]** A challenge is "a DIY offer packaged with accountability." Two required pieces:
 
-- **A community** — where participants gather, post, and are seen. the course presenter continuity vehicle of choice is a Skool community; a Facebook group works too.
+- **A community** — where participants gather, post, and are seen. A hosted community platform or a private group both work.
 - **A daily action** — one thing to show up and do each day. "I'm going to show up every day and do one thing." This is what drives action where a plain course fails.
 
 Name both concretely before moving on: exactly where the community lives, and what the single daily action is.
@@ -50,7 +50,7 @@ Name both concretely before moving on: exactly where the community lives, and wh
 **[RESEARCHED]** What makes accountability actually convert to completion:
 
 - **The Daily Loop** (*Scale For Impact*): show up → learn one thing → do one thing → post proof → get feedback → repeat. The "post proof" step is the engine — public commitment drives finishing.
-- **Skool's leaderboard + daily check-in threads** are cited as the single strongest completion driver (*CommuniPass*).
+- **Community-platform leaderboards + daily check-in threads** are cited as the single strongest completion driver (*CommuniPass*).
 - **Multi-channel delivery** (email + one of WhatsApp/Telegram/Discord) raises completion by ~20–25 points over single-channel.
 
 ## Output of this move

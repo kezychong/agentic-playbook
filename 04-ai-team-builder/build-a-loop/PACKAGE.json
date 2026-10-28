@@ -1,0 +1,12 @@
+{
+  "id": "build-a-loop",
+  "title": "Build a Loop",
+  "topic": "04",
+  "skill_ids": [
+    "ap-build-a-loop"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

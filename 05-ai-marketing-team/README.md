@@ -17,6 +17,15 @@ Start with [setup and permissions](SETUP.md), then follow [the workflow](WORKFLO
 | [Content OS](content-os/skills/ap-content-os/README.md) | Organize content from capture through review and learning. |
 | [Instagram Carousel](instagram-carousel/skills/ap-instagram-carousel/README.md) | Storyboard and export readable Instagram carousel slides. |
 | [Presentation Builder](presentation-builder/skills/ap-presentation-builder/README.md) | Build clear browser-based decks from supplied evidence. |
+| [Approval-Gated Actions](media-buyer-agent/skills/ap-approval-gated-actions/README.md) | Safety gate for all Meta writes, live spend, status, budget, tracker, and launch changes. |
+| [Basic Ad-Buying Recipe](media-buyer-agent/skills/ap-basic-ad-buying-recipe/README.md) | Core two-campaign paid-media recipe: testing, scaling, and test/keep/pause/kill/scale decisions. |
+| [Weekly Report Writer](media-buyer-agent/skills/ap-weekly-report-writer/README.md) | Owner-facing weekly report writer for spend, results, decisions, creative learnings, and next actions. |
+| [Creative Quality Gate](media-buyer-agent/skills/ap-creative-quality-gate/README.md) | Creative QA gate for mobile legibility, layout, claims, aspect ratio, and launch readiness. |
+| [Paused Launch Planner](media-buyer-agent/skills/ap-paused-launch-planner/README.md) | Paused-first launch planner for testing concepts and scaling winners without live activation. |
+| [Meta Account Readiness](media-buyer-agent/skills/ap-meta-account-readiness/README.md) | Read-only account readiness check for Meta connector access, scope, account selection, and tool availability. |
+| [Daily Performance Review](media-buyer-agent/skills/ap-daily-performance-review/README.md) | Daily review workflow that turns platform numbers into keep, pause, kill, graduate, scale, and watch recommendations. |
+| [Tracker Sheet Review](media-buyer-agent/skills/ap-tracker-sheet-review/README.md) | Tracker/sheet workflow for row review, frozen-row protection, explicit ranges, and approval-gated row changes. |
+| [Tracker and Creative JSON Update](media-buyer-agent/skills/ap-tracker-and-creative-json-update/README.md) | Approval-gated template for updating tracker rows and each creative's JSON data without client-specific fields. |
 
 Use one skill on its own or combine them. Content OS can hand a recording to Edit Pipeline; both retain a manual route. No external account is needed to try the text examples. Rendering, transcription and the dashboard have additional prerequisites.
 
@@ -46,3 +55,4 @@ These are browsing entries, not a requirement to install the whole topic. Combin
 - [Content OS](content-os/README.md)
 - [Instagram Carousel](instagram-carousel/README.md)
 - [Presentation Builder](presentation-builder/README.md)
+- [Media Buyer Agent](media-buyer-agent/README.md)

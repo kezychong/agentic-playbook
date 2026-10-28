@@ -334,8 +334,8 @@
       "role": "qa",
       "status": "present",
       "required": true,
-      "size": 44464,
-      "sha256": "f84d18f3b67402cc79c20f1c6cab57fd95ee3085aaa4401dd330702870d486e9"
+      "size": 44449,
+      "sha256": "ab6357862b7cc0209e4f3f3d1c78c126cd088d8e06909e51ca83162b4d836ffa"
     },
     {
       "path": "payload/frontend/tests/callend.test.mjs",

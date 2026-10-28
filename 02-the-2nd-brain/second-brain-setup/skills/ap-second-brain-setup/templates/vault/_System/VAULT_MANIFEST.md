@@ -12,7 +12,7 @@ Read this before you move, create, or remove anything. Created a folder or remov
 ## Folder tree
 
 - `01. Inbox/`: landing zone for anything new. Nothing stays here long. See its `README.md` for the routing rule.
-  - `01. Inbox/exports/`: converted AI conversations wait here before triage. See its `README.md`.
+  - `01. Inbox/imports/`: converted AI conversations wait here before triage. See its `README.md`.
 - `02. Projects/`: things the owner is actively working on, each in its own folder, each with a clear finish line.
   - `02. Projects/Second Brain Setup/`: the starter project for getting this whole system running.
 - `03. Areas/`: the businesses and personal life, always on, no finish line.

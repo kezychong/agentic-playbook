@@ -15,7 +15,7 @@ It does not execute financial actions. Use the supplied pack in this order:
    future approval-gated read access; they do not install or connect anything.
 3. Stage the [distribution templates](finance-agent/finance-agent-distribution/README.md) in a
    separate folder. Fill placeholders consistently. SOUL is identity; AGENTS/HERMES are the operating
-   manual; YAML is an unverified schema template; .env.EXAMPLE contains key names only; MCP is empty.
+   manual; YAML is an unverified schema template; env-example.txt contains key names only; MCP is empty.
 4. Run the [readiness checklist](finance-agent/finance-agent-onboarding-pack/go-live-checklist.md)
    with supplied files: correct entity, exact invoice fields, bank proof, P&L basis, settings,
    safety boundaries and no unexpected schedules. Checklist success never unlocks ledger writes.

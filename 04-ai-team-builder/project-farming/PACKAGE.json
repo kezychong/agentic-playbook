@@ -1,0 +1,12 @@
+{
+  "id": "project-farming",
+  "title": "Project Farming",
+  "topic": "04",
+  "skill_ids": [
+    "ap-project-farming"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

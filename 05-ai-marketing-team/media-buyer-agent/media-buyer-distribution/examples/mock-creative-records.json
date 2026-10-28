@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "source": "mock creative records",
+  "creatives": [
+    {
+      "creative_id": "test_concept_001",
+      "name": "Problem aware hook",
+      "concept": "pain-point direct response",
+      "status": "testing",
+      "tracker": {
+        "source": "mock tracker",
+        "tab": "Testing",
+        "row_id": "2"
+      },
+      "qa": {
+        "decision": "approve",
+        "notes": ["Readable at mobile scale"]
+      },
+      "performance": {
+        "date_range": "2026-06-15 to 2026-06-21",
+        "spend": 92,
+        "results": 1,
+        "cost_per_result": 92
+      },
+      "decision": {
+        "recommended_action": "watch",
+        "approved_action": null,
+        "approval_reference": null,
+        "updated_at": null
+      }
+    },
+    {
+      "creative_id": "test_concept_002",
+      "name": "Outcome hook",
+      "concept": "result-focused direct response",
+      "status": "testing",
+      "tracker": {
+        "source": "mock tracker",
+        "tab": "Testing",
+        "row_id": "3"
+      },
+      "qa": {
+        "decision": "approve",
+        "notes": ["Single clear idea"]
+      },
+      "performance": {
+        "date_range": "2026-06-15 to 2026-06-21",
+        "spend": 180,
+        "results": 8,
+        "cost_per_result": 22.5
+      },
+      "decision": {
+        "recommended_action": "graduate recommended",
+        "approved_action": null,
+        "approval_reference": null,
+        "updated_at": null
+      }
+    }
+  ]
+}

@@ -36,7 +36,7 @@ This pack writes the seven canonical files most personal-agent setups converge o
 | `USER.md` | `$HERMES_HOME/memories/USER.md` | Who you serve — the principal | Profile, hard rules, comms style, vault path |
 | `TOOLS.md` | `$HERMES_HOME/TOOLS.md` | What hardware/APIs are wired (driver registry) | Always-wired basics + a "wire as you go" section |
 | `MEMORY.md` | `$HERMES_HOME/memories/MEMORY.md` | Evidence-backed persistent knowledge (every entry dated + cited) | Seeded with onboarding facts; `§`-separated; under 2,200 chars |
-| `HEARTBEAT.md` | `$HERMES_HOME/HEARTBEAT.md` | Light rotating polls (scheduler) | Two dormant patterns — activation deferred to masterclass |
+| `HEARTBEAT.md` | `$HERMES_HOME/HEARTBEAT.md` | Light rotating polls (scheduler) | Two dormant patterns — activation deferred to later setup packs |
 
 **Memory subfolder note:** `USER.md` and `MEMORY.md` go inside `$HERMES_HOME/memories/`, not at root. The built-in memory tool reads them from there. The other five files live at `$HERMES_HOME/` root.
 
@@ -47,7 +47,7 @@ This pack writes the seven canonical files most personal-agent setups converge o
   Phase 2  Locate + scan the second brain (with privacy deny-list)
   Phase 3  Stage and write the seven boot files
   Phase 4  Self-verification — structural checks on all seven
-  Phase 5  Closeout — test prompt + pointer to masterclass
+  Phase 5  Closeout — test prompt + pointer to the next setup packs
 
 State persists between phases at `$HERMES_HOME/installs/ap-basic-onboarding/`. If the session dies mid-install, the user can paste the pack again and you resume from the last completed phase.
 
@@ -174,7 +174,7 @@ If `VAULT_CANDIDATES` is empty:
 > *Example (Mac iCloud vault):* `/Users/example-user/Library/Mobile Documents/com~apple~CloudDocs/vault`
 > *Example (regular folder):* `/Users/example-user/Documents/vault`
 >
-> If you haven't set up a second brain yet, reply `none` and I'll wire myself up without one — but you'll get more out of me after you run Pack 00 (Base Vault) and Pack 01 (Digital Twin)."
+> If you haven't set up a second brain yet, reply `none` and I'll wire myself up without one — but you'll get more out of me after you set up a second brain (Second Brain Setup or the Second Brain V3) and an about-you profile (Digital Twin or Digital Twin Builder)."
 
 ### Step 1.3 — Validate and normalize VAULT_PATH
 
@@ -182,17 +182,17 @@ When the user provides a path:
 1. Strip surrounding quotes (`'`, `"`).
 2. Strip trailing slash.
 3. Expand `~` to absolute home path.
-4. Verify the directory exists via `read_file` on a probable marker (`CLAUDE.md` or `_System/VAULT_MANIFEST.md`). If neither exists, list the directory's top-level contents and ask the user to confirm — it may still be valid (Pack 00 not yet installed).
+4. Verify the directory exists via `read_file` on a probable marker (`CLAUDE.md` or `_System/VAULT_MANIFEST.md`). If neither exists, list the directory's top-level contents and ask the user to confirm — it may still be valid (Second Brain Setup not yet installed).
 5. Cache as `VAULT_PATH`.
 
-If the user replied `none`, set `VAULT_PATH = not-yet-configured` and continue. The pack will still write the seven files; vault-dependent fields will point back to Pack 00.
+If the user replied `none`, set `VAULT_PATH = not-yet-configured` and continue. The pack will still write the seven files; vault-dependent fields will point back to Second Brain Setup.
 
 ### Step 1.4 — Save state
 
 Write `answers.md`:
 
 ```markdown
-# Pack 03 — Captured Answers
+# Basic Onboarding — Captured Answers
 
 USER_FULL_NAME: {USER_FULL_NAME}
 USER_CALL_NAME: {USER_CALL_NAME}
@@ -208,7 +208,7 @@ Mark `progress.md` (`Phase 1: complete`).
 PHASE 2 — SCAN THE SECOND BRAIN
 ═══════════════════════════════════════════════════════════
 
-If `VAULT_PATH = not-yet-configured`, skip the scan. Write `scan-results.md` with `vault: not-configured` and proceed to Phase 3 — the boot files will reference Pack 00 as a follow-up step.
+If `VAULT_PATH = not-yet-configured`, skip the scan. Write `scan-results.md` with `vault: not-configured` and proceed to Phase 3 — the boot files will reference Second Brain Setup as a follow-up step.
 
 Otherwise, send:
 
@@ -605,7 +605,7 @@ Your driver registry. Every tool, CLI, MCP, API, and integration you can call be
 - Persistent disk: `$HERMES_HOME/memories/MEMORY.md` (dated, cited, `§`-separated, ≤2,200 chars).
 - Principal profile: `$HERMES_HOME/memories/USER.md` (≤1,375 chars).
 - Built-in memory tool reads/writes here.
-- Larger structured memory providers (Honcho, vector stores, mem0) — wire when {USER_CALL_NAME} sets them up in the masterclass.
+- Larger structured memory providers (Honcho, vector stores, mem0) — wire when {USER_CALL_NAME} sets them up later.
 
 ## Wire as you go
 
@@ -616,7 +616,7 @@ The user will add tools below over time. When a new tool gets wired, add a row w
 - Auth state (working / needs setup / blocked)
 
 Common wirings to expect (none active yet):
-- Telegram bridge (see Pack 04 — Hermes Capture)
+- Telegram bridge (see Telegram Topics, ap-telegram-topics)
 - Google Workspace CLI (gws) — Gmail, Calendar, Drive, Sheets
 - Browser automation (Chrome / Playwright / cua-driver)
 - here.now — publish HTML review surfaces for mobile review
@@ -659,7 +659,7 @@ End the file with no trailing separator. Confirm total file size ≤ 2,200 chars
 
 ```markdown
 §
-[{YYYY-MM-DD}] No second brain yet. User to run Pack 00 (Base Vault) + Pack 01 (Digital Twin) to populate. Source: Hermes Basic Onboarding Pack, Phase 1.
+[{YYYY-MM-DD}] No second brain yet. User to run Second Brain Setup + Digital Twin (or Second Brain V3 + Digital Twin Builder) to populate. Source: Hermes Basic Onboarding Pack, Phase 1.
 ```
 
 ### File 7 — `staging/HEARTBEAT.md`
@@ -688,7 +688,7 @@ Your scheduled rhythm. Patterns below stay **dormant** until {USER_CALL_NAME} ap
 **Purpose:** Surface the day's ONE THING, today's commitments, any overnight escalations.
 **Boot order when activated:**
 1. Read `$HERMES_HOME/memories/USER.md` for {USER_CALL_NAME}'s context.
-2. Read `$HERMES_HOME/GOALS.md` for current priority (created in the masterclass).
+2. Read `$HERMES_HOME/GOALS.md` for current priority (created later, for example by the Chief of Staff Interview).
 3. Read active project state files inside `{VAULT_PATH}/02. Projects/`.
 4. Read calendar for today's commitments (if calendar tool wired).
 5. Read `{VAULT_PATH}/01. Inbox/agent-drops/` for overnight items.
@@ -833,7 +833,7 @@ Send the user the closeout report:
 > - Specialist agent fleet
 > - Tier-specific project file architecture (vault tier / code tier / Hermes ops tier)
 > - Cron activation for Morning Brief / EOD Pulse + Watchdog + Weekly Skill Health
-> - Telegram / Slack / Discord bridges (Pack 04 — Hermes Capture)
+> - Telegram / Slack / Discord bridges (Telegram Topics, ap-telegram-topics)
 > - Decision-rights and approval thresholds for higher-stakes work
 >
 > When you're ready for those, the next lessons in the Hermes Agent track will guide you in."

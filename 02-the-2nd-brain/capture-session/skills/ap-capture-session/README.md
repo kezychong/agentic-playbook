@@ -14,6 +14,10 @@ The current conversation and explicit permission for selected vault sources. Thi
 
 Expected output: An approval list followed by atomic notes with expressed-from provenance.
 
+## On your phone
+
+In a phone chat app that cannot run skills, use the two copy-paste prompts in [phone-chat-prompts.md](references/phone-chat-prompts.md).
+
 ## Limits and permissions
 
 Only confirmed session history is used; no invented Read-tool provenance or automatic nightly mining. Sending, publishing, spending, deletion, installation, scheduling and live account/profile changes require explicit approval of the concrete action. Keep credentials in secure local setup, never chat. Scripts are supplied source assets and have not been executed here. Package checks do not prove runtime compatibility.

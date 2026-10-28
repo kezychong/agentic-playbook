@@ -1,0 +1,12 @@
+{
+  "id": "connect-my-machines",
+  "title": "Connect My Machines",
+  "topic": "08",
+  "skill_ids": [
+    "ap-connect-my-machines"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

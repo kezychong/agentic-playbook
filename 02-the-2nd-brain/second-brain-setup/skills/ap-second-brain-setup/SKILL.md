@@ -142,7 +142,7 @@ Autopilot scheduling packs mentioned in the original method are not included. Ru
 - [ ] One `#biz/` tag per business in `_System/TAG_TAXONOMY.md`
 - [ ] Source Mirror location recorded in the manifest
 - [ ] Four helper skills installed in the vault's `.claude/skills/`
-- [ ] Both AI exports imported, `01. Inbox/exports/INDEX.md` built
+- [ ] Both AI exports imported, `01. Inbox/imports/INDEX.md` built
 - [ ] Key business documents converted onto their shelves, originals untouched in the Source Mirror
 - [ ] First triage done, receipts written
 - [ ] Top 3 documents distilled
@@ -156,7 +156,7 @@ Run these checks in order and jump to the first phase that is not done:
 1. Old-installer brain detected (the Phase 0 step 5 signs) and no `_System/VAULT_MANIFEST.md` (or no recorded upgrade) yet? → Upgrade mode.
 2. Vault folders exist, at least one business folder in `03. Areas/` with shelves, no `[Owner]` placeholders left, and the Source Mirror location recorded in the manifest? If any of those are missing → Phase 1.
 3. Four helper skills inside the vault's `.claude/skills/`? If not → Phase 2.
-4. `01. Inbox/exports/INDEX.md` exists and matches the export counts? If not → Phase 3 (it resumes from existing files).
+4. `01. Inbox/imports/INDEX.md` exists and matches the export counts? If not → Phase 3 (it resumes from existing files).
 5. Business documents present on their shelves? If not → Phase 4.
 6. Inbox has unrouted items? → Phase 5.
 7. Gold documents marked `status: distilled`? If not → Phase 6.

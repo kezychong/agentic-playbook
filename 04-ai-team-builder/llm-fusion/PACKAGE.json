@@ -1,0 +1,13 @@
+{
+  "id": "llm-fusion",
+  "title": "LLM Fusion",
+  "topic": "04",
+  "skill_ids": [
+    "ap-fusion-council",
+    "ap-fusion-build"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

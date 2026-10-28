@@ -4,7 +4,7 @@ Agentic Playbook — **by Kezy**
 
 SOUL.md defines identity; AGENTS.md and HERMES.md are identical operating-manual templates.
 config.yaml and distribution.yaml describe intended configuration, not a verified runtime schema.
-.env.EXAMPLE contains only commented key names. mcp.json contains no active servers.
+env-example.txt contains only commented key names. mcp.json contains no active servers.
 
 Fill placeholders in a separate staged copy after the onboarding interview. Never load these
 blank templates as a live profile. Review the filled copy and exact destination before approving

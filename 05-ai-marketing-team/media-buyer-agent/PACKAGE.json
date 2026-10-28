@@ -1,0 +1,20 @@
+{
+  "id": "media-buyer-agent",
+  "title": "Media Buyer Agent",
+  "topic": "05",
+  "skill_ids": [
+    "ap-approval-gated-actions",
+    "ap-basic-ad-buying-recipe",
+    "ap-weekly-report-writer",
+    "ap-creative-quality-gate",
+    "ap-paused-launch-planner",
+    "ap-meta-account-readiness",
+    "ap-daily-performance-review",
+    "ap-tracker-sheet-review",
+    "ap-tracker-and-creative-json-update"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

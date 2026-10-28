@@ -489,7 +489,7 @@ test('details come from the args and never carry a secret-looking value', () => 
   const detail = (name, payload) => M.jarvisActivityDetail(name, payload)
   assert.equal(detail('read_file', { args: { path: '/etc/hosts' } }), '/etc/hosts')
   assert.equal(detail('web_search', { args: { query: 'hermes plugin sdk' } }), 'hermes plugin sdk')
-  assert.equal(detail('browser_open', { args: { url: 'https://example.com/agentic-playbook' } }), 'skool.Agentic Playbook.com')
+  assert.equal(detail('browser_open', { args: { url: 'https://example.com/agentic-playbook' } }), 'example.com')
   assert.equal(detail('delegate_task', { args: { goal: 'Read the mirrors' } }), 'Read the mirrors')
   assert.equal(detail('unknown_tool', { preview: 'whatever it was' }), 'whatever it was')
 

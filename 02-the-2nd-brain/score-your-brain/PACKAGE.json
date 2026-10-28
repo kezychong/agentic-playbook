@@ -1,0 +1,12 @@
+{
+  "id": "score-your-brain",
+  "title": "Score Your Brain",
+  "topic": "02",
+  "skill_ids": [
+    "ap-score-your-brain"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

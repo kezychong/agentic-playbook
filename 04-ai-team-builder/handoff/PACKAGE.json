@@ -1,0 +1,12 @@
+{
+  "id": "handoff",
+  "title": "Handoff",
+  "topic": "04",
+  "skill_ids": [
+    "ap-handoff"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

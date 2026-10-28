@@ -5,7 +5,7 @@ source: system
 created: 2026-07-24
 ---
 
-# Exports Staging: converted AI conversations land here first
+# Imports Staging: converted AI conversations land here first
 
 This folder is a waiting room, not a home. When the `ap-import-ai-exports` skill runs, it turns raw ChatGPT and Claude conversation exports into one clean note per conversation, plus one `INDEX.md` that lists them all.
 

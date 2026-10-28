@@ -1,0 +1,14 @@
+{
+  "id": "meeting-intelligence",
+  "title": "Meeting Intelligence",
+  "topic": "02",
+  "skill_ids": [
+    "ap-meeting-intelligence"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": [
+    "ap-voice-recognition"
+  ]
+}

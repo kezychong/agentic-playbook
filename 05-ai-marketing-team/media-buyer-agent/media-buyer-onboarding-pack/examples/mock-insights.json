@@ -1,0 +1,12 @@
+{
+  "source": "mock ad-set insights",
+  "date_range": "2026-06-15 to 2026-06-21",
+  "offer": "example coaching program",
+  "result_type": "lead",
+  "target_cost_per_result": 40,
+  "items": [
+    {"label": "test_concept_001", "campaign_type": "testing", "spend": 92, "results": 1, "cost_per_result": 92, "frequency": 1.4, "cpm": 18},
+    {"label": "test_concept_002", "campaign_type": "testing", "spend": 180, "results": 8, "cost_per_result": 22.5, "frequency": 1.8, "cpm": 16},
+    {"label": "scale_winner_001", "campaign_type": "scaling", "spend": 520, "results": 20, "cost_per_result": 26, "frequency": 2.7, "cpm": 24}
+  ]
+}

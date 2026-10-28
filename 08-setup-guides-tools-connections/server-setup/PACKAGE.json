@@ -1,0 +1,13 @@
+{
+  "id": "server-setup",
+  "title": "Server Setup",
+  "topic": "08",
+  "skill_ids": [
+    "ap-hermes-server-setup",
+    "ap-mac-mini-setup"
+  ],
+  "version": "0.1.0",
+  "runtime_status": "unexecuted-source-draft",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

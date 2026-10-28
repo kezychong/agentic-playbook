@@ -11,6 +11,7 @@ You do not need to install the whole collection.
 - **Want a personal assistant:** follow [JARVIS Setup](03-jarvis-setup/README.md).
 - **Want specialist agents:** begin with [AI Team Builder](04-ai-team-builder/README.md), then pick [Marketing](05-ai-marketing-team/README.md), [Sales](06-ai-sales-team/README.md) or the [Finance Agent](07-ai-finance-team/README.md).
 - **Need software or account setup:** use [Setup Guides/Tools/Connections](08-setup-guides-tools-connections/README.md).
+- **Want an always-on assistant with a second brain, step by step:** follow the [Build Track](02-the-2nd-brain/TRACK.md).
 - **Want an optional review of new code:** read [AI Security Team](09-ai-security-team/GUIDE.md) before installing Code Security Auditor or approving an audit.
 
 ## Your first run

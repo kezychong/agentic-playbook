@@ -25,7 +25,7 @@ Create these in the user's own project folder (make a folder for the challenge i
 - What can they actually fulfil, and what's the capacity ceiling? (The whole reason for a challenge.)
 - What is the natural **back-end** offer the challenge should upsell into? (Coaching, group program, or a membership.)
 
-**Why these files matter:** they stop the user re-explaining their business every session, and every asset the skill produces later reads from them. As the course presenter teaches: "You should now have an audience.md and an offer.md, so you don't have to keep repeating."
+**Why these files matter:** they stop the user re-explaining their business every session, and every asset the skill produces later reads from them. As the core method puts it: "You should now have an audience.md and an offer.md, so you don't have to keep repeating."
 
 ## The four intake phases
 

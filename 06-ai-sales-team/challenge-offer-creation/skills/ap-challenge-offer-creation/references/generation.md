@@ -2,11 +2,11 @@
 
 The skill's value is producing real, usable assets — not describing them. Generate each as its own file in the user's project folder, reading from their `audience.md` and `offer.md` so everything is niche-specific. Never leave a deliverable as a placeholder or a summary.
 
-Legend: **[the course presenter]** = his call. **[RESEARCHED]** = credited structure.
+Legend: **[CORE METHOD]** = the supplied method. **[RESEARCHED]** = credited structure.
 
 ## 1. Challenge outline (day-by-day arc)
 
-The spine of the whole product. **[the course presenter]** one video + one action per day, building toward the named outcome.
+The spine of the whole product. **[CORE METHOD]** one video + one action per day, building toward the named outcome.
 
 Structure each day as:
 - **Day N — [title]**
@@ -27,7 +27,7 @@ Produce the full outline for the chosen duration — every day filled, no "…an
 
 ## 2. Launch content calendar (the runway)
 
-**[the course presenter]** the tease-tease-tease runway. Map every pre-launch touch to a date relative to the start:
+**[CORE METHOD]** the tease-tease-tease runway. Map every pre-launch touch to a date relative to the start:
 
 | When | Asset | Job |
 |------|-------|-----|
@@ -57,7 +57,7 @@ For each day, the participant-facing prompt: the one action, why it matters toda
 
 ## 5. Upsell pitch outline
 
-**[the course presenter]** the end-of-challenge transition into the fulfillable offer. Outline:
+**[CORE METHOD]** the end-of-challenge transition into the fulfillable offer. Outline:
 - **The bridge** — connect the win they just got to the bigger transformation they still want.
 - **The reveal** — the coaching/group/membership offer, framed as the natural next step (not a bolted-on pitch).
 - **Why now** — the momentum they've built + a real reason to decide.
@@ -70,4 +70,4 @@ For each day, the participant-facing prompt: the one action, why it matters toda
 - One file per deliverable, all in the user's project folder.
 - Everything reads from `audience.md` + `offer.md` — specific to their niche, never generic.
 - Plain English, the user's voice, no AI-slop phrasing (no em-dash drama, no "it's not X, it's Y").
-- Tag any element drawn from researched best practice with its named source so the user knows what's the course presenter model vs. added structure.
+- Tag any element drawn from researched best practice with its named source so the user knows what's the core model vs. added structure.

@@ -1,0 +1,17 @@
+
+name: media-buyer
+version: 0.1.0
+description: Member-safe paid-media operator with review, tracker, creative JSON, launch, QA, and report skills.
+hermes_requires: ">=0.16.0"
+author: "Kezy (Agentic Playbook repackage)"
+license: "See collection LICENSE"
+distribution_owned:
+  - SOUL.md
+  - AGENTS.md
+  - HERMES.md
+  - README.md
+  - config.yaml
+  - mcp.json
+  - skills/
+  - examples/
+  - QA-SCENARIOS.md

@@ -19,10 +19,10 @@ This collection brings reusable skills, setup guides, blank templates and worked
 | [AI Marketing Team](05-ai-marketing-team/README.md) | Plan content, prepare campaigns and review creative work. |
 | [AI Sales Team](06-ai-sales-team/README.md) | Prepare offers, calls, sales presentations and follow-ups. |
 | [AI Finance Team](07-ai-finance-team/README.md) | Set up the Finance Agent, its onboarding, weekly reporting and monthly close. |
-| [Setup Guides/Tools/Connections](08-setup-guides-tools-connections/README.md) | Choose tools, install selected skills and understand account connections. |
+| [Setup Guides/Tools/Connections](08-setup-guides-tools-connections/README.md) | An always-on box, phone access, a private link between machines, safe keys and tool connections. |
 | [AI Security Team](09-ai-security-team/README.md) | Optional, manually approved reviews of new code and new or changed skill imports; runtime untested. |
 
-Read [START-HERE.md](START-HERE.md) before installing anything. The [catalog](CATALOG.md) lists the skills and their requirements.
+Read [START-HERE.md](START-HERE.md) before installing anything. Building an always-on assistant with a second brain from scratch? Follow the [Build Track](02-the-2nd-brain/TRACK.md). The [catalog](CATALOG.md) lists the skills and their requirements.
 
 ## What you get
 

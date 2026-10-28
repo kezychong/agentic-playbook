@@ -858,3 +858,5 @@ END
 ## Runtime path conventions and optional integrations
 
 Paths such as HOME, 00. System, 07. World Model, Signals, RECENT.md and AUTOMATIONS.md describe a future user-approved runtime workspace. They are not pre-existing files supplied by this package. Resolve them from the user's confirmed vault manifest and profile. For a new PARA vault use the included ap-second-brain-setup templates; if a referenced file or automation is absent, record it missing and ask only for the information needed. Do not fabricate configured services. Optional GBrain, here.now, Telegram and scheduler integrations must be separately configured and authorized; no connector is bundled here.
+
+<!-- Agentic Playbook — by Kezy -->

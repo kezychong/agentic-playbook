@@ -124,3 +124,5 @@ Read `Voice.md` (and `Values.md` when price, fit or promises come up). Write the
 - Start: "Here is what I already know about you: <one short summary>. I'll only ask what's missing: <N> questions."
 - End: "I wrote five notes about you straight into your World Model. Nothing waits for approval: they are already part of your brain." Then Part E's list, and after their reply, Part E's report.
 - Fix: "Fixed, with its sources kept. I read these notes whenever I need to know you, so the fix counts from now on."
+
+<!-- Agentic Playbook — by Kezy -->

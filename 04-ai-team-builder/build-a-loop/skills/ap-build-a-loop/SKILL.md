@@ -175,3 +175,5 @@ Then turn that into a proper checklist item if it's a new rule, and **show the u
 - **Real artifacts on disk.** Every run produces `./loops/<loop-name>/loop-spec.md` and `./loops/<loop-name>/rubric.md`. Always tell the user the paths.
 - **Worker ≠ checker.** Two separate invocations, two prompts. An agent never grades its own output.
 - **Plain English.** Practical, Singaporean-English-friendly, no corporate or AI-sales tone. Build the thing — don't talk about building it.
+
+<!-- Agentic Playbook — by Kezy -->

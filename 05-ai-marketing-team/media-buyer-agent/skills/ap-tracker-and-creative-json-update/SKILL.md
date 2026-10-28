@@ -140,3 +140,5 @@ After approval, return:
 - executed JSON changes.
 - any skipped fields and why.
 - source and date range used.
+
+<!-- Agentic Playbook — by Kezy -->

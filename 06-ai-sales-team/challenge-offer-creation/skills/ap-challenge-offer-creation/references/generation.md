@@ -71,3 +71,5 @@ For each day, the participant-facing prompt: the one action, why it matters toda
 - Everything reads from `audience.md` + `offer.md` — specific to their niche, never generic.
 - Plain English, the user's voice, no AI-slop phrasing (no em-dash drama, no "it's not X, it's Y").
 - Tag any element drawn from researched best practice with its named source so the user knows what's the core model vs. added structure.
+
+<!-- Agentic Playbook — by Kezy -->

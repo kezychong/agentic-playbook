@@ -29,3 +29,5 @@ Add a laptop later? Set up [Brain Folder Setup](../../../02-the-2nd-brain/second
 - List every scheduled job on every machine. Exactly one machine should have any.
 - Each job appears once, in the brain's `AGENTS.md` jobs section: what it does, when it runs, which bot runs it.
 - Turning a schedule on, moving it or deleting it is a separate approval each time.
+
+<!-- Agentic Playbook — by Kezy -->

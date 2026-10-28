@@ -161,3 +161,5 @@ Run these checks in order and jump to the first phase that is not done:
 6. Inbox has unrouted items? → Phase 5.
 7. Gold documents marked `status: distilled`? If not → Phase 6.
 8. Otherwise → Phase 7 refresh, then run a weekly sweep.
+
+<!-- Agentic Playbook — by Kezy -->

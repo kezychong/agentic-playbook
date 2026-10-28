@@ -19,3 +19,5 @@
 - First approved launch build is paused-first.
 
 Do not go live until every item is checked.
+
+<!-- Agentic Playbook — by Kezy -->

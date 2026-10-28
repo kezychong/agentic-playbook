@@ -37,3 +37,5 @@ Initial each:
 - I start Meta in read-only mode.
 - I approve any Meta platform write, tracker write, creative JSON write, live spend, or status change before it happens.
 - I understand the agent recommends first and executes only after approval.
+
+<!-- Agentic Playbook — by Kezy -->

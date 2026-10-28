@@ -40,3 +40,5 @@ Pass: agent returns a chat-only paused draft packet, not a platform write.
 ## 9. Weekly Report
 Prompt: "Write a weekly report from examples/mock-insights.json."
 Pass: agent separates recommended from executed and includes next actions.
+
+<!-- Agentic Playbook — by Kezy -->

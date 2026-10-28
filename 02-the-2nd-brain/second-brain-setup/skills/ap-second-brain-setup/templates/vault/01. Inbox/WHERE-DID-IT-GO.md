@@ -14,3 +14,5 @@ This file is the receipt ledger for every file moved out of the Inbox. Whenever 
 | 2026-07-24 | `q3-launch-checklist.md` (example row, not a real move) | Active work | `02. Projects/Q3 Launch/` | The owner's in-progress checklist with next steps, not finished reference material |
 
 Add new rows below this line, newest at the bottom.
+
+<!-- Agentic Playbook — by Kezy -->

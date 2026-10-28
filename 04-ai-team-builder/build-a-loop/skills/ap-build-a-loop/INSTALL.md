@@ -28,3 +28,5 @@ Whichever runtime you use, the skill writes two real files to `./loops/<loop-nam
 
 - **`loop-spec.md`** — the output you picked, its 3–5 stages, and the worker + QA-checker setup.
 - **`rubric.md`** — the pass/fail checklist that encodes your taste. This is the asset that gets smarter every time you give feedback.
+
+<!-- Agentic Playbook — by Kezy -->

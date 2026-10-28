@@ -56,3 +56,5 @@ These are browsing entries, not a requirement to install the whole topic. Combin
 - [Instagram Carousel](instagram-carousel/README.md)
 - [Presentation Builder](presentation-builder/README.md)
 - [Media Buyer Agent](media-buyer-agent/README.md)
+
+<!-- Agentic Playbook — by Kezy -->

@@ -47,3 +47,5 @@ If you also installed `ap-orchestrator-astra`, this skill uses it: the strongest
 - It will not take a doc's word for it. It checks the real files, logs, and URLs before scoring anything faithful.
 - It will not sample a few files and call it done. A real review checks the whole project.
 
+
+<!-- Agentic Playbook — by Kezy -->

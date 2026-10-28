@@ -922,3 +922,5 @@ test('voiceToday: a new configured-timezone day starts at zero, and survives a r
   cells.set('hermes-jarvis:voice-today', 'not json at all')
   assert.equal(M.jarvisVoiceLoad(store, at).seconds, 0, 'and a wiped or broken cell starts today at zero')
 })
+
+// Agentic Playbook — by Kezy

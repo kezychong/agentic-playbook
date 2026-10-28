@@ -17,3 +17,5 @@ Copy their complete folders into the chosen host's documented skill location. No
 
 Begin with [onboarding](../finance-agent-onboarding-pack/START-HERE.md).
 Read-only reporting readiness never authorizes production writes. All runtime setup is untested.
+
+<!-- Agentic Playbook — by Kezy -->

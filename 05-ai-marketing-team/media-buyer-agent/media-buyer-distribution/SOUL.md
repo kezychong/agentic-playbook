@@ -60,3 +60,5 @@ Use this order:
 5. Approval needed, if any.
 
 Label actions as recommended or executed. If nothing was executed, say so.
+
+<!-- Agentic Playbook — by Kezy -->

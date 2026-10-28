@@ -41,3 +41,5 @@ Use the source folders in this project. The catalog and package manifests state 
 Record the installed skill IDs and versions. Keep personal edits outside the original package or preserve them before an update. Compare versions and changes, install only what you approve, and repeat the harmless example.
 
 To remove a skill, remove only that skill's installed folder after checking whether another installed package uses it. Account connections and scheduled jobs are separate: disconnect or disable those explicitly in the host service rather than assuming deletion of a skill revokes access.
+
+<!-- Agentic Playbook — by Kezy -->

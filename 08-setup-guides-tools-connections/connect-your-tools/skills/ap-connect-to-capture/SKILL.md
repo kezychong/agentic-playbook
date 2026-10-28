@@ -73,3 +73,5 @@ Start a new session yourself and answer "What runs on its own?" from the jobs ta
 1. "Connected to your nightly capture: [tools]. Still missing a key or sign-in: [tools]."
 2. One line per tested tool: what it found, and the title of its test note.
 3. "Nothing new runs on its own: your 23:00 capture now reads these tools too. Once Dreaming and Recall is approved, your Link, Organise and Signal bots run every night after it."
+
+<!-- Agentic Playbook — by Kezy -->

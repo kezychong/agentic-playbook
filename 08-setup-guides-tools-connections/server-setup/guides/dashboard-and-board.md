@@ -25,3 +25,5 @@ Most agent hosts ship a web dashboard on the box. Open it from your laptop throu
 4. **Delegate.** Only approved, specified cards are handed to a helper. Finished cards come back for your review.
 
 The board is a planning surface. A card on it never authorises sending, spending, publishing or deleting.
+
+<!-- Agentic Playbook — by Kezy -->

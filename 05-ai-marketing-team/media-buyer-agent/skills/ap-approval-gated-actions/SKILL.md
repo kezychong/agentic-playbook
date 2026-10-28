@@ -55,3 +55,5 @@ Before executing, repeat:
 - source used
 
 Then label result executed.
+
+<!-- Agentic Playbook — by Kezy -->

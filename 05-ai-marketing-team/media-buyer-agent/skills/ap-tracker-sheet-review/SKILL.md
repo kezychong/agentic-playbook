@@ -49,3 +49,5 @@ Return a dry-run table:
 - old value summary
 - new value summary
 - approval sentence needed
+
+<!-- Agentic Playbook — by Kezy -->

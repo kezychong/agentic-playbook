@@ -91,3 +91,5 @@ See `examples/fictional-voice-match-example.md` for one fictional pass: a sample
 ## Runtime path conventions and optional integrations
 
 Paths such as `{{VOICE_PROFILES_PATH}}` and `{{CONFIDENCE_THRESHOLD}}` describe a future user-approved runtime workspace. They are not pre-existing files or values supplied by this package. Resolve them from the user's confirmed setup; if a referenced location is absent, record it missing and ask only for what is needed. Do not fabricate a configured voice-comparison service or a default threshold; ask the user for one or state plainly that none has been set. Optional voice-comparison tooling must be separately installed, configured, and authorized; no connector or model is bundled here.
+
+<!-- Agentic Playbook — by Kezy -->

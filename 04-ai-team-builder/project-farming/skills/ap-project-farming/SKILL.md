@@ -54,3 +54,5 @@ Evidence, then recommendation, then wait. You decide what gets fixed and when. I
 - Sampling three files and calling it comprehensive.
 - Quietly fixing things mid-review. The deliverable here is the assessment, not the fix.
 
+
+<!-- Agentic Playbook — by Kezy -->

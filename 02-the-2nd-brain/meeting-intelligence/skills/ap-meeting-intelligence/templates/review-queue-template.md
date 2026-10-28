@@ -17,3 +17,5 @@ Type values:
 - `speaker` — unclear attribution of a line to a speaker label.
 - `term` — unclear spelling, name, or term not already in the glossary.
 - `contradiction` — two statements in scope that cannot both be true.
+
+<!-- Agentic Playbook — by Kezy -->

@@ -46,3 +46,5 @@ Use these to set honest revenue expectations against the user's actual completer
 ## The honesty anchor
 
 **[CORE METHOD]** the celebrated "$1M in 70 minutes, zero ads" launch worked because the creator had **built a large warm social audience for years first.** The challenge monetized that reach; it didn't create it. Always tie back-end projections to the user's real audience size. A challenge with strong ascension mechanics still needs people in the room — reach first, funnel second.
+
+<!-- Agentic Playbook — by Kezy -->

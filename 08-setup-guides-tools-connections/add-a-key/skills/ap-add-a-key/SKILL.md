@@ -159,3 +159,5 @@ Plain words, no key values, no file contents, no IP address, no version numbers:
 5. "Your names-only key list is started, at `_System/KEY_LIST.md` in your brain."
 
 If something is still stuck, say exactly which step and what you saw, and suggest: "Record the failing step without secrets and consult your host support documentation."
+
+<!-- Agentic Playbook — by Kezy -->

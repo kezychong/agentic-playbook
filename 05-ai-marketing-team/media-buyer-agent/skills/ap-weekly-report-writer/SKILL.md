@@ -42,3 +42,5 @@ Use for weekly or date-range summaries.
 - No account-level cost-per-result decisions.
 - Every number gets a date range and source.
 - Separate recommended from executed.
+
+<!-- Agentic Playbook — by Kezy -->

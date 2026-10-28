@@ -316,3 +316,5 @@ Keep it to six short lines, plain words, no secrets, no IP address, no version n
 6. "Here is Hermes's first reply:" followed by the reply.
 
 If you stopped early, say exactly where, what you saw, and the one sentence that continues: "Connect to my box and finish the rented-server setup pack (ap-hermes-server-setup)."
+
+<!-- Agentic Playbook — by Kezy -->

@@ -23,3 +23,5 @@ Your brain only knows what reaches it. List every tool you use, pillar by pillar
 
 ## Limits and reuse
 Source scripts, account connections, installations and host behaviour have not been exercised in this build. Some optional components need additional software, verified compatibility or paid access. Preserve required legal notices. The collection is maintained by Kezy; no new blanket redistribution licence is implied.
+
+<!-- Agentic Playbook — by Kezy -->

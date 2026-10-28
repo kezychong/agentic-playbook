@@ -27,3 +27,5 @@ tracker data, or Meta account IDs.
 ## Skills (Agentic Playbook layout)
 
 The nine canonical skill folders live once, at [`../skills/`](../skills/), not inside this template. Before any approved profile install, stage a copy of this folder and copy the nine skill folders into its `skills/` directory. Verify the host's current profile schema first. Nothing here installs or connects by itself.
+
+<!-- Agentic Playbook — by Kezy -->

@@ -42,3 +42,5 @@ Use this whenever the owner asks what to do with ads.
 - Never kill a winner only because result count is low.
 - Never use account totals for cost-per-result decisions.
 - Never execute without approval.
+
+<!-- Agentic Playbook — by Kezy -->

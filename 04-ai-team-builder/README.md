@@ -46,3 +46,5 @@ These are browsing entries, not a requirement to install the whole topic. Combin
 - [LLM Fusion](llm-fusion/README.md)
 - [Project Farming](project-farming/README.md)
 - [Build a Loop](build-a-loop/README.md)
+
+<!-- Agentic Playbook — by Kezy -->

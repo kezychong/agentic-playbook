@@ -55,3 +55,5 @@ Then demonstrate once: ask me for one piece of feedback I'd give the worker righ
 ---
 
 Start with **Stage 1** now. Ask me what I make over and over — nothing else.
+
+<!-- Agentic Playbook — by Kezy -->

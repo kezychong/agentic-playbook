@@ -20,3 +20,5 @@ A fixed, repeatable exam for a second brain: up to 20 questions from your own no
 
 ## Limits and reuse
 Source scripts, account connections, installations and host behaviour have not been exercised in this build. Some optional components need additional software, verified compatibility or paid access. Preserve required legal notices. The collection is maintained by Kezy; no new blanket redistribution licence is implied.
+
+<!-- Agentic Playbook — by Kezy -->

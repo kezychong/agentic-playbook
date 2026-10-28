@@ -88,3 +88,5 @@ Weekly sweep is the checkup, not the fix. It points at problems that the other s
 ## Included support
 
 The vault runtime paths above are created by [ap-second-brain-setup](../ap-second-brain-setup/README.md). Its `templates/vault/` contains the blank manifest, rules and templates. Use the installed vault paths only after setup; keep raw exports outside the vault.
+
+<!-- Agentic Playbook — by Kezy -->

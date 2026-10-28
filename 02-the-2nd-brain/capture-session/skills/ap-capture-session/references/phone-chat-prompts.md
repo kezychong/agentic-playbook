@@ -24,3 +24,5 @@ and do not add facts that were not in the conversation.
 ```
 
 When the note arrives, Capture Session's approval step still applies: nothing becomes a durable note until you confirm it.
+
+<!-- Agentic Playbook — by Kezy -->

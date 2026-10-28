@@ -27,3 +27,5 @@ workflow:
   launch_planning: skills/ap-paused-launch-planner
   approved_actions: skills/ap-approval-gated-actions
   weekly_report: skills/ap-weekly-report-writer
+
+# Agentic Playbook — by Kezy

@@ -29,3 +29,5 @@ One order for building an always-on assistant with an eight-door second brain. S
 ## Prefer the simpler vault?
 
 [Second Brain Setup](second-brain-setup/README.md) builds a five-folder vault run from your laptop, with [Digital Twin](digital-twin/README.md) for the about-you profile. Pick one layout per brain, not both.
+
+<!-- Agentic Playbook — by Kezy -->

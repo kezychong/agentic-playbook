@@ -42,3 +42,5 @@ These are browsing entries, not a requirement to install the whole topic. Combin
 - [Telegram Topics](telegram-topics/README.md)
 - [Connect Your Tools](connect-your-tools/README.md)
 - [Third-party tools worth knowing](third-party-tools.md) — not repackaged; links and credits
+
+<!-- Agentic Playbook — by Kezy -->

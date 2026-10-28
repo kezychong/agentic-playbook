@@ -25,3 +25,5 @@ It never asks for, shows or stores a key; keys go in only through Add a Key on t
 ## Setup, update and removal
 
 Use your host's documented skill directory and check discovery in a fresh session. Start with the harmless draft trigger above. On update, compare versions, back up the old complete folder and merge your private settings separately; never overwrite them with these blanks. Remove only this installed skill folder after approval. Disabling a skill does not revoke connections, undo profile edits or stop existing schedules: revoke/disable those separately using the saved setup record. Preserve user-created notes and backups.
+
+<!-- Agentic Playbook — by Kezy -->

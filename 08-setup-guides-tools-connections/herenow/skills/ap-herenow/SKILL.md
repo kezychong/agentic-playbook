@@ -35,3 +35,5 @@ Publishing makes a page reachable by anyone with the link. Treat every publish a
 ## Remove
 
 On request, delete the published page with the service's own tool and confirm it no longer opens. Deleting a page is a separate approval.
+
+<!-- Agentic Playbook — by Kezy -->

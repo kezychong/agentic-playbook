@@ -17,3 +17,5 @@ Maximum daily spend the agent may propose:
 
 Signature:
 > _______________________________________________
+
+<!-- Agentic Playbook — by Kezy -->

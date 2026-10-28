@@ -7,3 +7,5 @@ The master list of every imported conversation lives at `01. Inbox/imports/INDEX
 Conversations that turn out to be junk (small talk, dead ends, nothing worth keeping) go to `05. Archives/` instead of living here.
 
 Note: some AI exports include an AI-written memory summary about the owner. Treat it as a first draft only. It isn't verified truth until the owner confirms it themselves.
+
+<!-- Agentic Playbook — by Kezy -->

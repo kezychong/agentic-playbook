@@ -21,3 +21,5 @@ From here, the `ap-triage-inbox` skill (or the owner, by hand) decides what happ
 - Not worth keeping: goes to `05. Archives/`
 
 Raw export files (the original ChatGPT or Claude download, and any attachments) never live here and never enter the vault at all. They stay in the read-only Source Mirror folder outside the vault. Only the converted, cleaned-up notes come in.
+
+<!-- Agentic Playbook — by Kezy -->

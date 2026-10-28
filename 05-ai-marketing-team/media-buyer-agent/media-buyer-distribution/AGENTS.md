@@ -57,3 +57,5 @@ ask for separate activation approval.
 - No tracker write unless the owner approves the exact row/range/action.
 - No creative JSON write unless the owner approves the exact creative ID and fields.
 - No unsupported claims in creative.
+
+<!-- Agentic Playbook — by Kezy -->

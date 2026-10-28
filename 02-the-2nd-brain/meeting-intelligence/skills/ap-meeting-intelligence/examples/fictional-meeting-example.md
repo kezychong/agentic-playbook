@@ -80,3 +80,5 @@ If the human had answered row 1 with `later` instead, "Draft announcement" would
 generically ("Speaker 2, unconfirmed") in the confirmed notes, and the row would remain open in the
 held queue for the next pass. The skill does not promote a guess to confirmed just because time
 passed.
+
+<!-- Agentic Playbook — by Kezy -->

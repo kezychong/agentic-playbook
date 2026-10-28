@@ -75,3 +75,5 @@ Hold the microphone in any room and talk. Most agent hosts transcribe the note, 
 - The bot replies to the owner and to nobody else.
 - The token's name is in the box's locked file; its value appears nowhere else.
 - One private group, the bot as admin, Topics on, at least one subject room answering.
+
+<!-- Agentic Playbook — by Kezy -->

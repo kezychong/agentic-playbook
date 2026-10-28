@@ -20,3 +20,5 @@ A private hallway between your laptop and your always-on box: both join one Tail
 
 ## Limits and reuse
 Source scripts, account connections, installations and host behaviour have not been exercised in this build. Some optional components need additional software, verified compatibility or paid access. Preserve required legal notices. The collection is maintained by Kezy; no new blanket redistribution licence is implied.
+
+<!-- Agentic Playbook — by Kezy -->

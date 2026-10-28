@@ -34,3 +34,5 @@ Every single move out of this folder gets one row in `01. Inbox/WHERE-DID-IT-GO.
 ## The imports subfolder
 
 `imports/` is where converted AI conversations land first, before anyone decides if they're worth keeping. See `01. Inbox/imports/README.md` for how that works.
+
+<!-- Agentic Playbook — by Kezy -->

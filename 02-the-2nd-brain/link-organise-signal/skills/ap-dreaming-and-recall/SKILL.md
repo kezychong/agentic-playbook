@@ -160,3 +160,5 @@ The member adds the Voyage key first with the ap-add-a-key skill (Claude Code on
 - Link bot: Nightly Link, Organise and Signal at 02:00 (script, no agent) and Weekly link check on the strongest model; one crontab line for the weekly update and one for the nightly index (05:00); Signal bot: the 72-hour brief.
 - Rows on the jobs list: Nightly chat capture (23:00, from Stage 5), Nightly Link, Organise and Signal, Weekly link check, Weekly update, GBrain nightly index, 72-hour brief. No job appears twice.
 - `gbrain-serve` active on `127.0.0.1:3131`; `hermes mcp test gbrain` passes; `_System/RECENT.md` written once; the read-first line once in AGENTS.md.
+
+<!-- Agentic Playbook — by Kezy -->

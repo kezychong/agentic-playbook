@@ -42,3 +42,5 @@ Loading a skill does not authorise it to publish, send messages, spend money, de
 ## Maintenance and reuse
 
 Repackaged and maintained by Kezy Chong. Covered material may be used and customised for personal or internal business work, with the credit **Agentic Playbook — by Kezy Chong** retained. Redistribution, resale, publication or rebranding requires separate written permission. Read [LICENSE](LICENSE) and [REUSE.md](REUSE.md) for the terms and third-party exceptions. This is not a blanket open-source licence.
+
+<!-- Agentic Playbook — by Kezy -->

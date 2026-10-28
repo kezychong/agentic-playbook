@@ -1,4 +1,4 @@
-row,label,status,launch_date,end_date,spend,results,cost_per_result,action
-2,test_concept_001,Testing Phase,2026-06-15,,92,1,92,Let it run
-3,test_concept_002,Testing Phase,2026-06-15,,180,8,22.5,Let it run
-4,old_concept_003,Frozen,2026-06-01,2026-06-08,120,0,,Do not update
+"row","label","status","launch_date","end_date","spend","results","cost_per_result","action"
+"2","test_concept_001","Testing Phase","2026-06-15","","92","1","92","Let it run"
+"3","test_concept_002","Testing Phase","2026-06-15","","180","8","22.5","Let it run"
+"4","old_concept_003","Frozen","2026-06-01","2026-06-08","120","0","","Do not update"

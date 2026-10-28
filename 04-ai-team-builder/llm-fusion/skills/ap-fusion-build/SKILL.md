@@ -37,3 +37,5 @@ One builder executes the merged plan in a separate working copy or branch. Chang
 ## 5. Audit
 
 A different seat from the builder checks the result against the brief and the tests. Report: what was built, what was verified (and how), what is assumed, and the audit's findings.
+
+<!-- Agentic Playbook — by Kezy -->

@@ -52,3 +52,5 @@ Each creative should have one JSON record with:
 The agent prepares a dry-run packet first. It writes only after the owner approves the exact tracker
 row, creative ID, and fields.
 
+
+<!-- Agentic Playbook — by Kezy -->

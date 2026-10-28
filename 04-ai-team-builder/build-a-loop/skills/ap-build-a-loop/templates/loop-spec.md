@@ -56,3 +56,5 @@
 ## Changelog
 <!-- Dated, newest at top. One line per change to this loop's shape (new stage, role swap, model change, maturity bump). Rubric edits go in rubric.md's "Learned from feedback" log, not here. -->
 - <YYYY-MM-DD> — Loop created. <starting maturity, e.g. L1>
+
+<!-- Agentic Playbook — by Kezy -->

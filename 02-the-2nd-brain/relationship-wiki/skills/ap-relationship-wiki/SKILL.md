@@ -101,3 +101,5 @@ Report the four lists; change nothing until the owner answers.
 - Personal data stays in the owner's private vault. No sending, sharing or publishing from these notes without explicit approval of that exact message.
 - Linking a person to a life area (for example a trainer to Health) is a suggestion the owner confirms.
 - On request, delete or archive a person's note completely; deletion is a separate approval.
+
+<!-- Agentic Playbook — by Kezy -->

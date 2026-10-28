@@ -64,3 +64,5 @@ This is a brief for whoever builds the registration page — you're specifying w
 ## Output of this move
 
 A funnel-parameters map: runway dates, registration-page brief (with optional VIP), start date + cutoff, the daily delivery rhythm, and where the upsell is seeded. Feed this into `generation.md` to produce the offer assets. Handing these parameters to whoever builds the actual page/funnel is the next step, outside this skill.
+
+<!-- Agentic Playbook — by Kezy -->

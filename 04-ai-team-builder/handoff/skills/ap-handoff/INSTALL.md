@@ -70,3 +70,5 @@ the quality high. This skill makes that handoff a one-line habit.
 
 *Credit where it is due: the handoff-skill pattern was popularised by Matt Pocock
 (github.com/mattpocock/skills). This version is written independently.*
+
+<!-- Agentic Playbook — by Kezy -->

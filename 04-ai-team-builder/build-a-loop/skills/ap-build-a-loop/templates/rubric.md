@@ -37,3 +37,5 @@ Fix next: <one line per failed item, plain instruction>
 <!-- This is how the loop gets SMARTER. Every time you reject output the checker passed (or you catch something the rubric missed), append a dated line AND add the matching item to the Checklist above. The rule: a mistake you've corrected once should never reach you again. Newest at top. -->
 - <YYYY-MM-DD> — FAIL if <what was wrong>. Added checklist item: <the new yes/no line you put above>.
 - <YYYY-MM-DD> — Rubric created with <N> checklist items.
+
+<!-- Agentic Playbook — by Kezy -->

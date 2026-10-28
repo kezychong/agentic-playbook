@@ -18,3 +18,5 @@ https://mcp.facebook.com/ads
 7. Ask for a tiny read-only ad-set insight sample.
 
 Stop if the login is not on a Meta or Facebook-owned domain.
+
+<!-- Agentic Playbook — by Kezy -->

@@ -468,3 +468,5 @@ SAFEGUARDS
 ═══════════════════════════════════════════════════════════
 
 End of prompt. Run Phase 0 now: check pre-flight, report, wait for "go."
+
+<!-- Agentic Playbook — by Kezy -->

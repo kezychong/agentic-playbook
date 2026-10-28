@@ -24,3 +24,5 @@ status: confirmed
 ## Notes still held
 - Any review-queue rows left as `later`, for the next pass.
 ```
+
+<!-- Agentic Playbook — by Kezy -->

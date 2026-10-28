@@ -39,3 +39,5 @@ Compare template changes in a staged copy and review filled placeholders private
 an existing finance profile or manual. For removal, pause separately created schedules, revoke any
 connector, verify access is gone, then remove only approved installed files. Decide export retention
 separately. These steps are guidance; no live installation or connection has been tested.
+
+<!-- Agentic Playbook — by Kezy -->

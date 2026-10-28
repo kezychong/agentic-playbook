@@ -64,3 +64,5 @@ The Source Mirror is the read-only folder outside this vault that holds every ra
 ## Keeping this file honest
 
 Created a folder, removed one, or renamed a business folder? Update this manifest in the same change, not later.
+
+<!-- Agentic Playbook — by Kezy -->

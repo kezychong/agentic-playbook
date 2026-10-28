@@ -6,3 +6,5 @@
 # ACCOUNTING_CLIENT_SECRET=
 # ACCOUNTING_ORG_ID=
 # Provider requirements vary. No credentials or connections are supplied.
+
+# Agentic Playbook — by Kezy

@@ -63,3 +63,5 @@ Return a launch packet:
 - source campaign label, if using duplicate fallback
 - exact owner approval needed to create paused items
 - separate owner approval needed to activate spend later
+
+<!-- Agentic Playbook — by Kezy -->

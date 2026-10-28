@@ -45,3 +45,5 @@ As the judge (the strongest model available, in a fresh context), read all answe
 ## 6. Receipt
 
 End with which seats ran, which answer each surviving point came from, and anything that failed or timed out. Never claim a seat ran if it did not.
+
+<!-- Agentic Playbook — by Kezy -->

@@ -73,3 +73,5 @@ your existing Inbox/Projects structure instead of a plain folder.
 
 *Part of the Agentic Playbook build. Fork it for your own setup by editing `SKILL.md`. If your notes
 use different folder names, change the paths in the "Runtime path conventions" section to match.*
+
+<!-- Agentic Playbook — by Kezy -->

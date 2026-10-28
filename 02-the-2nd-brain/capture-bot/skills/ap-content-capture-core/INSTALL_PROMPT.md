@@ -141,3 +141,5 @@ SENT=$(HERMES_HOME="$MAIN_HOME" hermes send -t telegram "$LINE" 2>&1) || echo "T
 ## Private export storage and scope
 
 Raw chat archives must stay in an owner-selected private Source Mirror outside the shared vault. Resolve `<PRIVATE_SOURCE_MIRROR>` before any operation. For helper `prepare`, pass `--export-brain "<PRIVATE_SOURCE_MIRROR>"` in addition to the approved `--profile` arguments. This uses the helper's existing private-export option; redaction alone is not a sharing permission. Notes that are allowed into the vault must still pass the privacy gate. The original repair/seed procedure recognizes historical vault-relative links; if a historical private external export cannot be matched, retain the unresolved block and report it for manual review. Do not move private exports into the vault just to make a repair pass.
+
+<!-- Agentic Playbook — by Kezy -->

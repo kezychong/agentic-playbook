@@ -126,3 +126,5 @@ See `examples/fictional-meeting-example.md` for one full fictional pass: a short
 ## Runtime path conventions and optional integrations
 
 Paths such as `{{NOTES_INBOX}}`, `{{MEETINGS_FOLDER}}`, `{{HELD_QUEUE_PATH}}` and `{{TERMS_GLOSSARY_PATH}}` describe a future user-approved runtime workspace (for example, a notes vault under the user's own `${HERMES_HOME:-~/.hermes}` profile, or an equivalent host-specific location). They are not pre-existing files supplied by this package. Resolve them from the user's confirmed setup; if a referenced location is absent, record it missing and ask only for the information needed. Do not fabricate a configured transcription service, recorder app, or storage path. Optional recorder-app, transcription, or `ap-voice-recognition` integrations must be separately configured and authorized; no connector is bundled here.
+
+<!-- Agentic Playbook — by Kezy -->

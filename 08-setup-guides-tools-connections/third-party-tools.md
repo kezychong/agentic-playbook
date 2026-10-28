@@ -23,3 +23,5 @@ These tools and skills are made and licensed by other people. They are **not** r
 2. Check what it can read, send or store, and where its data goes.
 3. Prefer the maker's official release over copies passed around.
 4. Keep any key it needs in [Add a Key](add-a-key/README.md), never in chat.
+
+<!-- Agentic Playbook — by Kezy -->

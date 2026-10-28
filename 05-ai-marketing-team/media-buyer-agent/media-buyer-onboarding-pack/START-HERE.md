@@ -46,3 +46,5 @@ may plan it in chat, but it needs approval before writing anything into Meta.
 
 Tracker and creative JSON writes also need approval. The agent can prepare a dry-run update packet
 first, then write only the exact approved rows, creative IDs, and fields.
+
+<!-- Agentic Playbook — by Kezy -->

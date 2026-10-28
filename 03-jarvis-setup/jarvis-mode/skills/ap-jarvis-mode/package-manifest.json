@@ -28,8 +28,8 @@
     {
       "path": "README.md",
       "role": "source-and-support",
-      "required": true,
       "status": "present",
+      "required": true,
       "size": 1842,
       "sha256": "a341c2c15db91c9643abc4c99c3aebed3eb79459c5c77fa3596ab901a386c502"
     },
@@ -334,8 +334,8 @@
       "role": "qa",
       "status": "present",
       "required": true,
-      "size": 44449,
-      "sha256": "ab6357862b7cc0209e4f3f3d1c78c126cd088d8e06909e51ca83162b4d836ffa"
+      "size": 44482,
+      "sha256": "6106e4ec463838c77c353eae4ec0617a4680cb03120929fb5e21d92e4bedf808"
     },
     {
       "path": "payload/frontend/tests/callend.test.mjs",

@@ -22,3 +22,5 @@ Point your agent at this folder and say:
 
 ## For the agent doing the install
 Walk the owner through `media-buyer-onboarding-pack/START-HERE.md` in order. Stage a separate copy of `media-buyer-distribution`, copy the nine skill folders into its `skills/`, and fill placeholders from the owner's answers. Connect the ad account **read-only** first. Profile installation (for example `hermes profile install ./<staged copy> --name media-buyer`) needs separate approval and a check of the host's current profile schema. Run `media-buyer-onboarding-pack/QA-SCENARIOS.md` before any real spend decision. Never change budgets, status or creatives without the owner's explicit approval of that exact change.
+
+<!-- Agentic Playbook — by Kezy -->

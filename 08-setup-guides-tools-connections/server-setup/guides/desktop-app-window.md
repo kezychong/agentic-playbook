@@ -18,3 +18,5 @@ On your phone you talk to your agent through [Telegram Topics](../../telegram-to
 - Pin what you are working on; unpin it when done. The pinned list doubles as a short to-do list.
 - One helper agent per job beats one agent doing everything: each keeps its own memory.
 - Skills, scheduled jobs and settings live in the app too. Changing any of them is a live change: approve it first.
+
+<!-- Agentic Playbook — by Kezy -->

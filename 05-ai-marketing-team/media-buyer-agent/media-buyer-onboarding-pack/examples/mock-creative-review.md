@@ -14,3 +14,5 @@ Creative B:
 - Fake social UI frame visible.
 - Two competing ideas.
 - Hard claim has no support note.
+
+<!-- Agentic Playbook — by Kezy -->

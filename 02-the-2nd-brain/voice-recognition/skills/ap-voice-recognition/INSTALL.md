@@ -68,3 +68,5 @@ on its own without a human-approved profile set in place.
 
 *Part of the Agentic Playbook build. Fork it for your own setup by editing `SKILL.md`. If your profile
 storage uses a different location, change `{{VOICE_PROFILES_PATH}}` to match.*
+
+<!-- Agentic Playbook — by Kezy -->

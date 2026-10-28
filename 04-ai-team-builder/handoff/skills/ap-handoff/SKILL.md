@@ -89,3 +89,5 @@ When you finish, save the file, then print its full path so it can be opened in 
 ---
 
 *The handoff-skill pattern was popularised by Matt Pocock (github.com/mattpocock/skills). This version was written from scratch.*
+
+<!-- Agentic Playbook — by Kezy -->

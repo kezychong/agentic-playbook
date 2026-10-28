@@ -69,3 +69,5 @@ These are browsing entries, not a requirement to install the whole topic. Combin
 - [Voice Recognition](voice-recognition/README.md)
 
 Building the always-on version? Follow the [Build Track](TRACK.md).
+
+<!-- Agentic Playbook — by Kezy -->

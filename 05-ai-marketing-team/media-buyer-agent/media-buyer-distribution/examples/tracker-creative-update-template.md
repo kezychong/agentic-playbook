@@ -20,3 +20,5 @@ Use this as the owner approval packet before writing tracker rows or creative JS
 
 I approve updating tracker row ___ and creative JSON record ___ with the fields listed above.
 
+
+<!-- Agentic Playbook — by Kezy -->

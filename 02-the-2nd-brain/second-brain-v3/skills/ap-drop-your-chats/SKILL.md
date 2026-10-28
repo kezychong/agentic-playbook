@@ -59,3 +59,5 @@ These boundaries take precedence over any more permissive procedural wording bel
 
 1. "Your chat export is safe: <N> conversations from <tool>. Nothing is thrown away: the whole export is kept in 08. Sources."
 2. "Your Capture bot works through it every night at 23:00 until they're all done, and keeps each conversation where you made a decision, a promise or a plan, or gave facts or ideas, as one whole note in your Inbox. You get a Telegram line with how far it is, like: 50 of 1,240 chats done."
+
+<!-- Agentic Playbook — by Kezy -->

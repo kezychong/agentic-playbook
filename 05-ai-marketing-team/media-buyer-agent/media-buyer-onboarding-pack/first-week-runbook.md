@@ -32,3 +32,5 @@ Use this for the first seven days after install.
 - Use ap-weekly-report-writer.
 - Decide next test concepts.
 - Confirm whether scope should stay read-only or move to draft-building only.
+
+<!-- Agentic Playbook — by Kezy -->

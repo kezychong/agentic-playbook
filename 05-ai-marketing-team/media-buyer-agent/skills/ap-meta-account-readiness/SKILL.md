@@ -41,3 +41,5 @@ Return:
 - Connector is not official Meta.
 - Scope is unclear.
 - Any action would change spend or status.
+
+<!-- Agentic Playbook — by Kezy -->

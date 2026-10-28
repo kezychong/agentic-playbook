@@ -44,3 +44,5 @@
 - Use ap-creative-quality-gate.
 - Fix mobile readability first.
 - Remove fake UI, unsupported claims, and extra ideas.
+
+<!-- Agentic Playbook — by Kezy -->

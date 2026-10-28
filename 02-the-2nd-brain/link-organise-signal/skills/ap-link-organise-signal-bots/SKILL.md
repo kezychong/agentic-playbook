@@ -16,7 +16,7 @@ These boundaries take precedence over any more permissive procedural wording bel
 
 > **For you, the member:** you never need to read this file. Drag it onto your brain folder, then tell Hermes: Read ap-link-organise-signal-bots.md in my brain folder and make my Link, Organise and Signal bots.
 
-# Link, Organise and Signal Bots: Link, Organise and Signal
+# Link, Organise and Signal Bots: three helper bots and their chain
 
 **If you are Claude Code on the member's laptop, stop here.** This pack is for Hermes on the member's box. Tell the member in one line: "This one is for Hermes: drag it onto your brain folder, then in the Hermes app say: Read ap-link-organise-signal-bots.md in my brain folder and make my Link, Organise and Signal bots." Do nothing else with this file.
 
@@ -105,7 +105,7 @@ Write `_System/jobs/link-prompt.md`, short and plain, read by a bot with no one 
 6. **Link only to what already exists.** A link may point only to a note: one already in the brain (a person, company, project or area note), or another small note from today. A person on the brain map's People list may be linked by name (its spelling) even if they have no note yet. **Never make a new person, company, project or area note.** A new name that matters (it comes up in 2 or more of today's small notes) goes in the log as `Suggested new note: <name> (seen in <N> notes)` for the member to approve; leave it as plain words in the notes.
 7. **Write only into the new small notes.** Never add back-links, lines or sections to any other note, and never change the original. On the whole capture, add only two things at the very end: a `## Small notes` list linking every small note made from it, and `distilled: <date>`. Nothing above them changes by one byte. Never touch the original in `08. Sources`.
 8. Add `linked: <date>` as the last line of every small note. The Organise bot files only notes with that line.
-9. Write `_System/link-logs/<date>.md`: first one line `Inbox at start: <N> items`, then one row per item (what it was, small notes made, links on them, or skipped and why) (source, small notes made, links on them, skipped and why), then any `Suggested new note:` lines, ending with one line exactly like: `<date> · sources: <N> · small notes: <K> · links: <L> · nothing to keep: <Z>`. Links = the lines under `## Links` on today's small notes, nothing else.
+9. Write `_System/link-logs/<date>.md`: first one line `Inbox at start: <N> items`, then one row per item (what it was, small notes made, links on them, or skipped and why), then any `Suggested new note:` lines, ending with one line exactly like: `<date> · sources: <N> · small notes: <K> · links: <L> · nothing to keep: <Z>`. Links = the lines under `## Links` on today's small notes, nothing else.
 
 ## Part C: the Organise bot's prompt
 

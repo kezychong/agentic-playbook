@@ -6,7 +6,7 @@ A rented Ubuntu server becomes your always-on agent box, reached from your lapto
 
 ## Before you start
 
-A laptop with Claude Code, a browser you are signed in to, and a server plan you are willing to pay for (renting costs money: approve it yourself). Copy the whole folder with its support files and required companion folders. Review [the full method](SKILL.md) before use. Never run installation commands merely because this folder was loaded.
+A laptop with Claude Code, a browser you are signed in to, and a server plan you are willing to pay for (renting costs money: approve it yourself). The steps use Hostinger as the worked example; with another provider, follow the same parts on its own screens. Copy the whole folder with its support files and required companion folders. Review [the full method](SKILL.md) before use. Never run installation commands merely because this folder was loaded.
 
 ## Try it
 

@@ -418,7 +418,7 @@ After each wave completes:
 
 This way if the user quits mid-Phase-2, resume picks up at the next pending chunk.
 
-### Step 2.3 — Report Phase 2 complete
+### Step 2.4 — Report Phase 2 complete
 
 > "Phase 2 ✓ — Memory Import complete.
 > Total atomic notes: {total}
@@ -625,7 +625,7 @@ If the user types `synthesize now` (early synthesis with partial answers):
 - **H1.** When are you most alive? What conditions produce your best work?
 - **H2.** What does "successful next 12 months" look like, concretely? Three specific outcomes — not vibes.
 
-### Step 3.2 — Phase 3 complete
+### Step 3.3 — Phase 3 complete
 
 When all 30 answered (or user explicitly says "synthesize now"):
 > "Phase 3 ✓ — Calibration complete. {N} questions answered, {S} skipped. Moving to Phase 4..."

@@ -43,7 +43,7 @@ Accept loose wording too: "show me my Signals", "watch this one, drop that one",
 
 ## Rules for this pack
 
-- You are Hermes, on the member's box. The brain folder: find its full path once with `hermes config get terminal.cwd` (set on Stage 4; if that is empty, `echo "$HOME/second-brain"`). It is `second-brain` in the box account's home folder: the `hermes` user's home on a rented server, the member's own Mac account on a Mac mini; below, `<brain>` means that full path. Keep this pack at both paths in the compatibility mapping and add or update one line under `## Packs you have` in AGENTS.md: `- Signals and Insights: when I say "Show me my top Signals and the notes behind each one.", "Watch [x], drop [y], mark [z] done, and write what I now hold true into my World Model with the date and why.", "Run my hunch pass now." or "Keep [the one worth testing], bin the rest.", read _System/packs/ap-insights-pass.md and follow it; accept the legacy triggers listed there too.`
+- You are Hermes, on the member's box. The brain folder: find its full path once with `hermes config get terminal.cwd` (set on Stage 4; if that is empty, `echo "$HOME/second-brain"`). It is `second-brain` in the box account's home folder: the `hermes` user's home on a rented server, the member's own Mac account on a Mac mini; below, `<brain>` means that full path. Keep this pack: move this file into `_System/packs/` (replace an older copy) and add or update one line under `## Packs you have` in AGENTS.md: `- Signals and Insights: when I say "Show me my top Signals and the notes behind each one.", "Watch [x], drop [y], mark [z] done, and write what I now hold true into my World Model with the date and why.", "Run my hunch pass now." or "Keep [the one worth testing], bin the rest.", read _System/packs/ap-insights-pass.md and follow it; accept the loose wording listed there too.`
 - Needs the Signal bot from Stage 6. If `hermes profile list` has no `signal-bot`, stop and tell the member to do Stage 6 first.
 - The Signal bot owns the counts. Never change a `## Backed by` line, a count or a `status:` it set, except the member's own words `acted on` and `dropped`.
 - Ask the member only before spending money or deleting things. Report in plain words, no file paths unless asked. If stuck: "Record the failing step without secrets and consult your host support documentation."
@@ -84,7 +84,7 @@ Write `_System/jobs/hunch-pass-prompt.md`, short and plain. It says:
 
 ## Part B: the routine and the jobs list
 
-1. Reuse an existing timer as described in the compatibility mapping. Only if no such job exists, create `hermes -p signal-bot cron create "30 4 * * <d>" "Read _System/jobs/hunch-pass-prompt.md and follow it." --name "hunch pass" --workdir "<brain>" --deliver local`, once a week, on a day with no other weekly job.
+1. If the Signal bot already has a weekly hunch pass (or idea pass) job from an older setup, keep that one and skip to step 2. Only if no such job exists, create `hermes -p signal-bot cron create "30 4 * * <d>" "Read _System/jobs/hunch-pass-prompt.md and follow it." --name "hunch pass" --workdir "<brain>" --deliver local`, once a week, on a day with no other weekly job.
 2. Add or update its one row under `## Jobs that run on their own`: `| hunch pass | Connects notes from different parts of your brain into up to 3 Insights to test, from 20 Signals | Once a week, 04:30 your time | Signal bot |`. Read the row back.
 
 ## Part C: run it once now (and on "Run my hunch pass now.")
@@ -95,7 +95,7 @@ A run by hand goes ahead below 20 Signals, so its message must say so. Start `he
 
 - The Signal bot's cron list shows the 72-hour brief (Stage 10) and hunch pass. One new row on the jobs list; no job appears twice.
 - One `Insights <date>.md` in `06. Signals/Insights/` with up to 3 Insights, each with sources, an owner and a test.
-- Both pack paths in the compatibility mapping exist with identical bytes and the Packs line names the sentences above.
+- `_System/packs/ap-insights-pass.md` exists and the Packs line names the sentences above.
 - After a judgement: the watched Signal has a `judged: watch` line and stays in 06; the dropped one sits in `06. Signals/_closed/` with `status: dropped` and a Link rules line; `07. World Model/decisions/What I hold true.md` has the new dated line with a why and a link to its Signal.
 
 ## Traps

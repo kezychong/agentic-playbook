@@ -91,12 +91,12 @@ First check: `ssh mybox uname`. `Linux` means a rented server: follow What to do
    `ssh mybox 'sudo systemctl kill syncthing@hermes; sleep 15; systemctl is-active syncthing@hermes'` prints `active`, then
    `ssh mybox 'systemctl is-enabled syncthing@hermes; hermes gateway restart; sleep 5; systemctl is-active syncthing@hermes; hermes gateway status'` prints `enabled`, `active` and the messaging service running. Offer the full server reboot (`ssh mybox-root reboot`) only as optional, and only on a yes.
 8. **Point Hermes at the folder**:
-   `ssh mybox 'cp ~/.hermes/config.yaml ~/.hermes/config.yaml.bak-day4 && hermes config set terminal.cwd /home/hermes/second-brain && hermes gateway restart; pkill -f "serve [-]-isolated"'`
+   `ssh mybox 'cp ~/.hermes/config.yaml ~/.hermes/config.yaml.bak-brain-folder && hermes config set terminal.cwd /home/hermes/second-brain && hermes gateway restart; pkill -f "serve [-]-isolated"'`
    The desktop app's own server reads the config once at start; the `pkill` stops it and the app starts it again within seconds. **Check:** `ssh mybox 'grep -A4 "^terminal:" ~/.hermes/config.yaml'` shows `cwd: /home/hermes/second-brain`, and `hermes gateway status` shows it running (Telegram can time out on its first try after a restart; wait a minute before calling it a failure).
 9. **Silent two-way check**: write one small file on each side, wait for it on the other (Syncthing waits about 10 seconds before it sends; give it two minutes), compare checksums, then delete both files and their copies in `.stversions` on both sides. Say nothing about it unless it fails.
 10. **Report:** "Your brain folder from Stage 1, <name>, is now on both machines, and Syncthing keeps them matching, with versioning on. It comes back after restarts, Hermes now works from it, and every new chat knows where it is."
 
-When the member says "Open my brain folder in Finder.": `open` the laptop path, then hand back one step at a time: "Press Cmd and the up arrow: now you see it in your home folder. Drag it into the sidebar, under Favorites." Then: "You never need to open it in Claude Code again: you have worked in it since Stage 1." Only if this chat is not in the brain folder: tell them to start a new chat, click the folder button, Open folder, pick it,.
+When the member says "Open my brain folder in Finder.": `open` the laptop path, then hand back one step at a time: "Press Cmd and the up arrow: now you see it in your home folder. Drag it into the sidebar, under Favorites." Then: "You never need to open it in Claude Code again: you have worked in it since Stage 1." Only if this chat is not in the brain folder: tell them to start a new chat, click the folder button, Open folder, and pick it.
 
 ## Done looks like
 

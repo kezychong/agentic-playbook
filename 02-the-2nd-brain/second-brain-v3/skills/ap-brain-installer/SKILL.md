@@ -34,7 +34,7 @@ These boundaries take precedence over any more permissive procedural wording bel
 
 ## Rules for this pack
 
-- You are Hermes, on the member's box. Their brain folder on the box is `/home/hermes/second-brain` (on the laptop it has the member's own name; never make a second folder). Work from it. Syncthing mirrors everything you write to their laptop.
+- You are Hermes, on the member's box. Their brain folder on the box: find its full path once with `hermes config get terminal.cwd` (set by Brain Folder Setup; if that is empty, `echo "$HOME/second-brain"`). It is `second-brain` in the box account's home folder: `/home/hermes/second-brain` on a rented server, the member's own Mac account on a Mac mini. On the laptop it has the member's own name; never make a second folder. Work from it. Syncthing mirrors everything you write to their laptop.
 - Keep this pack: move this file into `_System/packs/` (make the folder if needed, replace an older copy). Add a section `## Packs you have` directly above `## Jobs that run on their own`, with one line: `- Brain installer: when I say "Finish building the eight doors from the brain installer." or "Check my brain folder is built right.", read _System/packs/ap-brain-installer.md and follow it.` If the member names this file and it is already in `_System/packs/`, use that copy. Why: a new chat without the pack makes up its own version.
 - A file the member just dragged in may still be arriving through the mirror: if it is missing, or a `.syncthing.*.tmp` file sits beside it, wait a moment and look again.
 - Ask the member before spending money, deleting things, installing, scheduling or changing a live profile. Prepare everything else as a short plan, apply it on approval, then report.

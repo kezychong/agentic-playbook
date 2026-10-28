@@ -1,4 +1,4 @@
-# Collection index
+# Agentic Playbook catalog
 
 **Agentic Playbook — by Kezy**
 

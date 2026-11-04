@@ -30,7 +30,7 @@ Nine browsing topics contain natural source packages. Multi-skill packages stay 
 - [Agent Detox](03-jarvis-setup/agent-detox/README.md) — ap-agent-detox
 - [Attention Brief](03-jarvis-setup/attention-brief/README.md) — ap-attention-brief
 - [Calendar From Chat](03-jarvis-setup/calendar-from-chat/README.md) — ap-calendar-from-chat
-- [Verdict Card](03-jarvis-setup/verdict-card/README.md) — ap-verdict-card
+- [Decision Card](03-jarvis-setup/verdict-card/README.md) — ap-verdict-card
 - [Morning Brief](03-jarvis-setup/morning-brief/README.md) — ap-morning-brief
 - [Chief Of Staff Interview](03-jarvis-setup/chief-of-staff-interview/README.md) — ap-chief-of-staff-interview
 - [Jarvis Mode](03-jarvis-setup/jarvis-mode/README.md) — ap-jarvis-mode, ap-macbook-hands
@@ -55,7 +55,7 @@ Nine browsing topics contain natural source packages. Multi-skill packages stay 
 - [Edit Pipeline](05-ai-marketing-team/edit-pipeline/README.md) — ap-edit-pipeline
 - [Retargeting Ads Core Funnel](05-ai-marketing-team/retargeting-ads-core-funnel/README.md) — ap-retargeting-ads-core-funnel
 - [Ad Analysis and New Creatives Brief](05-ai-marketing-team/ad-analysis-and-new-creatives-brief/README.md) — ap-ad-analysis-and-new-creatives-brief
-- [Newsletter from Voice](05-ai-marketing-team/newsletter-from-voice/README.md) — ap-newsletter-from-voice
+- [Voice into Newsletter](05-ai-marketing-team/newsletter-from-voice/README.md) — ap-newsletter-from-voice
 - [Yap](05-ai-marketing-team/yap/README.md) — ap-yap
 - [Content OS](05-ai-marketing-team/content-os/README.md) — ap-content-os
 - [Instagram Carousel](05-ai-marketing-team/instagram-carousel/README.md) — ap-instagram-carousel
@@ -64,9 +64,9 @@ Nine browsing topics contain natural source packages. Multi-skill packages stay 
 
 ## AI Sales Team
 
-- [Challenge Offer Creation](06-ai-sales-team/challenge-offer-creation/README.md) — ap-challenge-offer-creation
-- [Vsl Book A Call](06-ai-sales-team/vsl-book-a-call/README.md) — ap-vsl-book-a-call
-- [Webinar Architect](06-ai-sales-team/webinar-architect/README.md) — ap-webinar-architect
+- [Offer Creation](06-ai-sales-team/challenge-offer-creation/README.md) — ap-challenge-offer-creation
+- [VSL for Call Conversion](06-ai-sales-team/vsl-book-a-call/README.md) — ap-vsl-book-a-call
+- [Webinar Planner](06-ai-sales-team/webinar-architect/README.md) — ap-webinar-architect
 - [Call To Outcome](06-ai-sales-team/call-to-outcome/README.md) — ap-call-to-outcome
 - [Pre Meeting Brief](06-ai-sales-team/pre-meeting-brief/README.md) — ap-pre-meeting-brief
 

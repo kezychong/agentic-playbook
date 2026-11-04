@@ -1,4 +1,4 @@
-# Webinar Architect — start here
+# Webinar Planner — start here
 
 **by Kezy**
 

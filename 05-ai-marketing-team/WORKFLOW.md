@@ -10,7 +10,7 @@ Complete [intake](templates/campaign-intake.md). Content OS separates what the o
 
 Use Headline Analyzer to establish awareness, sophistication, desire and the page’s one job before scoring its eleven dimensions. Keep the source’s gating criteria and test variants across different angles. A rewrite may sharpen a true promise; it may not invent proof, a deadline or a result.
 
-For an email, Newsletter from Voice verifies reader opt-in and recognition, preserves the speaker’s experience, selects a framework, checks claims, and produces subject choices and a draft. A recipient signing up does not prove they used a download. Keep draft staging separate from sending; this skill never sends or schedules.
+For an email, Voice into Newsletter verifies reader opt-in and recognition, preserves the speaker’s experience, selects a framework, checks claims, and produces subject choices and a draft. A recipient signing up does not prove they used a download. Keep draft staging separate from sending; this skill never sends or schedules.
 
 ## 3. Make the appropriate asset
 

@@ -1,11 +1,11 @@
-# Newsletter from Voice
+# Voice into Newsletter
 
 **Agentic Playbook — by Kezy**
 
 This is one package, retaining the supplied grouping and its supporting files. It is a local source draft, not an installed or runtime-tested system.
 
 ## Included skills
-- [Newsletter from Voice](skills/ap-newsletter-from-voice/README.md): Turn voice notes into evidence-led newsletter drafts.
+- [Voice into Newsletter](skills/ap-newsletter-from-voice/README.md): Turn voice notes into evidence-led newsletter drafts.
 
 ## Setup
 1. Read each included skill README and its prerequisites.

@@ -1,4 +1,4 @@
-# Newsletter from Voice — start here
+# Voice into Newsletter — start here
 
 **by Kezy**
 

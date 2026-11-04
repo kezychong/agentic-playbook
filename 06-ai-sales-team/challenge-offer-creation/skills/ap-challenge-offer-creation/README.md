@@ -1,4 +1,4 @@
-# Challenge Offer Creation
+# Offer Creation
 
 Agentic Playbook — **by Kezy**
 

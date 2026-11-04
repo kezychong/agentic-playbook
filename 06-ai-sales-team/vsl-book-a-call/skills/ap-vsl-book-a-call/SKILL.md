@@ -18,7 +18,7 @@ setup, never in chat, reports, templates or source control. Examples are fiction
 Source scripts and HTML interactions are supplied unexecuted; runtime compatibility is untested.
 Check the host's available tools, models and supported settings at use-time.
 
-# VSL → Book a Call
+# VSL for Call Conversion
 
 ## Who this is for
 

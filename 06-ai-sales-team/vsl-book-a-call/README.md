@@ -1,11 +1,11 @@
-# Vsl Book A Call
+# VSL for Call Conversion
 
 **Agentic Playbook — by Kezy**
 
 This is one package, retaining the supplied grouping and its supporting files. It is a local source draft, not an installed or runtime-tested system.
 
 ## Included skills
-- [Vsl Book A Call](skills/ap-vsl-book-a-call/README.md): Draft an evidence-led video sales letter for calls.
+- [VSL for Call Conversion](skills/ap-vsl-book-a-call/README.md): Draft an evidence-led video sales letter for calls.
 
 ## Setup
 1. Read each included skill README and its prerequisites.

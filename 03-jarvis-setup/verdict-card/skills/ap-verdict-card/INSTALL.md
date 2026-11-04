@@ -3,7 +3,7 @@
 ---
 stage: shipped
 ---
-# Verdict Card: Install & Use
+# Decision Card: Install & Use
 
 Collection: Agentic Playbook — by Kezy. Use the included canonical skill folder.
 

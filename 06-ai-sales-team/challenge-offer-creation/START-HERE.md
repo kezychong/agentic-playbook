@@ -1,4 +1,4 @@
-# Challenge Offer Creation — start here
+# Offer Creation — start here
 
 **by Kezy**
 

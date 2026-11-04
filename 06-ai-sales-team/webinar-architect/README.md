@@ -1,11 +1,11 @@
-# Webinar Architect
+# Webinar Planner
 
 **Agentic Playbook — by Kezy**
 
 This is one package, retaining the supplied grouping and its supporting files. It is a local source draft, not an installed or runtime-tested system.
 
 ## Included skills
-- [Webinar Architect](skills/ap-webinar-architect/README.md): Build a webinar from intake through close and review.
+- [Webinar Planner](skills/ap-webinar-architect/README.md): Build a webinar from intake through close and review.
 
 ## Setup
 1. Read each included skill README and its prerequisites.

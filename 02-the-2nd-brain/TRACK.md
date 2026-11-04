@@ -15,9 +15,9 @@ One order for building an always-on assistant with an eight-door second brain. S
 | 7 | Rest or catch up | — |
 | 8 | List every tool, pick its route; add keys safely | [Connect Your Tools](../08-setup-guides-tools-connections/connect-your-tools/README.md): Connect Your Tools; [Add a Key](../08-setup-guides-tools-connections/add-a-key/README.md) |
 | 9 | WhatsApp and every tool into the nightly capture | Connect Your Tools: Connect to Capture (or [WhatsApp Capture](whatsapp-capture/README.md)) |
-| 10 | The bots run every night; a search engine for the brain | Link, Organise and Signal: Dreaming and Recall |
+| 10 | The bots run every night; a search engine for the brain | Link, Organise and Signal: Dreaming Cycle |
 | 11 | Prove the brain remembers: a score out of 100 | [Score Your Brain](score-your-brain/README.md) |
-| 12 | Judge your Signals; find testable hunches | Link, Organise and Signal: Insights Pass |
+| 12 | Judge your Signals; find testable hunches | Link, Organise and Signal: Insight Finder |
 | 13 | Light day: trace one note from capture to its final door | — |
 | 15 | Your assistant interviews you about your work | [Chief of Staff Interview](../03-jarvis-setup/chief-of-staff-interview/README.md) |
 | 16 | The rulebook and boot files from that interview | [Chief of Staff Interview](../03-jarvis-setup/chief-of-staff-interview/README.md), [Basic Onboarding](../03-jarvis-setup/basic-onboarding/README.md) |

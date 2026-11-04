@@ -1,11 +1,11 @@
-# Challenge Offer Creation
+# Offer Creation
 
 **Agentic Playbook — by Kezy**
 
 This is one package, retaining the supplied grouping and its supporting files. It is a local source draft, not an installed or runtime-tested system.
 
 ## Included skills
-- [Challenge Offer Creation](skills/ap-challenge-offer-creation/README.md): Design a cohort challenge offer and delivery plan.
+- [Offer Creation](skills/ap-challenge-offer-creation/README.md): Design a cohort challenge offer and delivery plan.
 
 ## Setup
 1. Read each included skill README and its prerequisites.

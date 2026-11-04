@@ -100,7 +100,7 @@ Not in the brain scores 2 or 0: 2 only if Hermes says the brain does not hold it
   ```
   ssh mybox 'systemctl --user is-active gbrain-serve; hermes mcp test gbrain 2>&1 | tail -2; cd ~/second-brain && hermes -z "Reply with the one word pong."'
   ```
-  You need `active`, a connected GBrain and `pong`. If not, run the Dreaming and recall pack's known fixes (Stage 10) first.
+  You need `active`, a connected GBrain and `pong`. If not, run the Dreaming Cycle pack's known fixes (Stage 10) first.
 - Hermes's full path, for the exam script: `ssh mybox 'bash -lc "command -v hermes"'`.
 - Hermes's memory folder, for the memory fingerprint: `ssh mybox 'ls ~/.hermes/memories/ 2>/dev/null'`. It usually holds `MEMORY.md` and `USER.md` (Stage 5's onboarding and the week 3 interview write into them). If the folder is missing, leave the fingerprint lines as they are; they record an empty fingerprint and nothing breaks.
 - The jobs helper and the nightly index script exist: `ssh mybox 'test -f ~/second-brain/_System/jobs/add-job-row.py && test -x ~/second-brain/_System/jobs/gbrain-nightly-index-run.sh && echo jobs-ok'` (Stage 9). If not, run the Stage 9 packs first.
@@ -492,7 +492,7 @@ Then:
 
 | What you see | Fix |
 |---|---|
-| Every answer says Hermes cannot reach GBrain | Search is down, not memory. Those answers are unmarked and the run has no score. Run the Dreaming and recall pack's known fixes (Stage 10), then run the exam again. |
+| Every answer says Hermes cannot reach GBrain | Search is down, not memory. Those answers are unmarked and the run has no score. Run the Dreaming Cycle pack's known fixes (Stage 10), then run the exam again. |
 | One answer timed out (exit 124) | Not a box fault. The script already asked it again; a second timeout is marked 0, not found. Leave it in the score. |
 | Many answers timed out, or answers mention a usage limit | The box was busy, GBrain was paused, or the Claude plan's usage limit was hit. Check the run did not overlap another job (`crontab -l`) and the member's usage meter. Usage-limit answers are unmarked. If fewer than 18 of 20 are marked, there is no score: run it again at a clear time. |
 | `hermes: command not found` in `run.log` | The script's Hermes path is wrong. Redo Before you start and the `sed` line in Part D step 1. |

@@ -1,4 +1,4 @@
-# Newsletter from Voice
+# Voice into Newsletter
 
 Agentic Playbook — **by Kezy**
 

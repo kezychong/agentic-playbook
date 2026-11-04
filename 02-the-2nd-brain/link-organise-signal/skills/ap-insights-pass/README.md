@@ -1,4 +1,4 @@
-# Insights Pass
+# Insight Finder
 
 Agentic Playbook — **by Kezy** · 0.1.0
 

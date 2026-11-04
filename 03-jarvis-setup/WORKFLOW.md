@@ -14,7 +14,7 @@ Agentic Playbook — **by Kezy**
 
 [Attention Brief](attention-brief/skills/ap-attention-brief/SKILL.md) is another route for open commitments and a short morning/evening review. Start with its blank settings. Do not activate both routines blindly: choose the one that fits and avoid duplicate reminders. Failed source reads are visible errors, not a silent “nothing to report.”
 
-[Calendar from Chat](calendar-from-chat/skills/ap-calendar-from-chat/SKILL.md) turns a conversation into an explicit event proposal. Confirm timezone, date, duration, attendees and target calendar before writing; check for duplicates and verify stored state afterward. [Verdict Card](verdict-card/skills/ap-verdict-card/SKILL.md) packages evidence and a choice for the owner. Its copy button copies a response, not permission for unspecified actions.
+[Calendar from Chat](calendar-from-chat/skills/ap-calendar-from-chat/SKILL.md) turns a conversation into an explicit event proposal. Confirm timezone, date, duration, attendees and target calendar before writing; check for duplicates and verify stored state afterward. [Decision Card](verdict-card/skills/ap-verdict-card/SKILL.md) packages evidence and a choice for the owner. Its copy button copies a response, not permission for unspecified actions.
 
 ## 3. Optional JARVIS interface and screen control
 

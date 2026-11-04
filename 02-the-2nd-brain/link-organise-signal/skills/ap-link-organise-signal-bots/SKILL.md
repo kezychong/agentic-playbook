@@ -20,7 +20,7 @@ These boundaries take precedence over any more permissive procedural wording bel
 
 **If you are Claude Code on the member's laptop, stop here.** This pack is for Hermes on the member's box. Tell the member in one line: "This one is for Hermes: drag it onto your brain folder, then in the Hermes app say: Read ap-link-organise-signal-bots.md in my brain folder and make my Link, Organise and Signal bots." Do nothing else with this file.
 
-**For Hermes.** The member dragged this file into their brain folder. Make three helper bots (Link bot, Organise bot, Signal bot), write their prompts and the **chain script** that runs them one after the other, and report. Do not run the chain yet: the member starts the first run with its own sentence (below). This pack makes **no scheduled job**: the chain runs only when the member asks. The Dreaming and Recall pack (ap-dreaming-and-recall) puts it on a nightly timer, after approval.
+**For Hermes.** The member dragged this file into their brain folder. Make three helper bots (Link bot, Organise bot, Signal bot), write their prompts and the **chain script** that runs them one after the other, and report. Do not run the chain yet: the member starts the first run with its own sentence (below). This pack makes **no scheduled job**: the chain runs only when the member asks. The Dreaming Cycle pack (ap-dreaming-and-recall) puts it on a nightly timer, after approval.
 
 ## What you are making
 

@@ -8,9 +8,9 @@ These tools and skills are made and licensed by other people. They are **not** r
 |---|---|---|---|
 | Tailscale | Private network between your own machines | tailscale.com | [Connect My Machines](connect-my-machines/README.md) |
 | Syncthing | Keeps one folder matching on two machines, with versioning | syncthing.net | [Brain Folder Setup](../02-the-2nd-brain/second-brain-v3/skills/ap-brain-folder-setup/README.md) |
-| GBrain | Local search engine over a notes folder, with optional meaning search | its official repository | [Dreaming and Recall](../02-the-2nd-brain/link-organise-signal/skills/ap-dreaming-and-recall/README.md) |
+| GBrain | Local search engine over a notes folder, with optional meaning search | its official repository | [Dreaming Cycle](../02-the-2nd-brain/link-organise-signal/skills/ap-dreaming-and-recall/README.md) |
 | here.now | Turns one HTML file into a shareable link | here.now | [here.now Publishing](herenow/README.md) |
-| Agency (browser-use) | A decision-card queue for reviewing many long-running agent sessions | github.com/browser-use/agency | [Verdict Card](../03-jarvis-setup/verdict-card/README.md) |
+| Agency (browser-use) | A decision-card queue for reviewing many long-running agent sessions | github.com/browser-use/agency | [Decision Card](../03-jarvis-setup/verdict-card/README.md) |
 | Grill Me (Matt Pocock's skills) | A relentless interview that stress-tests a plan | github.com/mattpocock/skills | [Fresh Eyes Judge](../04-ai-team-builder/fresh-eyes-judge/README.md) |
 | Handoff (Matt Pocock's skills) | The original handoff-document pattern | github.com/mattpocock/skills | [Handoff](../04-ai-team-builder/handoff/README.md) (an independent version) |
 | Last 30 Days | Researches what people said about a topic across social sites in the last month | github.com/mvanhorn/last30days-skill | [Content OS](../05-ai-marketing-team/content-os/README.md) |

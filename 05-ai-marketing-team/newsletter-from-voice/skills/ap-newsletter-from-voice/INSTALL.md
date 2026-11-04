@@ -1,4 +1,4 @@
-# Local setup: Newsletter from Voice
+# Local setup: Voice into Newsletter
 
 Agentic Playbook — by Kezy
 
@@ -24,7 +24,7 @@ Paths such as `content-os/`, `newsletter/` and `My Yaps/` mean runtime outputs i
 
 ## Preserved use guidance
 
-# Newsletter from voice: Install & Use
+# Voice into Newsletter: Install & Use
 
 Distribution: use the included complete skill folder. No external download is required.
 

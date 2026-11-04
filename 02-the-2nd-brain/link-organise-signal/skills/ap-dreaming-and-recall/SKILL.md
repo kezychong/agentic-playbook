@@ -16,7 +16,7 @@ These boundaries take precedence over any more permissive procedural wording bel
 
 > **For you, the member:** you never need to read this file. Drag it onto your brain folder, then tell Hermes: Read ap-dreaming-and-recall.md in my brain folder and set up my Dreaming.
 
-# Dreaming and Recall: your brain works at night, and can find what it kept
+# Dreaming Cycle: your brain works at night, and can find what it kept
 
 **If you are Claude Code on the member's laptop, stop here.** This pack is for Hermes on the member's box. Tell the member in one line: "This one is for Hermes: drag it onto your brain folder, then in the Hermes app say: Read ap-dreaming-and-recall.md in my brain folder and set up my Dreaming." Do nothing else with this file.
 

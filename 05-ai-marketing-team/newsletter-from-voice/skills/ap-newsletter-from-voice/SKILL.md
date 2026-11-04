@@ -16,7 +16,7 @@ Before installing software, connecting an account, creating a schedule, changing
 
 Paths such as `content-os/`, `newsletter/` and `My Yaps/` mean runtime outputs in the chosen workspace; they are not missing bundled files. Commands are use-time examples only, after prerequisites and permissions are satisfied.
 
-# Newsletter from voice
+# Voice into Newsletter
 
 ## Who this is for
 You are a business owner using an agent in an app or chat.

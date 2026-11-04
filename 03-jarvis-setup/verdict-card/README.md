@@ -1,11 +1,11 @@
-# Verdict Card
+# Decision Card
 
 **Agentic Playbook — by Kezy**
 
 This is one package, retaining the supplied grouping and its supporting files. It is a local source draft, not an installed or runtime-tested system.
 
 ## Included skills
-- [Verdict Card](skills/ap-verdict-card/README.md): Create an evidence-based decision card for review.
+- [Decision Card](skills/ap-verdict-card/README.md): Create an evidence-based decision card for review.
 
 ## Setup
 1. Read each included skill README and its prerequisites.

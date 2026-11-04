@@ -1,4 +1,4 @@
-# Verdict Card — start here
+# Decision Card — start here
 
 **by Kezy**
 

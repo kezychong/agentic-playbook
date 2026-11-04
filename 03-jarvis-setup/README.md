@@ -20,7 +20,7 @@ Suggested sequence: Basic Onboarding → Chief-of-Staff Interview → a local Mo
 | [Agent Detox](agent-detox/skills/ap-agent-detox/README.md) | Audit and shorten agent instructions with backups. |
 | [Attention Brief](attention-brief/skills/ap-attention-brief/README.md) | Surface sourced priorities and track open commitments. |
 | [Calendar From Chat](calendar-from-chat/skills/ap-calendar-from-chat/README.md) | Draft and verify calendar changes from conversation. |
-| [Verdict Card](verdict-card/skills/ap-verdict-card/README.md) | Create an evidence-based decision card for review. |
+| [Decision Card](verdict-card/skills/ap-verdict-card/README.md) | Create an evidence-based decision card for review. |
 | [Morning Brief](morning-brief/skills/ap-morning-brief/README.md) | Draft a goal-linked morning brief and review cards. |
 | [Chief Of Staff Interview](chief-of-staff-interview/skills/ap-chief-of-staff-interview/README.md) | Interview for goals, routines and decision rights. |
 | [Jarvis Mode](jarvis-mode/skills/ap-jarvis-mode/README.md) | Plan an optional profile-scoped JARVIS command centre. |
@@ -40,7 +40,7 @@ These are browsing entries, not a requirement to install the whole topic. Combin
 - [Agent Detox](agent-detox/README.md)
 - [Attention Brief](attention-brief/README.md)
 - [Calendar From Chat](calendar-from-chat/README.md)
-- [Verdict Card](verdict-card/README.md)
+- [Decision Card](verdict-card/README.md)
 - [Morning Brief](morning-brief/README.md)
 - [Chief Of Staff Interview](chief-of-staff-interview/README.md)
 - [Jarvis Mode](jarvis-mode/README.md)

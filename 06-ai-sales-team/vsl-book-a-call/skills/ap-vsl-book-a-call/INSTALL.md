@@ -9,7 +9,7 @@ support; no installation or integration has been tested. Preserve existing versi
 stage: draft
 ---
 
-# VSL → Book a Call
+# VSL for Call Conversion
 
 **Version:** 1.0.0 · Updated 2026-09-10
 

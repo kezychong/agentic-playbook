@@ -8,7 +8,7 @@ support; no installation or integration has been tested. Preserve existing versi
 ---
 stage: draft
 ---
-# Install Webinar Architect
+# Install Webinar Planner
 Select the included complete skill folder. In the Claude app or Codex app, say: "Install this skill from my Downloads folder so I can use it in every project."
 Then say: "Build my webinar from these offer notes. Read what I have and ask only for missing facts."
 For a review, provide the transcript and whatever real registration, attendance and sales results you have. Missing results stay unknown.

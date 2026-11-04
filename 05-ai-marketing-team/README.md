@@ -12,7 +12,7 @@ Start with [setup and permissions](SETUP.md), then follow [the workflow](WORKFLO
 | [Edit Pipeline](edit-pipeline/skills/ap-edit-pipeline/README.md) | Plan and edit talking-head videos with review gates. |
 | [Retargeting Ads Core Funnel](retargeting-ads-core-funnel/skills/ap-retargeting-ads-core-funnel/README.md) | Design warm-audience ads and funnel exclusions. |
 | [Ad Analysis and New Creatives Brief](ad-analysis-and-new-creatives-brief/skills/ap-ad-analysis-and-new-creatives-brief/README.md) | Inspect ad evidence and brief the next creative batch. |
-| [Newsletter from Voice](newsletter-from-voice/skills/ap-newsletter-from-voice/README.md) | Turn voice notes into evidence-led newsletter drafts. |
+| [Voice into Newsletter](newsletter-from-voice/skills/ap-newsletter-from-voice/README.md) | Turn voice notes into evidence-led newsletter drafts. |
 | [Yap](yap/skills/ap-yap/README.md) | Develop truthful short talking-camera video maps. |
 | [Content OS](content-os/skills/ap-content-os/README.md) | Organize content from capture through review and learning. |
 | [Instagram Carousel](instagram-carousel/skills/ap-instagram-carousel/README.md) | Storyboard and export readable Instagram carousel slides. |
@@ -50,7 +50,7 @@ These are browsing entries, not a requirement to install the whole topic. Combin
 - [Edit Pipeline](edit-pipeline/README.md)
 - [Retargeting Ads Core Funnel](retargeting-ads-core-funnel/README.md)
 - [Ad Analysis and New Creatives Brief](ad-analysis-and-new-creatives-brief/README.md)
-- [Newsletter from Voice](newsletter-from-voice/README.md)
+- [Voice into Newsletter](newsletter-from-voice/README.md)
 - [Yap](yap/README.md)
 - [Content OS](content-os/README.md)
 - [Instagram Carousel](instagram-carousel/README.md)

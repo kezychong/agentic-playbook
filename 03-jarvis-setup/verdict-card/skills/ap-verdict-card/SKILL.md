@@ -14,7 +14,7 @@ Use only the files, accounts and conversations the user explicitly places in sco
 
 These boundaries take precedence over any more permissive procedural wording below. Examples and templates are fictional or blank; they are not a live user profile. Schedule and installation sections are optional procedures, never startup actions.
 
-# Verdict Card
+# Decision Card
 
 ## Who this is for
 You are helping a business owner who uses an agent app or chats with their agent.

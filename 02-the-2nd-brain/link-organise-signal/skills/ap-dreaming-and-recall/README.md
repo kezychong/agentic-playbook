@@ -1,4 +1,4 @@
-# Dreaming and Recall
+# Dreaming Cycle
 
 Agentic Playbook — **by Kezy** · 0.1.0
 

@@ -6,8 +6,8 @@ Three helper bots that work on the brain after the day ends: one breaks new sour
 
 ## Included skills
 - [Link, Organise and Signal Bots](skills/ap-link-organise-signal-bots/README.md): Make the link, organise and signal helper bots and the chain that runs them in order.
-- [Dreaming and Recall](skills/ap-dreaming-and-recall/README.md): Put the chain on a nightly timer, add weekly checks, and give the brain a search engine.
-- [Insights Pass](skills/ap-insights-pass/README.md): Judge counted Signals with the owner and add a pass that proposes testable Insights.
+- [Dreaming Cycle](skills/ap-dreaming-and-recall/README.md): Put the chain on a nightly timer, add weekly checks, and give the brain a search engine.
+- [Insight Finder](skills/ap-insights-pass/README.md): Judge counted Signals with the owner and add a pass that proposes testable Insights.
 
 ## Setup
 1. Read each included skill README and its prerequisites.

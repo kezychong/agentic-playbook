@@ -1,4 +1,4 @@
-# Webinar Architect
+# Webinar Planner
 
 Agentic Playbook — **by Kezy**
 

@@ -5,7 +5,7 @@ This is documentation, not an instruction to install on load. Review the complet
 before changing a live host. Older app-specific steps below are conditional on current host
 support; no installation or integration has been tested. Preserve existing versions.
 
-# Install — Challenge Offer Architect
+# Install — Offer Creation
 
 ## What this is
 

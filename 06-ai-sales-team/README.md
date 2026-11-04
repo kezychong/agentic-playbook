@@ -30,8 +30,8 @@ no new downstream license grant is implied.
 
 These are browsing entries, not a requirement to install the whole topic. Combined source packs stay together; independent source products stay separate.
 
-- [Challenge Offer Creation](challenge-offer-creation/README.md)
-- [Vsl Book A Call](vsl-book-a-call/README.md)
-- [Webinar Architect](webinar-architect/README.md)
+- [Offer Creation](challenge-offer-creation/README.md)
+- [VSL for Call Conversion](vsl-book-a-call/README.md)
+- [Webinar Planner](webinar-architect/README.md)
 - [Call To Outcome](call-to-outcome/README.md)
 - [Pre Meeting Brief](pre-meeting-brief/README.md)

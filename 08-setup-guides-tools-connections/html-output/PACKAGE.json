@@ -5,7 +5,7 @@
   "skill_ids": [
     "ap-html-output"
   ],
-  "version": "0.1.0",
+  "version": "0.2.0",
   "runtime_status": "unexecuted-source-draft",
   "required_skill_ids": [],
   "optional_skill_ids": []

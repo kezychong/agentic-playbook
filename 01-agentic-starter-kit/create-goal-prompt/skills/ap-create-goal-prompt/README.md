@@ -1,8 +1,8 @@
 # Create Goal Prompt
 
-Agentic Playbook — **by Kezy** · 0.1.0
+Agentic Playbook — **by Kezy** · 0.2.0
 
-Build a measurable goal prompt with stopping rules.
+Build a measurable goal prompt with stopping rules for Hermes Agent, Claude Code, or Codex.
 
 ## Before you start
 
@@ -12,7 +12,11 @@ A concrete objective, acceptance evidence and a bounded working area. This is an
 
 > Turn “draft our customer handbook” into a bounded goal prompt.
 
-Expected output: A copyable objective, constraints, acceptance checks, progress expectations and stopping conditions.
+Expected output: A copyable objective, fresh-evidence checks, constraints, boundaries, progress expectations and stopping conditions. Hermes output uses the generic `/goal` contract fields `verify`, `constraints`, `boundaries`, and `stop when`, with supported controls explained separately.
+
+## Hermes goal support
+
+Hermes goals use the turn budget configured by the host. The skill does not invent or change that value. It can also explain `/goal status`, pause, resume and clear; add criteria with `/subgoal`; and suggest a deterministic read-only quality gate. The active goal, its contract, subgoals and gates persist with the Hermes session and return when that session is resumed. Completion evidence must be freshly produced and visible in the conversation.
 
 ## Limits and permissions
 

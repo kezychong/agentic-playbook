@@ -83,7 +83,7 @@ The masthead answers “What is this?” before the reader scrolls.
     <p class="lead">One plain sentence explaining the page.</p>
     <div class="chips" aria-label="Page details">
       <span class="chip">owner: project role</span>
-      <span class="chip">version: 2.0.0</span>
+      <span class="chip">version: 0.2.0</span>
       <span class="chip">offline page</span>
     </div>
   </div>
@@ -123,7 +123,7 @@ The summary strip gives the answer in three or four facts.
 .stat span{display:block;margin-top:9px;font-size:15px}
 ```
 
-Never display a number without its unit or denominator. If the source does not measure it, write “not measured.”
+Never display a number without its unit or denominator. Preserve the source's sign, digits, decimal precision, currency, range, qualifier, time window, and as-of date. Use the same representation everywhere the value repeats. Do not round, abbreviate, convert, normalize, or recompute unless the brief explicitly requests it. Mark derived values and show their formula and source values. If the source does not measure a value, write “not measured.”
 
 ## 5. Where we are
 
@@ -273,7 +273,7 @@ The graphics reference contains flow, stepper, chart, comparison, ring, glossary
 
 ## 9. Option and comparison cards
 
-An options page shows three to six genuinely different paths. Every card contains a schematic picture, title, plain description, one tradeoff, and recommendation state.
+An options page shows three to six genuinely different paths. Every card contains the same fields in the same order: schematic picture, title, plain description, evidence, benefits, limitations, tradeoff, and recommendation state. Use the same units, time window, evidence depth, card size, and type hierarchy across every option. Write “unknown” or “not measured” instead of leaving a weaker side blank.
 
 ```html
 <div class="card-grid">
@@ -296,7 +296,7 @@ An options page shows three to six genuinely different paths. Every card contain
 .tradeoff{color:var(--ash-700)}
 ```
 
-Do not preselect an option unless the member explicitly supplied the choice. A recommendation may be visible without being the member’s answer.
+Do not preselect an option unless the member explicitly supplied the choice. Keep undecided options visually equal. A recommendation may be visible in a separate labeled explanation, but it must not change the comparison fields, card size, color weight, or recorded answer.
 
 ## 10. Review cards
 
@@ -361,7 +361,7 @@ The verdict reference defines the honest clipboard fallback. A success label app
 
 ## 13. Glossary
 
-Glossary terms may be linked from prose with a dashed underline. Keep the bottom glossary complete even when hover is unavailable.
+Glossary terms may be linked from prose with a dashed underline. Keep the bottom glossary complete even when hover is unavailable. Before handoff, inventory every abbreviation, acronym, technical term, domain term, and invented label that a general reader may not know. Expand or explain it at first use and give it exactly one plain-language glossary entry. Remove entries that never appear on the page.
 
 ```css
 .term{border-bottom:1.5px dashed var(--cobalt);cursor:help}
@@ -406,3 +406,5 @@ footer{border-top:1.5px solid var(--line-light);margin-top:70px;padding:28px 0 8
 ```
 
 Every grid child gets `min-width:0`. Stack cards on phones. Keep labels readable. Never let a sticky panel cover a decision control. Respect `prefers-reduced-motion: reduce` by removing smooth scrolling and transitions.
+
+Render the actual page in a browser at a desktop viewport near 1440×900 and a phone viewport near 390×844. At both sizes, inspect every section and exercise every control with keyboard and pointer or touch emulation. Confirm that repeated numbers match, comparison fields stay symmetrical, glossary definitions remain reachable without hover, focus order is visible, and no content is clipped or obscured. Capture one screenshot at each size when browser tooling supports it.

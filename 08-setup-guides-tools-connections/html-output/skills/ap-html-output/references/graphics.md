@@ -155,7 +155,7 @@ The phone layout becomes a vertical stepper. Text remains the same size.
 
 ## 6. Bar chart with real values
 
-Use a bar chart when the source contains measured categories. Include a zero baseline, unit, exact labels, and source/as-of note.
+Use a bar chart when the source contains measured categories. Include a zero baseline, unit, exact labels, and source/as-of note. Copy each source value without changing its sign, digits, decimal precision, currency, range, denominator, qualifier, or time window. Keep the same representation in the chart, accessible description, caption, summary, table, and copy output. Do not round or rescale labels for convenience. If a derived value is requested, label it and show the formula and source values outside the graphic.
 
 ```html
 <figure class="diagram data-chart">
@@ -212,7 +212,7 @@ Use a labeled local scroll only when a dense diagram cannot be redrawn. Tell the
 
 ## 8. Before and after comparison
 
-Use a comparison figure for teaching pages. Label both sides and mark it as a schematic when it is not a real screenshot.
+Use a comparison figure for teaching pages. Label both sides and mark it as a schematic when it is not a real screenshot. Give both sides the same fields, order, scale, units, time window, evidence depth, drawing area, and type hierarchy. Show `unknown` or `not measured` explicitly. Do not make the recommended side larger, brighter, more detailed, or more complete inside the comparison.
 
 ```html
 <figure class="diagram comparison">
@@ -306,7 +306,7 @@ Use numbered badges for manual actions. Each step must say what to do and where 
 
 ## 15. Responsive and print checks
 
-For every page, test widths near 1440, 768, 390, and 320 CSS pixels.
+For every page, render the actual HTML in a browser at widths near 1440, 768, 390, and 320 CSS pixels. Treat 1440×900 as the primary desktop check and 390×844 as the primary phone check.
 
 - At 840px, reduce multi-column grids.
 - At 560px, stack cards and use tall diagrams.
@@ -318,6 +318,8 @@ For every page, test widths near 1440, 768, 390, and 320 CSS pixels.
 - Add visible keyboard focus.
 - Remove motion under `prefers-reduced-motion`.
 - Hide copy buttons in print, but keep the decision text and diagrams.
+
+At the primary desktop and phone sizes, exercise every control and inspect all headings, exact values, comparison fields, glossary links, diagrams, tables, focus states, and copy output. Confirm no information depends on hover, no sticky element hides a control, and no label is clipped or reduced below its minimum size. Capture a desktop and phone screenshot when browser tooling supports it. If no browser is available, report that both rendered checks remain unperformed.
 
 When a wide diagram truly needs local scrolling, use a labeled panel such as “Scroll sideways inside this diagram.” This is an intentional exception, not the default mobile strategy.
 

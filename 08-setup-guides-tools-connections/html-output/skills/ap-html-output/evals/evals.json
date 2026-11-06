@@ -1,6 +1,6 @@
 {
   "skill": "ap-html-output",
-  "version": "2.0.0",
+  "version": "0.2.0",
   "cases": [
     {
       "id": "demo-exact-content",
@@ -12,7 +12,7 @@
         "6, 4, and 2 hours per week charted from zero",
         "three distinct option sketches",
         "2 of 5 steps and fictional 40% progress",
-        "three unanswered Confirm, Veto, Edit cards",
+        "three neutral unanswered Confirm, Veto, Edit cards",
         "working verdict and prompt copy controls"
       ]
     },
@@ -41,6 +41,61 @@
       ]
     },
     {
+      "id": "exact-numeric-fidelity",
+      "request": "Build a report from values -3.50%, USD 1,250.00, 7–9 days, 12 of 37, and about 4.0 hours as of 2026-10-31. Repeat them in the summary, chart, table, and copy output.",
+      "expected": [
+        "preserve signs, digits, decimal precision, currency, ranges, units, denominators, qualifiers, and as-of date exactly",
+        "use the same representation in every repeated location",
+        "do not round, abbreviate, convert, normalize, or silently recompute",
+        "label any requested derived value and show its formula and source values",
+        "keep conflicting source values visible"
+      ]
+    },
+    {
+      "id": "complete-glossary-coverage",
+      "request": "Explain a workflow that uses API, RAG, retrieval latency, and an invented Confidence Gate label for a general reader.",
+      "expected": [
+        "expand or explain every qualifying term at first use",
+        "include API, RAG, retrieval latency, and Confidence Gate in the bottom glossary",
+        "give each term one plain-language definition",
+        "include no unused glossary entries",
+        "keep definitions available on phone, touch, and print without hover"
+      ]
+    },
+    {
+      "id": "symmetrical-comparison",
+      "request": "Compare two options when one has complete evidence and the other has one unknown measurement, then recommend one.",
+      "expected": [
+        "use the same fields in the same order on both sides",
+        "use the same units, time window, scale, evidence depth, and visual weight",
+        "show the unknown measurement explicitly",
+        "show benefits, limitations, and tradeoffs for both options",
+        "separate the recommendation from the neutral comparison"
+      ]
+    },
+    {
+      "id": "neutral-undecided-decision",
+      "request": "Make a decision page with a recommendation but no user answer yet.",
+      "expected": [
+        "show Unanswered",
+        "preselect no answer",
+        "give Confirm, Veto, and Edit equal control weight",
+        "keep the recommendation in a separate labeled explanation",
+        "copy back Unanswered until the user makes a choice"
+      ]
+    },
+    {
+      "id": "desktop-phone-browser-check",
+      "request": "Finish and verify a responsive report with diagrams, comparisons, glossary links, and decision controls.",
+      "expected": [
+        "render in a browser near 1440x900 and 390x844",
+        "exercise every control at both sizes",
+        "inspect exact values, comparison fields, glossary access, focus order, diagrams, tables, and copy output",
+        "capture desktop and phone screenshots when tooling supports it",
+        "state both visual-check gaps if no browser is available"
+      ]
+    },
+    {
       "id": "short-answer",
       "request": "Explain a two-sentence concept.",
       "expected": [
@@ -56,7 +111,7 @@
         "choose the matching shape",
         "use the matching diagram recipe",
         "keep summary-first order",
-        "include a glossary when technical terms appear"
+        "include a complete glossary when qualifying terms appear"
       ]
     }
   ]

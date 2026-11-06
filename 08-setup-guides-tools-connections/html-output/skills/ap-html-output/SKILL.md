@@ -1,7 +1,7 @@
 ---
 name: ap-html-output
 description: "Create offline HTML reports with clear visual decisions."
-version: 0.1.0
+version: 0.2.0
 metadata:
   maintainer: Kezy
 ---
@@ -40,7 +40,7 @@ Read this file first.
 6. Read `templates/decision-page.html` when the page needs decision cards.
 7. Use `examples/demo.html` and its brief only to understand the included fictional demonstration.
 
-These are portable references beside this skill. Do not look for an internal source skill or private project path.
+These are the complete portable references for this public package.
 
 ## When to fire
 
@@ -81,10 +81,11 @@ Every page uses the ELI5 layer. ELI5 means “explain it with simple words, with
 - Keep each sentence to 20 words or fewer when practical.
 - Keep each paragraph to three sentences or fewer.
 - Keep each bullet to 12 words or fewer.
-- Explain a technical or invented term the first time it appears.
-- Expand an abbreviation the first time it appears.
+- Explain a technical, domain-specific, or invented term the first time it appears.
+- Expand every abbreviation and acronym the first time it appears unless the expanded form is less clear.
 - Use one idea per card.
-- Add a bottom glossary with one plain line per explained term.
+- Add a bottom glossary covering every abbreviation, acronym, technical term, domain term, and invented label that a general reader may not know.
+- Run a glossary coverage pass: every qualifying term used in the page has one definition, and every glossary entry is used in the page.
 - Read the page aloud before handoff. Rewrite any section a smart 10-year-old cannot follow.
 
 Simple does not mean thin. Keep the complete decision, number, consequence, and next action. Use a native details section when full material would otherwise make the page hard to scan.
@@ -159,9 +160,9 @@ Every diagram has:
 
 Keep a single flow axis. Do not cross lines. Split branches symmetrically. Rejoin branches at one merge point. Use rounded elbows. Use a stepper for a linear sequence. Do not make an SVG unreadable by shrinking a wide desktop drawing onto a phone. Use a tall mobile view, stacked HTML, or an intentional local scroll with a visible label when density truly needs it.
 
-Use real data-bearing charts. Show exact values, zero baseline where appropriate, units, and a source or as-of note. If a number is unknown, say “not measured.” Never invent a percentage, result, saving, or business metric.
+Use real data-bearing charts. Preserve every source number exactly: sign, digits, decimal precision, currency, range, unit, denominator, qualifier, time window, and as-of date. Repeat the same representation in summaries, charts, tables, captions, and copy-back blocks. Do not round, convert, abbreviate, normalize, or recompute a number unless the brief explicitly requests it. Label a derived number, show its formula and source values, and keep it separate from supplied measurements. If sources conflict, show the conflict instead of silently selecting one value. If a number is unknown, say “not measured.” Never invent a percentage, result, saving, or business metric.
 
-Every comparison or option card gets a small schematic SVG. Do not use emoji as a picture.
+Every comparison or option card gets a small schematic SVG. Do not use emoji as a picture. Build comparisons symmetrically: use the same fields in the same order, the same units and time window, equivalent evidence depth, and equal visual weight on every side. Show unknown values explicitly rather than leaving one side blank. A recommendation may follow the comparison, but the comparison itself must not hide disadvantages or give the preferred side extra detail, color, or space.
 
 ### Evidence imagery and proof
 
@@ -195,11 +196,11 @@ Each decision card contains:
 3. what Confirm means;
 4. what Veto means;
 5. what Edit changes;
-6. Confirm, Veto, and Edit controls with no choice preselected;
+6. Confirm, Veto, and Edit controls with no choice preselected and no control styled as the default answer;
 7. an optional note box;
 8. any missing-data field needed to answer it.
 
-Veto must describe the consequence. Veto never silently authorizes an unsafe fallback.
+Veto must describe the consequence. Veto never silently authorizes an unsafe fallback. Keep an undecided card visually neutral: show `Unanswered`, give each answer equal control weight, and keep any recommendation in a separate labeled explanation. A recommendation is evidence for the reader, not a recorded decision.
 
 Use `references/verdicts.md` for the supplied card and copy-back contract. Include unanswered cards in the copied block. Notes are JSON-string encoded so quotes, newlines, and pipes survive.
 
@@ -240,12 +241,13 @@ Check the actual page, not only the source text:
 - confirm copy success is shown only after the clipboard write resolves;
 - confirm clipboard refusal selects the full output and gives manual-copy instructions;
 - test hostile note content as text;
-- test desktop and phone layout;
+- test the rendered page in a real browser at a desktop viewport near 1440×900 and a phone viewport near 390×844;
+- at both sizes, exercise every control and inspect headings, numbers, comparison fields, glossary links, diagrams, tables, focus order, and copy output;
+- confirm no content is clipped, hidden by sticky elements, reduced to unreadable type, or dependent on hover;
 - repair overflow, clipped SVG labels, weak focus rings, and controls below 44px;
-- check reduced-motion and print styles;
-- capture a screenshot for review when a browser is available.
+- check reduced-motion and print styles.
 
-If no browser is available, say that visual checking was not performed. Do not claim it was.
+Capture one desktop and one phone screenshot when browser tooling supports it. If no browser is available, say that desktop and phone visual checking was not performed. Do not claim it was.
 
 Open the page when possible. Give the member a concise handoff with the page link and sidecar link. Do not paste the full page into chat.
 

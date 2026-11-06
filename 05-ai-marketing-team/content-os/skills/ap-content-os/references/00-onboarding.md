@@ -3,7 +3,7 @@
 
 ## What this stage does
 
-This is the one long conversation the whole system runs on. It learns the business, the audience, how the owner actually talks, a few real stories from their working life, the accounts worth learning from, and which formats they want to make. Then it builds their workspace and writes five foundation files, and everything after this reads those files instead of guessing.
+This is the one long conversation the whole system runs on. It learns the business, the audience, how the owner actually talks, a few real stories from their working life, the accounts worth learning from, and which formats they want to make. Then it builds one brand workspace and writes the foundation files. A durable readiness record tracks foundations, board, provider validation, real first pull, approved schedule and radar separately, so partial setup is never called complete.
 
 It runs once. It takes about twenty minutes. It can be stopped and resumed at any point.
 
@@ -22,8 +22,10 @@ It runs once. It takes about twenty minutes. It can be stopped and resumed at an
 3. **Record verbatim.** Their sentences go into the files as they said them. Do not upgrade their grammar, do not make them sound more professional, do not compress a story into a summary.
 4. **Reflect back before moving on.** After each topic area, say back what you heard in two or three lines and ask "did I get that right?" Fix it before continuing.
 5. **A pass is final.** If they decline a question, or decline to go deeper on a story, that is finished for this session. No rephrasing it and asking again. No coming back to it later in the same run.
-6. **Stoppable.** Say at the start: "You can stop any time and say continue later, I will pick up where we left off." If they stop, create the `content-os/` folder if it does not exist yet, save what you have so far into a note there, and resume from the next unanswered topic.
+6. **Stoppable.** Say at the start: "You can stop any time and say continue later, I will pick up where we left off." If they stop, create the `content-os/` folder if it does not exist yet, save what you have so far, and update `content-os/setup-readiness.md` with the last completed topic and next unanswered topic. Resume there without asking completed questions again.
 7. **Never ask them to do anything technical.** You create every folder and every file yourself. They only talk.
+
+Before the first question, confirm the brand in plain words and the workspace root. Follow `setup-readiness.md`: one workspace per brand, preserve verified answers and explicit skips, and use only verified, paused, skipped or blocked as setup statuses. If the record already exists, read it and continue from its next action instead of restarting.
 
 **Opening line, say roughly this:**
 
@@ -183,7 +185,7 @@ File `content-os/MY-WATCHLIST.md` from the template, with why each account is th
 
 ## Topic 7: setting up the research engine
 
-This is what makes that watchlist work on its own, every week, without them lifting a finger. The full mechanics live in `02-research-drop.md`, and you do not need to open that file to do this part. Same rules as every topic before it: one thing at a time, plain words, wait between each.
+This can make that watchlist work on a reviewed weekly schedule. The full mechanics live in `02-research-drop.md`; provider, source and first-pull checks live in `research-and-reference-gates.md`. Same rules as every topic before it: one thing at a time, plain words, wait between each. Provider validation, a real first pull and a schedule are three separate readiness steps.
 
 **Say it in two sentences, no more:**
 
@@ -212,7 +214,9 @@ Explain each provider's permissions, current cost and data flow before connectin
 
 Say one plain sentence before you run it: "Running your first pull now. This one is bigger than the weekly ones because I am learning what normal looks like on each account."
 
-Then run it and report back in one plain paragraph. Not a table, not a numbers dump. Something in the shape of: "Done. I read the recent posts on all six accounts and worked out what a normal post does for each one. Two of them have something sitting well above their own normal in the last month, and that is what I will bring you next week."
+First validate each approved provider with the smallest approved call and read back the outcome. Mark provider validation verified only after that evidence exists; otherwise mark blocked. Then run one real bounded pull from the approved public source list and read back its workspace receipt. A dry run, account creation or credential check is not a first pull. A real zero-result pull may still be verified.
+
+Report back in one plain paragraph. Not a table, not a numbers dump. Something in the shape of: "Done. I read the recent posts on all six accounts and worked out what a normal post does for each one. Two of them have something sitting well above their own normal in the last month, and that is what I will bring you next week."
 
 ### Step 4: switch on the weekly run
 
@@ -222,13 +226,14 @@ Then run it and report back in one plain paragraph. Not a table, not a numbers d
 
 **Before creating a schedule, show the exact scope, time, timezone, cost limits and removal controls and obtain explicit approval. If declined, leave it off.**
 
-1. Only after approval, create the reviewed weekly job using a supported scheduler. Verify its definition; do not claim a run occurred until there is evidence.
-2. Say the controls once, in their own words: "If you ever want it sooner, say 'run my research pull now'. If you want it to stop for a while, say 'pause the research engine'."
-3. Confirm in one sentence: "Done. It runs on its own each week and needs nothing from you."
+1. Only after approval, list existing jobs and match on purpose plus canonical workspace root. Reuse, update or unpause the exact match; never create a duplicate for the same brand workspace.
+2. Create or update the reviewed weekly job using a supported scheduler, then read it back. Verify purpose, workspace root, source scope, time, timezone, budget and enabled/paused state. Record the returned job identifier and verification time in `setup-readiness.md`. Do not claim a run occurred until a separate run receipt is read back.
+3. Say the controls once, in their own words: "If you ever want it sooner, say 'run my research pull now'. If you want it to stop for a while, say 'pause the research engine'."
+4. Confirm only what read-back evidence proves. Use verified, paused, skipped or blocked; never turn an accepted definition into a claimed completed run.
 
 ### The skip door
 
-If they say skip at any point in this topic, drop it immediately and do not ask twice. One sentence so they know where the door is: "No problem. Say 'set up my research engine' whenever you want it." Note in `MY-RULES.md` that the research engine is off by their choice, with the date.
+If they say skip at any point in this topic, drop it immediately and do not ask twice. One sentence so they know where the door is: "No problem. Say 'set up my research engine' whenever you want it." Note in `MY-RULES.md` that the research engine is off by their choice, with the date, and mark the relevant readiness steps skipped. Do not reopen them unless the owner asks.
 
 Until they are ready, they have the manual road, and you frame it as the road rather than a choice: "Until that is set up, when you want research, open two or three of those accounts, spot the posts that clearly beat their normal, and paste me the link and the caption. Say 'research drop' and I do the rest." The full ritual for that lives in `02-research-drop.md`.
 
@@ -301,6 +306,7 @@ Create in the root of wherever you are working:
 
 ```
 content-os/
+  setup-readiness.md
   MY-VOICE.md        MY-AUDIENCE.md    MY-FORMATS.md
   MY-WATCHLIST.md    MY-RULES.md       MY-FOCUS.md
   news-pillars.md
@@ -308,7 +314,7 @@ content-os/
   analytics/
 ```
 
-Research credentials belong in a secure local secret store outside this workspace; no credential file is bundled or created here.
+This root belongs to one brand only. Never reuse its answers, research state, Cockpit receipts or schedule identity for another brand. Research credentials belong in a secure local secret store outside this workspace; no credential file is bundled or created here.
 
 `analytics/` starts empty. It is where the arithmetic on their own results gets written, once there are results.
 
@@ -326,6 +332,7 @@ Story Cards go into `story-bank/` as they were captured. The other three folders
 
 ### Check before you hand back
 
+- `setup-readiness.md` names the brand and exact workspace and reports all six steps honestly.
 - All five MY-* files exist and none of them contains a placeholder you did not fill.
 - Every quote in `MY-AUDIENCE.md` is a real sentence a real person said.
 - `MY-VOICE.md` contains real lines pulled from their samples, not descriptions of lines.
@@ -336,7 +343,7 @@ Story Cards go into `story-bank/` as they were captured. The other three folders
 
 ## Switch on the overnight radar
 
-This optional step is disabled by default. Offer it after the manual workflow works; do not create it without explicit approval. The full rules for what you are switching on live in `07-harvest-autopilot.md`, and you do not need to open that file to do this part.
+This optional step is disabled by default. Offer it only after one approved manual harvest sample has verified the own-material filter, blank-angle rule and workspace exclusion. Do not create it without explicit approval. The full rules live in `07-harvest-autopilot.md`.
 
 **Ask which folders are permitted; separately approve any schedule:**
 
@@ -351,12 +358,13 @@ This optional step is disabled by default. Offer it after the manual workflow wo
 
 **Before creating a schedule, show the exact scope, time, timezone, cost limits and removal controls and obtain explicit approval. If declined, leave it off.**
 
-1. Only after approval of the exact folders, timezone and run time, create the reviewed nightly job.
-2. Write the state note at `content-os/harvest-state.md` with the two watched places and the run time.
-3. **Mark everything that already exists as seen.** Every note in their working folder and every file in the transcripts folder gets recorded as already handled, so night one only picks up what is genuinely new. Skipping this step means their whole second brain gets mined at once on the first night, which is the single worst first impression this system could make.
-4. Confirm in one sentence: "Done. It runs each night on its own and needs nothing from you."
+1. Only after approval of the exact folders, timezone and run time, list existing jobs and match on radar purpose plus canonical workspace root. Reuse, update or unpause the exact match; never create a duplicate.
+2. Create or update the reviewed nightly job, read it back, and verify purpose, workspace root, watched folders, timezone, run time and enabled/paused state. Record the returned job identifier and verification time in `setup-readiness.md`.
+3. Write the state note at `content-os/harvest-state.md` with the watched places and run time.
+4. **Mark everything that already exists as seen.** Every note in their working folder and every file in the transcripts folder gets recorded as already handled, so night one only picks up what is genuinely new. Skipping this step means their whole second brain gets mined at once on the first night, which is the single worst first impression this system could make.
+5. Confirm only the state the read-back proves. Do not claim the first nightly run happened until its receipt exists.
 
-**If they say skip that.** Fine, drop it immediately and do not ask twice. Say one sentence so they know where the door is: "No problem. If you ever want it, say 'start the radar' and I will set it up then." Note in `MY-RULES.md` that the radar is off by their choice.
+**If they say skip that.** Fine, drop it immediately and do not ask twice. Say one sentence so they know where the door is: "No problem. If you ever want it, say 'start the radar' and I will set it up then." Note in `MY-RULES.md` that the radar is off by their choice and mark radar skipped in `setup-readiness.md`.
 
 ---
 
@@ -388,7 +396,7 @@ Then show them, in about eight lines, not a wall:
 
 - What got built and where it lives.
 - The one-sentence version of their voice, their cold viewer, and their chosen formats.
-- One line saying the radar is on, and what it will do tonight while they sleep.
+- One line for each readiness step: verified with its evidence, paused with its next action, skipped as the owner's choice, or blocked with the cause. Never say the radar is on unless its job was read back as enabled; never say it ran until a run receipt exists.
 - One line saying the board is there whenever they want it, and the words that open it.
 - The two notes from the section above, one sentence each: the first edit day, and the one number habit. Then the optional caption question, if it fits.
 - One honest note on what is still thin. If the voice file is provisional, say so here.
@@ -452,7 +460,7 @@ If you do split them, split them in this order, and only this order. **The board
 
 ### Step 5: the radar, if they never had it
 
-If `content-os/harvest-state.md` is missing, switch the radar on now as part of the same minute, using the section above, including marking everything that already exists as seen. Do not make it a separate conversation.
+If `content-os/harvest-state.md` is missing, leave radar readiness paused. Offer the manual sample and optional schedule under the normal approval rules; do not switch it on as part of an upgrade.
 
 ### Step 6: say what changed, in five lines
 

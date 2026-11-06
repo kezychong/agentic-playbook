@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Visual + behaviour check for a presentation-builder deck (Jarvis layer).
+"""Optional visual and behaviour check for a presentation-builder deck.
 
 The Agentic Playbook method says "open the deck in a browser and inspect every slide at
-1600x900 and 1280x720" — this does that headlessly so Jarvis can do it from Telegram:
+1600x900 and 1280x720" — this performs those checks headlessly:
 
   - screenshots every slide at both sizes (for the agent to look at)
   - flags: content overflowing / clipped by the slide, headlines over 3 lines,
@@ -11,7 +11,7 @@ The Agentic Playbook method says "open the deck in a browser and inspect every s
     presenter/notes-window code (not allowed in this version)
   - tests navigation: Right/Space/Left/Home/End, URL hash, progress bar at 100% on the end
   - writes contact_sheet.png (1600x900 shots, numbered grid on graphite) for the preview
-  - optionally writes a PDF of every slide (--pdf) so Kezy can flip through on his phone
+  - optionally writes a PDF of every slide (--pdf) for human review
 
 Usage:
   check_deck.py --html <abs>/<slug>.html --out <abs>/check [--pdf <abs>/<slug>.pdf]

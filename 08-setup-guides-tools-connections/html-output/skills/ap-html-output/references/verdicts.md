@@ -15,11 +15,11 @@ Each card has:
 5. what Veto means;
 6. what Edit changes;
 7. three radio controls: Confirm, Veto, Edit;
-8. no preselected radio;
+8. no preselected radio and no answer control styled as the default;
 9. an optional note textarea;
 10. a visible current state such as Unanswered.
 
-The page may recommend a choice. The recommendation is not the member’s answer.
+The page may recommend a choice in a separate, clearly labeled explanation. The recommendation is not the member’s answer and must not alter the neutral `Unanswered` state, control order, color weight, or copy-back value.
 
 Veto must say what stops, stays manual, or remains undefined. Never turn Veto into automatic execution. Edit means the note carries a replacement scope, rule, or target.
 
@@ -58,7 +58,7 @@ Example shape:
 ```text
 # HTML Output verdicts
 
-- Page version: 2.0.0
+- Page version: 0.2.0
 - Source basename: demo.html
 - Local copy date: 2026-09-15
 - Weekly time budget (minutes): not supplied
@@ -75,7 +75,7 @@ Example shape:
 ## Machine-readable answers
 
 {
-  "page_version": "2.0.0",
+  "page_version": "0.2.0",
   "source_basename": "demo.html",
   "local_copy_date": "2026-09-15",
   "safe_fields": {"weekly_time_budget_minutes": null},
@@ -142,6 +142,8 @@ The choice controls themselves do not execute any action. They only change what 
 - [ ] Veto consequence is visible.
 - [ ] Edit rule is visible.
 - [ ] Every card starts Unanswered.
+- [ ] Unanswered cards use neutral styling and equal-weight controls.
+- [ ] Any recommendation is separate from the recorded answer.
 - [ ] Every note is included.
 - [ ] Notes are JSON-string encoded.
 - [ ] Unanswered cards remain in the output.

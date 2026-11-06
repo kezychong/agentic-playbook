@@ -5,6 +5,8 @@ Your second brain fills up all week. Notes you typed on a Tuesday, a call that g
 
 It is disabled by default. After a successful manual sample, show the watched folders, authorship exclusions, timezone, run time and removal procedure. Create it only after explicit approval; loading the skill never activates it.
 
+Radar is one separate step in `setup-readiness.md`. Its state is verified, paused, skipped or blocked. It belongs to one brand workspace and may write only to that workspace; a schedule or state note from another brand is never reused.
+
 The mining itself is the harvest work already described in `01-capture.md`, done on a schedule instead of by hand. Nothing new is invented here. Same bar, same cap, same blank angle.
 
 **This file holds three things:** what gets watched, what happens each night, and the plain sentences that control it. The setup conversation lives at the end of `00-onboarding.md`.
@@ -19,7 +21,7 @@ The mining itself is the harvest work already described in `01-capture.md`, done
 
 **My job (the agent)**
 
-- Build the nightly job only after approval of the exact scope and schedule; report what was actually created.
+- Build the nightly job only after approval of the exact scope and schedule; deduplicate it by purpose plus canonical workspace root, read it back, and report only what was verified.
 - Remember what I have already read, so nothing gets done twice.
 - Tell the difference between what YOU wrote and what you merely saved, and only ever mine the first kind.
 - Run the harvest procedure from `01-capture.md` exactly as written, with no shortcuts because nobody is watching.
@@ -63,7 +65,7 @@ Skipping is the correct answer, not a failure. Guessing which lines are theirs i
 
 ## Procedure: what happens each night
 
-1. **Read the state note** at `content-os/harvest-state.md`. It holds the watched places, the run time, and the list of files already handled with the date each one was done. **If the note is missing, treat everything as already seen, write a fresh note, and say so in the next summary.** Never mass-harvest a whole second brain by accident.
+1. **Confirm the brand workspace, then read the state note** at that root's `content-os/harvest-state.md`. It holds the watched places, the run time, and the list of files already handled with the date each one was done. **If the note is missing, treat everything as already seen, write a fresh note, and say so in the next summary.** Never borrow another workspace's state or mass-harvest a whole second brain by accident.
 
 2. **Find what is new.** Anything in the two watched places that is new, or changed since the date recorded against it, and is not already on the handled list. Skip the `content-os/` exclusion described above. Nothing new is a perfectly good night. Update the state note and stop.
 
@@ -106,16 +108,20 @@ None of these are new. They are the same rules the rest of your system already r
 
 ## Recurrence, and how to control it
 
-Optional setup follows explicit approval. New watched folders or schedules need approval of their scope. Four plain sentences control it, and the agent does the work behind each one.
+Optional setup follows one verified manual sample and explicit approval. New watched folders or schedules need approval of their scope. Before any create or change, list existing jobs and match on radar purpose plus canonical workspace root. Reuse, update or unpause the exact match; never create a duplicate because its display name differs.
 
-- **Pause it:** "pause the radar". It stops running. The state note stays, so nothing gets reprocessed when it comes back.
-- **Start it again:** "start the radar again".
+After creating, updating, pausing, resuming or removing the job, read back the exact target and verify purpose, workspace root, watched folders, run time, timezone and enabled/paused state. Record the returned job identifier and verification time in `setup-readiness.md`. A job definition is not evidence that a run happened; that requires a separate run receipt.
+
+Four plain sentences control it, and the agent does the work behind each one.
+
+- **Pause it:** "pause the radar". It stops running after the paused state is read back. The state note stays, so nothing gets reprocessed when it comes back. Mark readiness paused.
+- **Start it again:** "start the radar again". Read back enabled before calling it verified.
 - **Watch somewhere else too, or instead:** "watch this folder too" or "watch this folder for transcripts instead", naming the folder. The job and the state note get updated together, and everything already in a newly added folder is marked as seen so it does not all land at once.
 - **Remove it completely:** "remove the radar". After confirming the exact deletion scope, the scheduled job and its wrapper are deleted, and you are told exactly what was removed. Your cards, your summaries and your workspace stay untouched.
 
 "What did the radar find" is the fifth thing you can say. It reads back the last few summaries without you opening a folder.
 
-There is no half-removed state. Whichever of those you say, the agent confirms in one sentence what is now true.
+There is no half-removed state. Whichever of those you say, the agent confirms in one sentence what the read-back proves. If the change fails, radar is blocked; if the owner declines setup, it is skipped. Never report a missing receipt as success.
 
 ---
 
@@ -127,6 +133,7 @@ There is no half-removed state. Whichever of those you say, the agent confirms i
 - Never scores, ranks or kills an idea.
 - Never edits or deletes your notes, your transcripts, your cards, or anything else it did not create.
 - Never leaves a summary on a night that had nothing to report.
+- Never creates a duplicate job or calls a schedule/run verified without read-back evidence.
 
 ---
 

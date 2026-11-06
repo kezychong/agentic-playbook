@@ -12,6 +12,7 @@ Run it with no arguments and it makes its own sample workspace. Nothing on
 the network is touched at any point.
 """
 
+import datetime
 import json
 import os
 import shutil
@@ -232,29 +233,39 @@ Numbers nobody checks. Three sequels filed.
 # The first two entries are written the way references/templates.md teaches:
 # the name of each number, then the number. The third is written the other way
 # round, which some people do, and which has to read correctly too.
-POSTED_LEDGER = """# Posted
+FIXTURE_TODAY = datetime.date.today()
+FIXTURE_POST_DATES = [
+    (FIXTURE_TODAY - datetime.timedelta(days=offset)).isoformat()
+    for offset in (2, 9, 14)
+]
+FIXTURE_STATS_DATES = [
+    (FIXTURE_TODAY - datetime.timedelta(days=offset)).isoformat()
+    for offset in (1, 0, 1, 12)
+]
 
-## 2026-08-22 - The number nobody checks
+POSTED_LEDGER = f"""# Posted
+
+## {FIXTURE_POST_DATES[0]} - The number nobody checks
 - platform: instagram
 - format: reel
 - link: https://www.instagram.com/p/CwQ0aBcDeFg/
 - hook: The number nobody checks in their own books
 - franchise: Numbers nobody checks
-- stats: views 12400, likes 310, comments 22 (as of 2026-08-23)
-- stats: views 18900, likes 402, comments 31 (as of 2026-08-24)
+- stats: views 12400, likes 310, comments 22 (as of {FIXTURE_STATS_DATES[0]})
+- stats: views 18900, likes 402, comments 31 (as of {FIXTURE_STATS_DATES[1]})
 
-## 2026-08-15 - What our slowest month taught us
+## {FIXTURE_POST_DATES[1]} - What our slowest month taught us
 - platform: linkedin
 - format: post
 - hook: Our slowest month fixed our pricing
-- stats: likes 88, comments 12 (as of 2026-08-23)
+- stats: likes 88, comments 12 (as of {FIXTURE_STATS_DATES[2]})
 
-## 2026-08-10 - The quote I stopped sending
+## {FIXTURE_POST_DATES[2]} - The quote I stopped sending
 - platform: instagram
 - format: reel
 - link: https://www.instagram.com/p/CwQ0zZyXwVu/
 - hook: The quote I stopped sending clients
-- stats: 4,200 views, 180 likes, 24 comments (as of 2026-08-12)
+- stats: 4,200 views, 180 likes, 24 comments (as of {FIXTURE_STATS_DATES[3]})
 """
 
 NEWS_PILLARS = """# My news pillars
@@ -710,14 +721,19 @@ def run(workspace_root: Path) -> int:
         check("the pattern read is never cached by the browser", True)
 
         # -- calendar ------------------------------------------------------------------
+        expected_post_date = FIXTURE_POST_DATES[0]
+        check("the sample posted record stays inside the rolling calendar window",
+              f"## {expected_post_date} -" in POSTED_LEDGER,
+              f"expected a post dated {expected_post_date}")
         status, calendar = client.json("/api/calendar?days=30")
         posts = (calendar or {}).get("posts", [])
         check("the calendar answers with posts and plans", status == 200 and "plans" in (calendar or {}))
         check("the posted record is read", len(posts) >= 1, f"got {len(posts)}")
-        newest = next((p for p in posts if p["date"] == "2026-08-22"), None)
+        newest = next((p for p in posts if p["date"] == expected_post_date), None)
         check("the newest numbers snapshot wins", bool(newest and newest["views"] == 18900),
               f"got {newest['views'] if newest else None}")
-        check("the as-of date travels with the numbers", bool(newest and newest["stats_as_of"] == "2026-08-24"))
+        check("the as-of date travels with the numbers",
+              bool(newest and newest["stats_as_of"] == FIXTURE_STATS_DATES[1]))
 
         before = receipt_count(workspace)
         future = (datetime.date.today() + datetime.timedelta(days=7)).isoformat()
@@ -880,13 +896,13 @@ def run_offline_unit_checks(workspace: Path):
     check("a name-first stats line lands every number on its own name",
           (newest.get("views"), newest.get("likes"), newest.get("comments")) == (18900, 402, 31),
           f"got {(newest.get('views'), newest.get('likes'), newest.get('comments'))}")
-    likes_only = next((e for e in entries if e["date"] == "2026-08-15"), {})
+    likes_only = next((e for e in entries if e["date"] == FIXTURE_POST_DATES[1]), {})
     check("a name-first line with no view count leaves views empty rather than borrowing one",
           likes_only.get("views") is None and likes_only.get("likes") == 88,
           f"got views {likes_only.get('views')}, likes {likes_only.get('likes')}")
 
     # The tolerated shape: the number comes first. Same fields, same places.
-    number_first = next((e for e in entries if e["date"] == "2026-08-10"), {})
+    number_first = next((e for e in entries if e["date"] == FIXTURE_POST_DATES[2]), {})
     check("a number-first stats line still lands every number on its own name",
           (number_first.get("views"), number_first.get("likes"), number_first.get("comments"))
           == (4200, 180, 24),
@@ -894,7 +910,8 @@ def run_offline_unit_checks(workspace: Path):
     snapshots = posted_ledger.snapshots_by_shortcode(entries)
     check("view counts over time become a history the surge check can use",
           snapshots.get("CwQ0aBcDeFg", []) == [
-              {"date": "2026-08-23", "views": 12400}, {"date": "2026-08-24", "views": 18900}
+              {"date": FIXTURE_STATS_DATES[0], "views": 12400},
+              {"date": FIXTURE_STATS_DATES[1], "views": 18900},
           ], f"got {snapshots.get('CwQ0aBcDeFg')}")
     check("a missing posted record reads as nothing, never an error",
           posted_ledger.load_entries(workspace / "nothing-here.md") == [])

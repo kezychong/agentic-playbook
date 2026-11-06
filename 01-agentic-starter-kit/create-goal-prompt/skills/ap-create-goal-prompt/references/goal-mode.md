@@ -8,7 +8,25 @@ Read the whole reference before drafting. It travels with this pack and has no s
 
 ## 1. Mechanics and evidence limits
 
-Documentation checked 2026-09-09. Verify the member's actual app before giving activation instructions.
+Documentation checked 2026-11-07. Verify the member's actual app and installed version before giving activation instructions.
+
+Hermes Agent: `/goal <text>` creates or replaces the standing objective and starts its first turn. A structured inline contract uses the first line as the outcome and recognizes these public field forms:
+
+```text
+/goal <one observable finished outcome>
+verify: <current command, inspection, or artifact evidence that proves it>
+constraints: <behavior and data that must not change>
+boundaries: <files, folders, tools, systems, and conversations in scope>
+stop when: <conditions that require user input or a new decision>
+```
+
+The lifecycle controls are `/goal status`, `/goal pause`, `/goal resume`, and `/goal clear`. `/goal show` displays the active contract. A new goal replaces the old one.
+`/subgoal <criterion>` adds another required criterion while preserving the original goal. With no argument it lists criteria; `remove <N>` and `clear` manage them.
+`/goal gate add <command>` adds an exit-code quality gate. This pack recommends gates only when the command is deterministic and read-only; never turn an install, write, deletion, restart, message, publication, or external-state change into a gate.
+Hermes uses the host's configured `goals.max_turns` value, then pauses rather than declaring success. `/goal resume` starts another configured budget window.
+The goal contract, subgoals, and gates are stored with the session and return when that same session is resumed. They are not a global goal shared by unrelated or fresh sessions.
+The judge evaluates the latest response, so the completion report must display fresh evidence from the current workspace, such as command output, a file excerpt, or an artifact inspection. A claim without visible proof is not enough.
+Source: [Hermes Agent persistent goals](https://hermes-agent.nousresearch.com/docs/user-guide/features/goals).
 
 Claude Code: one goal per session. A new condition starts work; a replacement replaces the current condition.
 The condition limit is 4,000 characters. A separate small model reads conversation evidence, without running tools.
@@ -30,15 +48,25 @@ Source: [OpenAI developer commands](https://learn.chatgpt.com/docs/developer-com
 These checks concern documented mechanics. They do not prove the member's installed version or a successful run.
 An installed launcher or package alone does not establish the desktop app's available goal controls; verify them in the active app.
 
+Across Hermes, Claude Code, and Codex, keep the outcome, proof, constraints, boundaries, and blocked-stop conditions even when the target uses different labels or controls. Status/view, pause, resume, and clear are shared lifecycle concepts, not permission to assume identical command syntax or evaluator internals.
+
 ## 2. Complete task contract
 
 ```text
 GOAL
 One end state, verified by stated checks.
+VERIFY
+Fresh commands, observations, or artifact checks that demonstrate the end state.
 CONTEXT
 Project, stack, current state, working folder, audience, known constraints.
 SUCCESS CRITERIA (ALL MUST BE TRUE)
 Numbered, independent checks. Include operation without the defined errors and visible proof.
+CONSTRAINTS
+Behavior, data, interfaces, and approved resources that must be preserved.
+BOUNDARIES
+Files, folders, tools, systems, accounts, and conversations that are in scope.
+STOP WHEN
+Decisions, missing access, unsafe actions, or scope changes that require the member.
 OPERATING RULES
 Plan first; work autonomously within scope; verify; debug; use relevant available tools;
 no unfinished placeholders; record progress; stay on goal; handle blockers; audit before stopping.
@@ -84,6 +112,7 @@ Use these two lines in every contract:
 
 Set the verification scope before work. Use relevant checks after changes and the full acceptance suite at the end.
 This is a practical guard against unsupported completion; no measured improvement rate is claimed.
+For Hermes, put the concrete proof check in `verify:` and require the final response to show its current result. A read-only gate strengthens this check but does not replace the visible evidence report.
 For drift, keep one coherent outcome and a supported stopping bound.
 For wasted usage, baseline the checks and keep changes reversible using the project's normal version-control workflow.
 After a compressed conversation or resume, read the plan and progress record and rerun checks.
@@ -149,45 +178,40 @@ Include the two exact evidence sentences from section 4 in every final version.
 
 ```text
 /goal Deliver the working v1 in @PLAN.md, following @AGENTS.md.
-Success: every required acceptance criterion is implemented; documented setup, build, and start checks pass;
-the main user flows are demonstrated; relevant tests pass; the final diff is reviewed.
-First identify actual project commands and baseline their results. Add the smallest suitable test setup if missing.
-Work milestone by milestone with small changes and a current PROGRESS.md.
-Use browser or automated flow checks where relevant. Preserve the agreed stack and service boundaries.
-At completion, rerun the required suite and map every acceptance criterion to its current evidence.
-If blocked, report completed work, remaining work, blocker, evidence, attempts, and smallest next input.
+verify: rerun every acceptance check in @PLAN.md; show current setup, build, start, test, main-flow, and diff-review results.
+constraints: preserve the agreed stack, interfaces, data, and service choices; do not leave required placeholders.
+boundaries: the files, tools, and services authorized by @PLAN.md and @AGENTS.md.
+stop when: a required service or credential is unavailable, the plan needs a product decision, or completion requires work outside those boundaries; report evidence and the smallest next input.
 ```
 
 ### Existing feature
 
 ```text
 /goal Implement @SPEC.md while preserving public behavior outside its stated changes.
-Read project rules, inspect affected files and nearby tests, and follow existing patterns.
-Success: each specified flow works; relevant tests and final project checks pass; the diff is reviewed for regressions.
-Work through discovery, implementation, tests, flow verification, and final audit. Record results in PROGRESS.md.
-Before completion, list every acceptance criterion with fresh proof. Missing proof remains unfinished or explicitly blocked.
+verify: demonstrate each specified flow; rerun relevant tests and final project checks; show a current regression-focused diff review.
+constraints: preserve public behavior outside @SPEC.md and follow existing project rules and patterns.
+boundaries: affected implementation files, nearby tests, and directly related documentation or configuration.
+stop when: the specification conflicts with current behavior, required access is missing, or a change outside these boundaries is necessary; show evidence and request the smallest decision.
 ```
 
 ### Bug fix
 
 ```text
 /goal Fix @BUG.md and demonstrate that its reproduction no longer fails.
-First reproduce the issue or document why reproduction is unavailable. Identify the cause before patching.
-Change one hypothesis at a time. Preserve unrelated behavior and existing assertions.
-Add a regression check where practical and run the relevant verification after each change.
-Success: reproduction passes, required project checks pass, and the report includes cause, changes, proof, and remaining risk.
-If reproduction remains unavailable, gather evidence and name the smallest missing input.
+verify: show the original reproduction passing, the regression check, and all required current project-check results; report the cause, changes, proof, and remaining risk.
+constraints: preserve unrelated behavior and existing assertions; change one supported hypothesis at a time.
+boundaries: the failing path, its direct dependencies, regression test, and necessary documentation only.
+stop when: the issue cannot be reproduced, required access or data is missing, or the fix requires unrelated behavior changes; show evidence and name the smallest missing input.
 ```
 
 ### File migration
 
 ```text
 /goal Complete the approved file migration in @PLAN.md and prove every source has the intended destination.
-Before changes, record the source inventory, destination rules, and collision policy.
-Preserve contents and metadata required by the plan. Do not change unrelated files.
-Verify counts, paths, and content checksums after each batch. Record completed batches so recovery does not repeat work.
-Success: every planned item has verified destination evidence; no unexplained loss, collision, or duplicate remains.
-Report unresolved items with their evidence. Never treat a partial batch as the completed migration.
+verify: compare final source and destination inventories, counts, paths, required metadata, and content checksums; show evidence for every planned item and every exception.
+constraints: preserve content and required metadata; follow the approved destination and collision rules; do not alter unrelated files.
+boundaries: only the sources, destinations, tools, and batches named in @PLAN.md.
+stop when: an unplanned collision, unexplained mismatch, permission problem, or destructive exception appears; preserve the current state and report the exact items and evidence.
 ```
 
 ## 8. Better finish lines

@@ -3,9 +3,9 @@
 
 Everything this system knows about your content, on one page, in your browser, on your own computer.
 
-The workspace is a folder of files. That is deliberate: files are yours, they never expire, and no company can switch them off. But a folder is a poor way to see where things stand. The Cockpit is the window onto that same folder. It reads your files and shows them as a board, a brief, and five other views. It invents nothing, and it stores nothing of its own except your tab order, a log of the buttons you pressed, and the two flat pages it can print for you.
+The workspace is a folder of files. That is deliberate: files are yours, they never expire, and no company can switch them off. But a folder is a poor way to see where things stand. The Cockpit is the window onto that same folder. It reads your files and shows them as a board, a brief, and five other views. It invents nothing. Its own folder holds durable settings and receipts, generated pages, cached public covers, news memory, step logs and temporary locks.
 
-It runs on your machine only. Nothing on your network and nothing on the internet can reach it. Closing the browser window does not necessarily stop the local server; stop its process explicitly when finished.
+It binds to private loopback on your machine only by default. Nothing on the LAN or public internet can reach that server. Closing the browser window does not necessarily stop the local server; stop its process explicitly when finished.
 
 ## YOUR JOB vs MY JOB
 
@@ -44,10 +44,11 @@ CONTENT_OS_WORKSPACE="<absolute path to the member's content-os folder>" \
 Notes for the agent, none of which the member ever needs to hear:
 
 - Standard library only. There is nothing to install. If `python3` is absent, explain the prerequisite and obtain approval before installing it.
-- It binds to the loopback address only. That is a constant in the file, not a setting.
+- It binds to the loopback address only. That is a constant in the file, not a setting. Keep it that way.
+- Optional private loopback access for another approved local/private client may be provided only by a host-supported, authenticated bridge after explicit approval of the client, duration and removal method. The Cockpit still binds to loopback; never expose it on `0.0.0.0`, a LAN address or the public internet. This package does not install or configure a bridge. Read back the bridge target and access state, then remove it when approval ends.
 - The default port is 8791. Override with `CONTENT_OS_COCKPIT_PORT` when something else already holds it. Starting it twice is harmless: the second start prints that it is already open and exits.
 - `CONTENT_OS_COCKPIT_AGENT=off` is the default and keeps the copy-and-paste path for step buttons. `CONTENT_OS_COCKPIT_DRYRUN=1` makes every step button hand back its exact words without running anything, which is what the health check uses.
-- Health check: `python3 "<pack path>/tools/cockpit/selftest.py"`. It builds its own sample workspace in a temporary folder, exercises every view and every action against that copy, and never touches the member's real files. Run it when something looks wrong, and report the result as one plain sentence.
+- Health check: `python3 "<pack path>/tools/cockpit/selftest.py"`. It builds its own sample workspace in a temporary folder, exercises every view and every action against that copy, and never touches the member's real files. Run it when something looks wrong. Mark the board readiness step verified only when the sample test passes and the live Cockpit is then read back against the exact selected brand workspace; otherwise report paused or blocked plainly.
 - If the member asks for a shortcut they can double-click, build one for their operating system that runs the same command. Never ask them to type it.
 
 ---
@@ -213,18 +214,18 @@ Everything it does gets one line in `content-os/cockpit/actions-log.md`, with th
 
 ## Where the Cockpit keeps its own things
 
-One folder, `content-os/cockpit/`, and nothing outside it:
+One folder inside the selected brand workspace, `content-os/cockpit/`, and nothing outside it:
 
-- `config.json`, your timezone, your region, the port
-- `prefs.json`, your tab order
-- `actions-log.md`, one line per button pressed
+- `config.json`, durable settings such as timezone, region and port
+- `prefs.json`, durable tab order
+- `actions-log.md`, the durable receipt for button presses
 - `today.html` and `board.html`, the two pages that work without the app
 - `news-archive.json`, the rolling seven-day news memory
 - `covers/`, cached cover pictures
-- `step-logs/`, what a background step printed
+- `step-logs/`, durable receipts for what a background step printed
 - `locks/`, stops two news refreshes overlapping
 
-Nothing precious lives in there. Delete the whole folder and the Cockpit rebuilds it, losing only your tab order.
+Do not treat this folder as disposable. Generated pages, cached covers and locks can be rebuilt, but settings and receipts cannot. Keep `config.json`, `prefs.json`, `actions-log.md` and `step-logs/` with the brand workspace and include them in normal workspace backups. If repair requires clearing generated data, name the exact files, obtain approval for deletion, and preserve settings and receipts first.
 
 ---
 

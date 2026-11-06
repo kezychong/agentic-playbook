@@ -5,7 +5,9 @@
 This is one package, retaining the supplied grouping and its supporting files. It is a local source draft, not an installed or runtime-tested system.
 
 ## Included skills
-- [Create Goal Prompt](skills/ap-create-goal-prompt/README.md): Build a measurable goal prompt with stopping rules.
+- [Create Goal Prompt](skills/ap-create-goal-prompt/README.md): Build a measurable goal prompt with stopping rules for Hermes Agent, Claude Code, or Codex.
+
+The Hermes target emits a generic `/goal` contract with `verify`, `constraints`, `boundaries`, and `stop when`. It documents shared goal controls, subgoals, session persistence, the host's configured turn budget, read-only quality gates, and fresh visible completion evidence.
 
 ## Setup
 1. Read each included skill README and its prerequisites.

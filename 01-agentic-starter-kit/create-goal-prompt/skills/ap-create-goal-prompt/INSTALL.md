@@ -5,12 +5,12 @@ stage: shipped
 ---
 # Create a Goal Prompt
 
-For a business owner using the Claude app or Codex app.
+For a business owner using Hermes Agent, the Claude app, or Codex.
 This skill turns a clear task or agreed plan into a prompt with a finish line and proof checks.
 
 ## Add it once
 
-1. Open the Claude app or Codex app.
+1. Open Hermes Agent, the Claude app, or Codex.
 2. Attach this skill folder and say: "Install this skill for me. Handle any setup and confirm it is ready."
 
 Your agent handles setup. You do not need another app for writing the prompt.
@@ -24,7 +24,9 @@ It then gives you one prompt to paste into the app where the work will happen.
 Writing the prompt does not start the work.
 
 When ready, say: "Help me start this goal using the supported feature in this app."
-Your agent checks whether that feature is available before claiming the goal is active.
+Your agent checks whether that feature is available before claiming the goal is active. In Hermes, it also checks the configured turn budget, keeps goal controls outside the prompt, and offers only read-only quality gates that you approve.
+
+Hermes goals remain attached to the session where they were started. Resume that session to recover the goal, contract, subgoals and gates; a new session does not inherit them automatically. Ask for `/goal status` after resuming, and require fresh visible evidence before accepting completion.
 
 ## Use it again
 

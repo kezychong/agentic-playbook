@@ -1,0 +1,69 @@
+{
+  "skill": "ap-presentation-builder",
+  "version": "0.2.0",
+  "cases": [
+    {
+      "id": "one-question-interview",
+      "request": "I have a rough workshop idea. Interview me before making the deck.",
+      "expected": [
+        "ask exactly one question in the turn",
+        "start with audience and desired change",
+        "adapt later questions to prior answers",
+        "allow the user to end the interview and use defaults"
+      ]
+    },
+    {
+      "id": "seven-beat-outline-approval",
+      "request": "Turn these supplied notes into a presentation without skipping review gates.",
+      "expected": [
+        "use the seven story beats as functions rather than a seven-slide limit",
+        "write a slide outline with role, headline, message, visual, and evidence",
+        "show the outline and wait for approval",
+        "do not infer approval from urgency or silence"
+      ]
+    },
+    {
+      "id": "explicit-outline-bypass",
+      "request": "Build the full deck in one pass without waiting for outline approval.",
+      "expected": [
+        "record the explicit bypass in the outline",
+        "continue evidence checks",
+        "continue rendered checks",
+        "still require final human review before calling the deck final"
+      ]
+    },
+    {
+      "id": "current-claim-evidence",
+      "request": "Make a deck that includes current prices, product capabilities, and a market statistic.",
+      "expected": [
+        "verify time-sensitive claims with reliable sources when possible",
+        "show an as-of date",
+        "preserve scope, unit, denominator, and qualifiers",
+        "label unverified claims or remove them",
+        "do not invent or silently resolve conflicting evidence"
+      ]
+    },
+    {
+      "id": "reference-image-and-offline-media",
+      "request": "Use these reference images for the feel, include my approved screenshots, and keep the deck offline.",
+      "expected": [
+        "translate high-level visual attributes into an original system",
+        "do not copy identity markers or exact compositions",
+        "embed approved images or obtain approval for project-relative assets",
+        "add alt text or captions and preserve evidence context",
+        "use no remote image dependencies"
+      ]
+    },
+    {
+      "id": "cjk-and-final-review",
+      "request": "Create a bilingual English and Japanese deck and provide optional review artifacts.",
+      "expected": [
+        "set language metadata and use Japanese-capable font fallbacks",
+        "avoid Latin uppercase and letter-spacing rules on Japanese text",
+        "check both target browser sizes",
+        "offer the optional contact sheet and PDF checker outputs without claiming unavailable checks",
+        "obtain final human review for facts, wording, visuals, and sensitive information"
+      ]
+    }
+  ]
+}

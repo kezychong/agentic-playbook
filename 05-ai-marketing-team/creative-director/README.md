@@ -2,7 +2,7 @@
 
 **Agentic Playbook — by Kezy**
 
-An original, public-safe package for planning and reviewing evidence-led video work. Five focused skills cover direction, short video, motion graphics, narrated video and footage assembly without copying a private agent, personal setup or proprietary source pack.
+An original, public-safe package for planning and reviewing evidence-led video work. Five focused skills cover direction, short video, motion graphics, narrated video and footage assembly without copying a private agent, personal setup or proprietary source pack. Review uses the host's review-capable vision tool; media generators only make assets and never review their own output.
 
 This is a local source draft. It is not installed or runtime-tested. It does not connect accounts, call paid tools, publish, post, send or change live systems.
 
@@ -28,7 +28,7 @@ The grouping is deliberate. Shared planning and truth checks live in Creative Di
 
 - [Content Plan](../content-plan/README.md) can supply an approved content brief.
 - [Content OS](../content-os/README.md) can track draft status and learning.
-- [Edit Pipeline](../edit-pipeline/README.md) can handle a separately approved talking-camera edit.
+- [Edit Pipeline](../edit-pipeline/README.md) can handle a separately approved talking-camera edit. For a clean-up-only job, its approved cut list can serve as the production plan; no cut starts before that approval.
 
 These are optional products. If they are absent, report the limitation and use this package's manual path.
 

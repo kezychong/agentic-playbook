@@ -2,7 +2,7 @@
 name: ap-short-video-production
 description: "Prepare truthful short-video drafts with evidence and review gates."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   maintainer: Kezy
 ---
 
@@ -43,7 +43,7 @@ If the opening is tool talk, scene-setting or vague throat-clearing, propose a t
 
 ### 3. Build the clean speech cut
 
-Create a cut list before editing. Remove unintended repeats, dead starts and irrelevant detours without changing meaning. Keep natural breath and enough context for every claim. Preserve the original. Save each cut with source start, source end, reason and expected new position.
+Create a cut list before editing. Remove unintended repeats, dead starts and irrelevant detours without changing meaning. Keep natural breath and enough context for every claim. Preserve the original. Save each cut with source start, source end, reason and expected new position. Show the cut list and obtain approval before cutting. For a clean-up-only job using the optional Edit Pipeline, this approved cut list is the production plan.
 
 Do not cut on a partial word. Listen around every join. If exact audio review is unavailable, disclose that limitation and leave the join for human review.
 
@@ -85,6 +85,7 @@ Before delivery, verify:
 - captions, names and subtitles match the final audio;
 - evidence is readable on a phone and retains context;
 - generated media is not presented as documentary proof;
+- sampled frames and the final cut were inspected with the host's review-capable vision tool, not a media generator, or the missing check is stated;
 - the final file has the intended video and audio streams when a checking tool is available;
 - the reviewer watches the full final file, including every join;
 - no paid tool call, post, send or live change occurred.

@@ -2,7 +2,7 @@
 name: ap-motion-graphics-production
 description: "Brief and review evidence-led motion graphics without assuming a renderer."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   maintainer: Kezy
 ---
 
@@ -60,7 +60,7 @@ Use the approved project command and pinned local versions. Record the command, 
 
 ### 7. Judge the actual render
 
-Review frames from the rendered video, not only source code or a design preview. Sample every major reveal, transition and data change. Then watch the full file with sound.
+Review frames from the rendered video, not only source code or a design preview. Use the host's review-capable vision tool, not a media generator reviewing its own output. Sample every major reveal, transition and data change. Then watch the full file with sound. If vision review is unavailable, state that limitation and leave the visual check pending.
 
 Check:
 

@@ -2,7 +2,7 @@
 
 Agentic Playbook — by Kezy
 
-This is a local, uninstalled skill folder, version 0.1.0.
+This is a local, uninstalled skill folder, version 0.1.1.
 
 1. Read `SKILL.md` and the collection [manual setup guide](../../../../08-setup-guides-tools-connections/manual-setup.md).
 2. With approval to change the host, copy the complete folder to its documented skill location. Preserve an existing same-ID version.

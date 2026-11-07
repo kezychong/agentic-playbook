@@ -2,7 +2,7 @@
 name: ap-creative-direction
 description: "Turn a video objective and permitted evidence into a reviewable production plan."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   maintainer: Kezy
 ---
 
@@ -107,6 +107,10 @@ Run the dependency-free checker on a JSON plan if the host can run Python:
 `python3 scripts/check_video_plan.py path/to/video-plan.json`
 
 The checker tests structure only. A passing result does not replace rights, claim, accessibility, creative or playback review.
+
+### 9. Keep generation and review separate
+
+Inspect frames, stills, thumbnails, supporting footage and finished cuts with the host's review-capable vision tool. A media generator is a production tool, not the reviewer of its own output. If the host has no suitable vision review, mark those checks pending instead of guessing. A human still watches the full final file with sound.
 
 ## Creative quality gate
 

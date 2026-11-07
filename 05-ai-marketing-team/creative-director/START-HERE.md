@@ -8,6 +8,7 @@
 4. Run Creative Direction. Approve the canvas as a planning decision only.
 5. Choose one production skill and build a local review draft.
 6. Run the plan checker and the skill's final checklist.
-7. Ask separately before any paid call, upload, post, send, installation, account connection or live change.
+7. Inspect frames and the finished cut with the host's review-capable vision tool, not the tool that generated any assets. Record unavailable checks instead of guessing.
+8. Ask separately before any paid call, upload, post, send, installation, account connection or live change.
 
 A finished draft is not permission to publish. This package has no publishing step. Narration uses permitted human recordings only.

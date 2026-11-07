@@ -2,7 +2,7 @@
 
 Agentic Playbook — by Kezy
 
-This is a local, uninstalled skill folder, version 0.1.0.
+This is a local, uninstalled skill folder, version 0.1.1.
 
 1. Read the complete `SKILL.md` and the collection [manual setup guide](../../../../08-setup-guides-tools-connections/manual-setup.md).
 2. With approval to change the host, copy the complete `ap-creative-direction/` folder to the host's documented skill location. Back up an existing same-ID folder rather than overwriting it.

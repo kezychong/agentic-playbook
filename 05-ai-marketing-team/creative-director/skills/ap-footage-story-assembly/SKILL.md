@@ -2,7 +2,7 @@
 name: ap-footage-story-assembly
 description: "Assemble permitted footage into evidence-led stories with consent and claim controls."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   maintainer: Kezy
 ---
 
@@ -72,7 +72,7 @@ Any document, screenshot, stage image or supporting clip needs its own rights an
 Create a local review draft with an approved editor when available. Then:
 
 - verify expected duration and streams;
-- inspect frames around every join;
+- inspect frames around every join with the host's review-capable vision tool, not a media generator, or state that the check is pending;
 - check for black frames, frozen frames and clipped captions;
 - listen for abrupt audio changes and cut words;
 - compare all visible names and numbers with the ledger;

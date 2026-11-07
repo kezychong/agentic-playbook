@@ -2,7 +2,7 @@
 name: ap-narrated-video-production
 description: "Plan narration-led explainers and teaching videos with staged review gates."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   maintainer: Kezy
 ---
 
@@ -73,7 +73,7 @@ Keep real demonstrations faithful. Do not substitute a different interface or st
 
 ### 7. Mechanical checks
 
-When local tools exist, verify the final file has video and audio, expected duration, dimensions and readable frames. Extract a chronological sample and samples around every major reveal. Check the beginning and end for clipped words or missing audio.
+When local tools exist, verify the final file has video and audio, expected duration, dimensions and readable frames. Extract a chronological sample and samples around every major reveal. Inspect those images with the host's review-capable vision tool, not a media generator reviewing its own output. If that review is unavailable, record it as pending. Check the beginning and end for clipped words or missing audio.
 
 ### 8. Human review
 

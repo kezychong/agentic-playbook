@@ -6,7 +6,7 @@ Build your AI assistant, second brain and team.
 
 This collection brings reusable skills, setup guides, blank templates and worked examples into one place. Start with one useful task, then add only the tools and roles you need.
 
-> **Source collection — package-specific status.** There is no blanket live-runtime guarantee. Package files state their own status. The two new Capture helpers have offline regression coverage only, with no live-platform proof. The Base Schema fictional example was rehearsed only in a throwaway SQLite environment. Other source-draft workflows remain unexecuted unless their package says otherwise. Do not assume every skill works on every AI host.
+> **Source collection — package-specific status.** There is no blanket live-runtime guarantee. Package files state their own status. The two Capture helpers have offline regression coverage only, with no live-platform proof. The Creative Director plan checker has offline regression coverage, while its creative workflows remain unexecuted. The Base Schema fictional example was rehearsed only in a throwaway SQLite environment. Other source-draft workflows remain unexecuted unless their package says otherwise. Do not assume every skill works on every AI host.
 
 ## Choose your topic
 

@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "project": "Fictional invalid plan",
+  "status": "draft",
+  "format": "short-video",
+  "sources": [],
+  "claims": [
+    {
+      "text": "Unsupported result claim",
+      "source_ids": ["MISSING"],
+      "status": "verified"
+    }
+  ],
+  "people": [
+    {
+      "id": "P1",
+      "role": "speaker",
+      "consent": "pending"
+    }
+  ],
+  "production": {
+    "renderer": "manual",
+    "paid_calls": true,
+    "publish": true,
+    "send": false
+  },
+  "review": {
+    "message": "pending",
+    "claims": "pending",
+    "rights_and_consent": "pending",
+    "accessibility": "pending",
+    "full_playback": "pending"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "project": "Fictional Company A feature overview",
+  "status": "draft",
+  "format": "short-video",
+  "sources": [
+    {
+      "id": "S1",
+      "kind": "owner-supplied-fictional-note",
+      "permission": "confirmed",
+      "description": "Fictional product note created for this example"
+    }
+  ],
+  "claims": [
+    {
+      "text": "Company A provides a weekly summary.",
+      "source_ids": ["S1"],
+      "status": "verified"
+    }
+  ],
+  "people": [],
+  "production": {
+    "renderer": "manual",
+    "paid_calls": false,
+    "publish": false,
+    "send": false
+  },
+  "review": {
+    "message": "pending",
+    "claims": "passed",
+    "rights_and_consent": "passed",
+    "accessibility": "pending",
+    "full_playback": "pending"
+  }
+}

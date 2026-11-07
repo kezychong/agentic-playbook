@@ -1,0 +1,4 @@
+record_id,record_type,exact_text_or_asset,source_ids,source_date,evidence_status,permission_status,allowed_use,hold_reason,reviewer
+R1,source,,,,,,local-draft,,
+R2,claim,,R1,,,,local-draft,,
+R3,person,,,,,,local-draft,,

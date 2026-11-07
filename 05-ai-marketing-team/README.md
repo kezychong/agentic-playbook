@@ -2,12 +2,16 @@
 
 Agentic Playbook — **by Kezy**
 
-A practical collection for turning supplied evidence and your own ideas into drafts, creative briefs, videos and presentations. These nine skills retain their supplied methods and supporting source tools. Kezy maintains the repackage; this does not claim independent authorship or grant new downstream licences.
+A practical collection for turning supplied evidence and your own ideas into brand decisions, content plans, drafts, creative briefs, videos and presentations. These skills retain their supplied methods and supporting source tools. Kezy maintains the repackage; this does not claim independent authorship or grant new downstream licences.
 
 Start with [setup and permissions](SETUP.md), then follow [the workflow](WORKFLOW.md). Try [Company A’s fictional workshop campaign](examples/company-a-workshop.md) before using real material. Its [expected result](examples/expected-result.md) is an authored illustration, not a runtime test.
 
 | Skill | Use it for |
 |---|---|
+| [Brand Strategist](brand-strategy/skills/ap-brand-strategist/README.md) | Develop evidence-led positioning, diagnosis and activation options. |
+| [Brand Build](brand-strategy/skills/ap-brand-build/README.md) | Build a brand foundation from evidence and explicit decisions. |
+| [Brand Audit](brand-strategy/skills/ap-brand-audit/README.md) | Check public brand claims against dated, traceable evidence. |
+| [Content Plan](content-plan/skills/ap-content-plan/README.md) | Plan evidence-led organic content batches from business goals. |
 | [Headline Analyzer](headline-analyzer/skills/ap-headline-analyzer/README.md) | Score headlines and interpret split-test evidence. |
 | [Edit Pipeline](edit-pipeline/skills/ap-edit-pipeline/README.md) | Plan and edit talking-head videos with review gates. |
 | [Retargeting Ads Core Funnel](retargeting-ads-core-funnel/skills/ap-retargeting-ads-core-funnel/README.md) | Design warm-audience ads and funnel exclusions. |
@@ -47,6 +51,8 @@ Everything is a local draft package. No host, source script, renderer, integrati
 These are browsing entries, not a requirement to install the whole topic. Combined source packs stay together; independent source products stay separate.
 
 - [Headline Analyzer](headline-analyzer/README.md)
+- [Brand Strategy](brand-strategy/README.md)
+- [Content Plan](content-plan/README.md)
 - [Edit Pipeline](edit-pipeline/README.md)
 - [Retargeting Ads Core Funnel](retargeting-ads-core-funnel/README.md)
 - [Ad Analysis and New Creatives Brief](ad-analysis-and-new-creatives-brief/README.md)

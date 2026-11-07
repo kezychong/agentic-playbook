@@ -1,0 +1,12 @@
+{
+  "id": "base-schema",
+  "title": "Base Schema",
+  "topic": "08",
+  "skill_ids": [
+    "ap-base-schema"
+  ],
+  "version": "0.2.0",
+  "runtime_status": "fictional-example-rehearsed",
+  "required_skill_ids": [],
+  "optional_skill_ids": []
+}

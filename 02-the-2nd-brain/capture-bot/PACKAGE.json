@@ -4,14 +4,16 @@
   "topic": "02",
   "skill_ids": [
     "ap-content-capture-core",
+    "ap-channel-research",
     "ap-document-capture",
     "ap-instagram-reel-capture",
+    "ap-social-video-capture",
     "ap-web-article-capture",
     "ap-x-twitter-capture",
     "ap-youtube-video-capture"
   ],
-  "version": "0.1.0",
-  "runtime_status": "unexecuted-source-draft",
+  "version": "0.2.1",
+  "runtime_status": "source-draft-two-helpers-offline-regression-tested",
   "required_skill_ids": [],
   "optional_skill_ids": []
 }

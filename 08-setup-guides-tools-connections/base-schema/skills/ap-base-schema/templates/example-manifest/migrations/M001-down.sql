@@ -1,0 +1,23 @@
+-- M001 down: undo M001 completely. Version 1 -> 0. Dropping a table drops its triggers and indexes.
+DROP VIEW stale_copies;
+DROP VIEW open_exceptions;
+DROP VIEW money_paid_total;
+DROP VIEW unmatched_bills;
+DROP VIEW fees_paid_by_deadline;
+DROP VIEW months_not_reconciled;
+DROP VIEW licences_expiring;
+DROP VIEW overdue;
+DROP VIEW due_next_30_days;
+DROP VIEW deadline_list;
+DROP VIEW report_day;
+DROP TABLE onboarding_exception;
+DROP TABLE month_close;
+DROP TABLE paid_bill;
+DROP TABLE licence_request;
+DROP TABLE licence;
+DROP TABLE deadline;
+DROP TABLE import_log;
+DROP TABLE import_guard;
+DROP TABLE record_home;
+DROP TABLE settings;
+PRAGMA user_version = 0;

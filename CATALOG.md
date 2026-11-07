@@ -2,7 +2,7 @@
 
 **Agentic Playbook — by Kezy**
 
-Nine browsing topics contain natural source packages. Multi-skill packages stay together; separately supplied products stay separate. Use the complete source folders. All have runtime status untested. Building an always-on assistant from scratch? Follow the [Build Track](02-the-2nd-brain/TRACK.md).
+Nine browsing topics contain natural source packages. Multi-skill packages stay together; separately supplied products stay separate. Use the complete source folders. There is no blanket live-runtime guarantee; package files state their own status. The two new Capture helpers have offline regression coverage only, with no live-platform proof. The Base Schema fictional example was rehearsed only in a throwaway SQLite environment. Other source-draft workflows remain unexecuted unless their package says otherwise. Building an always-on assistant from scratch? Follow the [Build Track](02-the-2nd-brain/TRACK.md).
 
 ## Agentic Starter Kit
 
@@ -12,7 +12,7 @@ Nine browsing topics contain natural source packages. Multi-skill packages stay 
 
 ## The 2nd Brain
 
-- [Capture Bot](02-the-2nd-brain/capture-bot/README.md) — ap-content-capture-core, ap-document-capture, ap-instagram-reel-capture, ap-web-article-capture, ap-x-twitter-capture, ap-youtube-video-capture
+- [Capture Bot](02-the-2nd-brain/capture-bot/README.md) — ap-content-capture-core, ap-document-capture, ap-instagram-reel-capture, ap-web-article-capture, ap-x-twitter-capture, ap-youtube-video-capture, ap-channel-research, ap-social-video-capture
 - [Capture Session](02-the-2nd-brain/capture-session/README.md) — ap-capture-session
 - [Whatsapp Capture](02-the-2nd-brain/whatsapp-capture/README.md) — ap-whatsapp-capture
 - [Capture Router](02-the-2nd-brain/capture-router/README.md) — ap-capture-router
@@ -51,6 +51,8 @@ Nine browsing topics contain natural source packages. Multi-skill packages stay 
 
 ## AI Marketing Team
 
+- [Brand Strategy](05-ai-marketing-team/brand-strategy/README.md) — ap-brand-strategist, ap-brand-build, ap-brand-audit
+- [Content Plan](05-ai-marketing-team/content-plan/README.md) — ap-content-plan
 - [Headline Analyzer](05-ai-marketing-team/headline-analyzer/README.md) — ap-headline-analyzer
 - [Edit Pipeline](05-ai-marketing-team/edit-pipeline/README.md) — ap-edit-pipeline
 - [Retargeting Ads Core Funnel](05-ai-marketing-team/retargeting-ads-core-funnel/README.md) — ap-retargeting-ads-core-funnel
@@ -76,6 +78,7 @@ Nine browsing topics contain natural source packages. Multi-skill packages stay 
 
 ## Setup Guides/Tools/Connections
 
+- [Base Schema](08-setup-guides-tools-connections/base-schema/README.md) — ap-base-schema
 - [Html Output](08-setup-guides-tools-connections/html-output/README.md) — ap-html-output
 - [Server Setup](08-setup-guides-tools-connections/server-setup/README.md) — ap-hermes-server-setup, ap-mac-mini-setup
 - [Add a Key](08-setup-guides-tools-connections/add-a-key/README.md) — ap-add-a-key

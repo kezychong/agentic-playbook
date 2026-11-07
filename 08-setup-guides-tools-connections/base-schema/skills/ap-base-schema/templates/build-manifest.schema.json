@@ -1,0 +1,1664 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-playbook:base-schema:build-manifest:1.0",
+  "title": "Portable local SQLite build manifest, format 1.0",
+  "description": "The build plan a design session hands to a fresh build session. One file per revision; a changed plan is a new revision, and old revisions are kept. Progress goes in a separate build-status file (see $defs/build_status), never in the manifest. Format 1.0 allows no connectors, no write-back and no real records in the file.",
+  "$comment": "Checked by scripts/check_manifest.py and rehearsed by scripts/rehearse.py. The format permits fictional fixtures only and no connectors or write-back.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_format",
+    "build_id",
+    "revision",
+    "supersedes_sha256",
+    "made_on",
+    "made_by",
+    "blueprint",
+    "truth",
+    "approval",
+    "venture",
+    "target",
+    "policy",
+    "record_home_map",
+    "blockers",
+    "checkpoints",
+    "migrations",
+    "acceptance",
+    "rollback",
+    "not_in_this_build"
+  ],
+  "properties": {
+    "manifest_format": {
+      "const": "portable-sqlite-build/1.0"
+    },
+    "build_id": {
+      "$ref": "#/$defs/slug"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "supersedes_sha256": {
+      "description": "SHA-256 of the previous revision's file; null only for revision 1.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/sha256"
+        }
+      ]
+    },
+    "made_on": {
+      "$ref": "#/$defs/date"
+    },
+    "made_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "blueprint": {
+      "description": "Project-relative path of the Base Blueprint used to make this manifest.",
+      "type": "string",
+      "pattern": "\\.md$"
+    },
+    "truth": {
+      "description": "Whether the owner has confirmed the business statements in the draft.",
+      "enum": [
+        "unverified",
+        "confirmed"
+      ]
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "draft",
+            "approved_for_build"
+          ]
+        },
+        "by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "on": {
+          "$ref": "#/$defs/date"
+        },
+        "proof": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "if": {
+        "properties": {
+          "state": {
+            "const": "approved_for_build"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "by",
+          "on",
+          "proof"
+        ]
+      }
+    },
+    "venture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "db_path",
+        "sqlite_min_version",
+        "foreign_keys",
+        "strict_tables",
+        "user_version_after_build"
+      ],
+      "properties": {
+        "db_path": {
+          "description": "Project-relative path of the approved SQLite file.",
+          "type": "string",
+          "pattern": "^(?![~/\\\\])(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+\\.db$"
+        },
+        "sqlite_min_version": {
+          "type": "string",
+          "pattern": "^3\\.(3[7-9]|[4-9][0-9])\\.[0-9]+$"
+        },
+        "foreign_keys": {
+          "const": true
+        },
+        "strict_tables": {
+          "const": true
+        },
+        "user_version_after_build": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "policy": {
+      "description": "Fixed in format 1.0. Loosening a value needs a new reviewed format version and owner approval.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "connectors",
+        "write_back",
+        "real_records_in_this_file",
+        "outside_ai_reads",
+        "dashboards",
+        "fixtures"
+      ],
+      "properties": {
+        "connectors": {
+          "const": "none"
+        },
+        "write_back": {
+          "const": false
+        },
+        "real_records_in_this_file": {
+          "const": false
+        },
+        "outside_ai_reads": {
+          "const": "totals_and_counts_only"
+        },
+        "dashboards": {
+          "const": "existing_dashboards_only"
+        },
+        "fixtures": {
+          "const": "fictional_only"
+        }
+      }
+    },
+    "record_home_map": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/record_home_line"
+      }
+    },
+    "blockers": {
+      "description": "Every blank the owner hasn't filled. A checkpoint listed in an open blocker's 'blocks' does not start.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/blocker"
+      }
+    },
+    "checkpoints": {
+      "description": "Run in this order. Each ends with a readback; a step only counts once its readback matches.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/checkpoint"
+      }
+    },
+    "migrations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/migration"
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "as_of",
+        "fixtures",
+        "metrics",
+        "real_records"
+      ],
+      "properties": {
+        "as_of": {
+          "description": "The 'today' date the fixture tests run against, so results never depend on the real date.",
+          "$ref": "#/$defs/date"
+        },
+        "fixtures": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/fixture"
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "items": {
+            "$ref": "#/$defs/metric"
+          }
+        },
+        "real_records": {
+          "description": "Two owner-supplied records used only after build approval. They never appear in the manifest.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "count",
+            "cases",
+            "stop_for_owner",
+            "kept_in_this_file"
+          ],
+          "properties": {
+            "count": {
+              "const": 2
+            },
+            "cases": {
+              "const": [
+                "smooth",
+                "went_wrong"
+              ]
+            },
+            "kept_in_this_file": {
+              "const": false
+            },
+            "stop_for_owner": {
+              "const": true
+            }
+          }
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "backup_dir",
+        "method",
+        "restore_steps",
+        "proven_on_copy"
+      ],
+      "properties": {
+        "backup_dir": {
+          "type": "string",
+          "pattern": "^(?![~/\\\\])(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+/?$"
+        },
+        "method": {
+          "const": "sqlite_online_backup"
+        },
+        "restore_steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "proven_on_copy": {
+          "type": "boolean"
+        }
+      }
+    },
+    "not_in_this_build": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "description": "An approved build must use owner-confirmed business statements.",
+      "if": {
+        "properties": {
+          "approval": {
+            "properties": {
+              "state": {
+                "const": "approved_for_build"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "truth": {
+            "const": "confirmed"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12][0-9]|3[01])|(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9]))$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{2,62}$"
+    },
+    "sql_name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,40}$"
+    },
+    "checkpoint_id": {
+      "type": "string",
+      "pattern": "^CP[0-9]{1,2}$"
+    },
+    "role_label": {
+      "description": "A job title or person. Never 'the system' or 'automation'.",
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "pattern": "^([Tt]he )?([Ss]ystem|[Bb]ot|[Aa]utomation)$"
+      }
+    },
+    "record_home_line": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "table",
+        "role",
+        "home",
+        "direction",
+        "source_ref",
+        "match_key",
+        "freshness",
+        "data_owner",
+        "sync_owner",
+        "allowed_writers",
+        "route",
+        "classification"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The owner's own name for this kind of record."
+        },
+        "table": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/sql_name"
+            }
+          ]
+        },
+        "role": {
+          "enum": [
+            "source",
+            "mirror",
+            "intake",
+            "snapshot",
+            "not_held"
+          ]
+        },
+        "home": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "system",
+            "name"
+          ],
+          "properties": {
+            "system": {
+              "enum": [
+                "this_base",
+                "notes_system",
+                "task_system",
+                "work_board",
+                "outside_system",
+                "spreadsheet_or_export",
+                "paper_or_file"
+              ]
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Generic name, for example 'accounting software'. No live account or client names."
+            }
+          }
+        },
+        "direction": {
+          "enum": [
+            "born_here",
+            "copy_in",
+            "request_out",
+            "frozen_here",
+            "not_held"
+          ]
+        },
+        "source_ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "field",
+            "issued_by"
+          ],
+          "properties": {
+            "field": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/$defs/sql_name"
+                }
+              ]
+            },
+            "issued_by": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "match_key": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "not_needed",
+                "agreed",
+                "ask_owner",
+                "matched_by_hand"
+              ]
+            },
+            "field": {
+              "$ref": "#/$defs/sql_name"
+            },
+            "carried_in_home_as": {
+              "type": "string",
+              "minLength": 1
+            },
+            "ties_to": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "agreed"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "field",
+                  "carried_in_home_as",
+                  "ties_to"
+                ]
+              }
+            }
+          ]
+        },
+        "freshness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "max_age_days",
+            "read_by"
+          ],
+          "properties": {
+            "max_age_days": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              ]
+            },
+            "read_by": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^Q[0-9]{2}$"
+              }
+            }
+          }
+        },
+        "data_owner": {
+          "$ref": "#/$defs/role_label"
+        },
+        "sync_owner": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/role_label"
+            }
+          ]
+        },
+        "allowed_writers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "route": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/route"
+            }
+          ]
+        },
+        "classification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sensitivity"
+          ],
+          "properties": {
+            "sensitivity": {
+              "enum": [
+                "normal",
+                "personal_data",
+                "client_money",
+                "regulator"
+              ]
+            },
+            "minimise": {
+              "type": "string",
+              "minLength": 1,
+              "description": "What is kept instead of the full record, e.g. 'opaque client code only'."
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity": {
+                    "enum": [
+                      "personal_data",
+                      "client_money"
+                    ]
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "minimise"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "source"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "direction": {
+                "const": "born_here"
+              },
+              "table": {
+                "$ref": "#/$defs/sql_name"
+              },
+              "route": {
+                "type": "null"
+              },
+              "home": {
+                "properties": {
+                  "system": {
+                    "const": "this_base"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "mirror"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "direction": {
+                "const": "copy_in"
+              },
+              "table": {
+                "$ref": "#/$defs/sql_name"
+              },
+              "source_ref": {
+                "properties": {
+                  "field": {
+                    "$ref": "#/$defs/sql_name"
+                  }
+                }
+              },
+              "sync_owner": {
+                "$ref": "#/$defs/role_label"
+              },
+              "allowed_writers": {
+                "const": [
+                  "import_step_only"
+                ]
+              },
+              "route": {
+                "$ref": "#/$defs/route"
+              },
+              "home": {
+                "properties": {
+                  "system": {
+                    "not": {
+                      "enum": [
+                        "this_base",
+                        "task_system"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "intake"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "direction": {
+                "const": "request_out"
+              },
+              "table": {
+                "$ref": "#/$defs/sql_name"
+              },
+              "route": {
+                "$ref": "#/$defs/route"
+              },
+              "home": {
+                "properties": {
+                  "system": {
+                    "not": {
+                      "enum": [
+                        "this_base",
+                        "work_board",
+                        "task_system"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "snapshot"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "direction": {
+                "const": "frozen_here"
+              },
+              "table": {
+                "$ref": "#/$defs/sql_name"
+              },
+              "allowed_writers": {
+                "const": [
+                  "close_step_only"
+                ]
+              },
+              "route": {
+                "type": "null"
+              },
+              "home": {
+                "properties": {
+                  "system": {
+                    "const": "this_base"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "not_held"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "direction": {
+                "const": "not_held"
+              },
+              "table": {
+                "type": "null"
+              },
+              "allowed_writers": {
+                "const": [
+                  "nobody"
+                ]
+              },
+              "route": {
+                "type": "null"
+              },
+              "home": {
+                "properties": {
+                  "system": {
+                    "not": {
+                      "const": "this_base"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "description": "A work board is watch-only and the task system remains the home for tasks; neither receives new database rows.",
+          "if": {
+            "properties": {
+              "home": {
+                "properties": {
+                  "system": {
+                    "enum": [
+                      "work_board",
+                      "task_system"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "role": {
+                "enum": [
+                  "mirror",
+                  "not_held"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "home": {
+                "properties": {
+                  "system": {
+                    "const": "task_system"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "role": {
+                "const": "not_held"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "route": {
+      "description": "How copies or requests travel, and how far that is proven. Steps 3 (copies arrive by themselves) and 4 (proven end to end) need a connector and are not allowed in format 1.0.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "state",
+        "proof"
+      ],
+      "properties": {
+        "method": {
+          "enum": [
+            "hand_import_from_export",
+            "hand_copy_from_register",
+            "handover_by_person",
+            "not_known_yet"
+          ]
+        },
+        "state": {
+          "enum": [
+            0,
+            1,
+            2
+          ]
+        },
+        "proof": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "proven_on": {
+          "$ref": "#/$defs/date"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  1,
+                  2
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "proof": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "proven_on"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "not_known_yet"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "state": {
+                "const": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "blocker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "ask",
+        "ask_who",
+        "blocks",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^B[0-9]{2}$"
+        },
+        "ask": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ask_who": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blocks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/checkpoint_id"
+          }
+        },
+        "status": {
+          "enum": [
+            "open",
+            "answered"
+          ]
+        },
+        "answer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "answered_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "answered_on": {
+          "$ref": "#/$defs/date"
+        }
+      },
+      "if": {
+        "properties": {
+          "status": {
+            "const": "answered"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "answer",
+          "answered_by",
+          "answered_on"
+        ]
+      },
+      "else": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "answer"
+              ]
+            },
+            {
+              "required": [
+                "answered_by"
+              ]
+            },
+            {
+              "required": [
+                "answered_on"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "stop_for_owner",
+        "steps",
+        "readback",
+        "on_fail"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/checkpoint_id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "preflight",
+            "backup",
+            "rehearse_on_copy",
+            "migrate",
+            "import_by_hand",
+            "acceptance_real",
+            "finish"
+          ]
+        },
+        "migration": {
+          "type": "string",
+          "pattern": "^M[0-9]{3}$"
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "readback": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/readback_check"
+          }
+        },
+        "on_fail": {
+          "const": "stop_and_report"
+        },
+        "stop_for_owner": {
+          "type": "boolean"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "migrate"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "migration"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "import_by_hand",
+                  "acceptance_real"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "stop_for_owner": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "readback_check": {
+      "description": "Read the result back and compare. A command saying 'ok' proves nothing. Every kind except owner_confirms is run by a program, so its target must be runnable: names for *_exist and columns_match, a SELECT or a table/view name for query_returns and row_count, an INSERT/UPDATE/DELETE for refused. owner_confirms is the human readback: show the owner the target, they say whether it matches.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check",
+        "target"
+      ],
+      "properties": {
+        "check": {
+          "enum": [
+            "sqlite_version_at_least",
+            "file_absent_or_backed_up",
+            "tables_exist",
+            "views_exist",
+            "triggers_exist",
+            "columns_match",
+            "user_version",
+            "foreign_key_check_empty",
+            "integrity_check_ok",
+            "row_count",
+            "query_returns",
+            "refused",
+            "same_as_backup",
+            "rehearsal_passed",
+            "owner_confirms"
+          ]
+        },
+        "target": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          ]
+        },
+        "expect": {}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "enum": [
+                  "tables_exist",
+                  "views_exist",
+                  "triggers_exist"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "target": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/sql_name"
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "$ref": "#/$defs/sql_name"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "columns_match"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "expect"
+            ],
+            "properties": {
+              "target": {
+                "$ref": "#/$defs/sql_name"
+              },
+              "expect": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/$defs/sql_name"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "enum": [
+                  "query_returns",
+                  "row_count"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "expect"
+            ],
+            "properties": {
+              "target": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/sql_name"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\s*([Ss][Ee][Ll][Ee][Cc][Tt]|[Ww][Ii][Tt][Hh])\\s"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "row_count"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expect": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "refused"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "expect"
+            ],
+            "properties": {
+              "target": {
+                "type": "string",
+                "pattern": "^\\s*([Ii][Nn][Ss][Ee][Rr][Tt]|[Uu][Pp][Dd][Aa][Tt][Ee]|[Dd][Ee][Ll][Ee][Tt][Ee])\\s"
+              },
+              "expect": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "user_version"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "expect"
+            ],
+            "properties": {
+              "expect": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "sqlite_version_at_least"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "expect"
+            ],
+            "properties": {
+              "expect": {
+                "type": "string",
+                "pattern": "^3\\.[0-9]+\\.[0-9]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "owner_confirms"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "expect"
+            ],
+            "properties": {
+              "expect": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "machine_check": {
+      "description": "A readback a program runs on its own; used inside fixtures.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/readback_check"
+        },
+        {
+          "properties": {
+            "check": {
+              "enum": [
+                "tables_exist",
+                "views_exist",
+                "triggers_exist",
+                "columns_match",
+                "row_count",
+                "query_returns",
+                "refused",
+                "same_as_backup",
+                "foreign_key_check_empty",
+                "integrity_check_ok"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "migration": {
+      "description": "One versioned schema step. 'up' and 'down' are SQL files beside the manifest; a null hash means the file isn't written yet, and the build refuses to run it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "from_version",
+        "to_version",
+        "up_file",
+        "down_file",
+        "up_sha256",
+        "down_sha256",
+        "additive"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^M[0-9]{3}$"
+        },
+        "from_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "to_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "up_file": {
+          "type": "string",
+          "pattern": "^migrations/M[0-9]{3}-up\\.sql$"
+        },
+        "down_file": {
+          "type": "string",
+          "pattern": "^migrations/M[0-9]{3}-down\\.sql$"
+        },
+        "up_sha256": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/sha256"
+            }
+          ]
+        },
+        "down_sha256": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/sha256"
+            }
+          ]
+        },
+        "additive": {
+          "type": "boolean",
+          "description": "true = only adds tables, columns, views, triggers or indexes."
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "fixture": {
+      "description": "Fictional records that prove one rule. Never live people, clients, numbers, or codes.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "case",
+        "proves",
+        "fictional",
+        "rows",
+        "then"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^FX[0-9]{2}$"
+        },
+        "case": {
+          "enum": [
+            "smooth",
+            "went_wrong",
+            "duplicate",
+            "collision",
+            "orphan_match",
+            "stale",
+            "read_only",
+            "intake_not_money",
+            "snapshot_frozen",
+            "privacy",
+            "rollback"
+          ]
+        },
+        "proves": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rows": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/sql_name"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "$ref": "#/$defs/sql_name"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number",
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "then": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/machine_check"
+          }
+        },
+        "fictional": {
+          "const": true
+        }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "monday_question",
+        "answered_by",
+        "expected_with_fixtures"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^Q[0-9]{2}$"
+        },
+        "monday_question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "answered_by": {
+          "$ref": "#/$defs/sql_name"
+        },
+        "columns": {
+          "description": "Columns of the view to compare, in order. Omitted = every column.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/sql_name"
+          }
+        },
+        "expected_with_fixtures": {
+          "description": "The rows the view must return once every fixture is loaded, at acceptance.as_of.",
+          "type": "array",
+          "items": {
+            "type": "array"
+          }
+        }
+      }
+    },
+    "build_status": {
+      "description": "The build journal, kept in its own file beside the manifest (build-status.json). A resuming session reads it first, then compares the database with the manifest up to the last finished checkpoint. If they differ, it reports and waits; it never 'repairs' towards the manifest.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "build_id",
+        "manifest_revision",
+        "manifest_sha256",
+        "checkpoints",
+        "routes",
+        "last_session"
+      ],
+      "properties": {
+        "build_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "manifest_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "checkpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "done",
+              "readback_matched"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/checkpoint_id"
+              },
+              "done": {
+                "type": "boolean"
+              },
+              "readback_matched": {
+                "type": "boolean"
+              },
+              "at": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "if": {
+              "properties": {
+                "done": {
+                  "const": true
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "readback_matched": {
+                  "const": true
+                }
+              },
+              "required": [
+                "at"
+              ]
+            }
+          }
+        },
+        "routes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "state"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "state": {
+                "enum": [
+                  0,
+                  1,
+                  2
+                ]
+              },
+              "proof": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "last_session": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "on",
+            "stopped_at",
+            "reason"
+          ],
+          "properties": {
+            "on": {
+              "$ref": "#/$defs/date"
+            },
+            "stopped_at": {
+              "$ref": "#/$defs/checkpoint_id"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

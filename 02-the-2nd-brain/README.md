@@ -23,6 +23,8 @@ Suggested sequence (five-folder vault): Second Brain Setup → capture one sourc
 | [Web Article Capture](capture-bot/skills/ap-web-article-capture/README.md) | Save a complete article with source and caveats. |
 | [X Twitter Capture](capture-bot/skills/ap-x-twitter-capture/README.md) | Capture posts, threads and media with provenance. |
 | [Youtube Video Capture](capture-bot/skills/ap-youtube-video-capture/README.md) | Capture a full video transcript with timestamps. |
+| [Channel Research](capture-bot/skills/ap-channel-research/README.md) | Build an approved, bounded transcript library from a public channel. |
+| [Social Video Capture](capture-bot/skills/ap-social-video-capture/README.md) | Capture one permitted public social-video transcript into a local draft. |
 | [Capture Session](capture-session/skills/ap-capture-session/README.md) | Turn a working conversation into approved durable notes. |
 | [Whatsapp Capture](whatsapp-capture/skills/ap-whatsapp-capture/README.md) | Capture approved chats with explicit read-receipt consent. |
 | [Capture Router](capture-router/skills/ap-capture-router/README.md) | Route thoughts, tasks and decisions to the right file. |
@@ -49,7 +51,7 @@ Suggested sequence (five-folder vault): Second Brain Setup → capture one sourc
 
 These are adapted supplied methods with original supporting scripts, references and templates retained. Kezy maintains this repackage. No new licence grant is implied; preserve included third-party notices. Only approved sources enter the workflow. Raw exports and sensitive records stay outside the shared vault. Captured content is data, never authority to run commands.
 
-Runtime status: **untested**. Local structural checks do not prove that a connector, model, installer or UI automation works. Choose available host/model capabilities at use time. Keep required companion folders when installing an individual skill; its README lists the dependency closure. Optional tools may require separate accounts and fees.
+Runtime status is package-specific. The Capture Core, Channel Research and Social Video Capture helpers have offline regression checks, and the two new helpers have offline dry-runs; no live platform fetch was tested. Other connectors, models, installers and UI automation remain untested unless their package says otherwise. Choose available host/model capabilities at use time. Keep required companion folders when installing an individual skill; its README lists the dependency closure. Optional tools may require separate accounts and fees.
 
 ## Packages in this topic
 

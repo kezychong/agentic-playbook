@@ -1,0 +1,1176 @@
+{
+  "manifest_format": "portable-sqlite-build/1.0",
+  "build_id": "example-compliance-desk",
+  "revision": 1,
+  "supersedes_sha256": null,
+  "made_on": "2026-01-15",
+  "made_by": "Base Schema fictional worked example",
+  "blueprint": "blueprints/example-compliance-desk.md",
+  "truth": "unverified",
+  "approval": {
+    "state": "draft"
+  },
+  "venture": {
+    "label": "Example compliance desk (made up)"
+  },
+  "target": {
+    "db_path": "data/example-compliance-desk.db",
+    "sqlite_min_version": "3.37.0",
+    "foreign_keys": true,
+    "strict_tables": true,
+    "user_version_after_build": 1
+  },
+  "policy": {
+    "connectors": "none",
+    "write_back": false,
+    "real_records_in_this_file": false,
+    "outside_ai_reads": "totals_and_counts_only",
+    "dashboards": "existing_dashboards_only",
+    "fixtures": "fictional_only"
+  },
+  "record_home_map": [
+    {
+      "kind": "Deadline",
+      "table": "deadline",
+      "role": "source",
+      "home": {
+        "system": "this_base",
+        "name": "this database"
+      },
+      "direction": "born_here",
+      "source_ref": {
+        "field": null,
+        "issued_by": "this database (DL-0001, DL-0002, ...)"
+      },
+      "match_key": {
+        "status": "not_needed"
+      },
+      "freshness": {
+        "max_age_days": null,
+        "read_by": [
+          "Q01",
+          "Q02"
+        ]
+      },
+      "data_owner": "Compliance lead",
+      "sync_owner": null,
+      "allowed_writers": [
+        "Compliance lead",
+        "Accounts lead"
+      ],
+      "route": null,
+      "classification": {
+        "sensitivity": "regulator"
+      }
+    },
+    {
+      "kind": "Licence",
+      "table": "licence",
+      "role": "mirror",
+      "home": {
+        "system": "outside_system",
+        "name": "the regulator's public register"
+      },
+      "direction": "copy_in",
+      "source_ref": {
+        "field": "source_ref",
+        "issued_by": "the regulator (licence number)"
+      },
+      "match_key": {
+        "status": "not_needed"
+      },
+      "freshness": {
+        "max_age_days": 30,
+        "read_by": [
+          "Q03"
+        ]
+      },
+      "data_owner": "Compliance lead",
+      "sync_owner": "Compliance lead",
+      "allowed_writers": [
+        "import_step_only"
+      ],
+      "route": {
+        "method": "hand_copy_from_register",
+        "state": 1,
+        "proof": "agreed with the Compliance lead (made up)",
+        "proven_on": "2026-10-28"
+      },
+      "classification": {
+        "sensitivity": "regulator"
+      }
+    },
+    {
+      "kind": "Licence request",
+      "table": "licence_request",
+      "role": "intake",
+      "home": {
+        "system": "outside_system",
+        "name": "the regulator, filed by the company secretary"
+      },
+      "direction": "request_out",
+      "source_ref": {
+        "field": "returned_ref",
+        "issued_by": "the regulator (application number, filled in once it comes back)"
+      },
+      "match_key": {
+        "status": "not_needed"
+      },
+      "freshness": {
+        "max_age_days": null,
+        "read_by": []
+      },
+      "data_owner": "Compliance lead",
+      "sync_owner": "Compliance lead",
+      "allowed_writers": [
+        "Compliance lead until handed over",
+        "nobody after, except filling in the returned number once"
+      ],
+      "route": {
+        "method": "handover_by_person",
+        "state": 1,
+        "proof": "agreed with the Compliance lead (made up)",
+        "proven_on": "2026-10-28"
+      },
+      "classification": {
+        "sensitivity": "regulator"
+      }
+    },
+    {
+      "kind": "Paid bill",
+      "table": "paid_bill",
+      "role": "mirror",
+      "home": {
+        "system": "outside_system",
+        "name": "the accounting software"
+      },
+      "direction": "copy_in",
+      "source_ref": {
+        "field": "source_ref",
+        "issued_by": "the accounting software (bill number)"
+      },
+      "match_key": {
+        "status": "agreed",
+        "field": "match_ref",
+        "carried_in_home_as": "the bill's reference box, where the team types the deadline code",
+        "ties_to": "deadline (code DL-nnnn)"
+      },
+      "freshness": {
+        "max_age_days": 7,
+        "read_by": [
+          "Q05"
+        ]
+      },
+      "data_owner": "Accounts lead",
+      "sync_owner": "Accounts lead",
+      "allowed_writers": [
+        "import_step_only"
+      ],
+      "route": {
+        "method": "hand_import_from_export",
+        "state": 1,
+        "proof": "agreed with the Accounts lead (made up)",
+        "proven_on": "2026-10-28"
+      },
+      "classification": {
+        "sensitivity": "normal"
+      }
+    },
+    {
+      "kind": "Month-end result",
+      "table": "month_close",
+      "role": "snapshot",
+      "home": {
+        "system": "this_base",
+        "name": "this database"
+      },
+      "direction": "frozen_here",
+      "source_ref": {
+        "field": null,
+        "issued_by": "this database (one per month)"
+      },
+      "match_key": {
+        "status": "not_needed"
+      },
+      "freshness": {
+        "max_age_days": null,
+        "read_by": [
+          "Q04"
+        ]
+      },
+      "data_owner": "Accounts lead",
+      "sync_owner": null,
+      "allowed_writers": [
+        "close_step_only"
+      ],
+      "route": null,
+      "classification": {
+        "sensitivity": "client_money",
+        "minimise": "the month's result only (matched or not, and the difference); bank lines are never kept"
+      }
+    },
+    {
+      "kind": "Onboarding exception",
+      "table": "onboarding_exception",
+      "role": "source",
+      "home": {
+        "system": "this_base",
+        "name": "this database"
+      },
+      "direction": "born_here",
+      "source_ref": {
+        "field": null,
+        "issued_by": "this database"
+      },
+      "match_key": {
+        "status": "agreed",
+        "field": "client_code",
+        "carried_in_home_as": "the client's opaque code in the client onboarding system",
+        "ties_to": "one client file in the client onboarding system"
+      },
+      "freshness": {
+        "max_age_days": null,
+        "read_by": [
+          "Q06"
+        ]
+      },
+      "data_owner": "Compliance lead",
+      "sync_owner": null,
+      "allowed_writers": [
+        "Compliance lead"
+      ],
+      "route": null,
+      "classification": {
+        "sensitivity": "personal_data",
+        "minimise": "an opaque client code only; no names, ID numbers or documents"
+      }
+    },
+    {
+      "kind": "Bank statement line",
+      "table": null,
+      "role": "not_held",
+      "home": {
+        "system": "outside_system",
+        "name": "the bank, and the accounting software's bank feed"
+      },
+      "direction": "not_held",
+      "source_ref": {
+        "field": null,
+        "issued_by": "the bank"
+      },
+      "match_key": {
+        "status": "not_needed"
+      },
+      "freshness": {
+        "max_age_days": null,
+        "read_by": []
+      },
+      "data_owner": "Accounts lead",
+      "sync_owner": null,
+      "allowed_writers": [
+        "nobody"
+      ],
+      "route": null,
+      "classification": {
+        "sensitivity": "client_money",
+        "minimise": "not kept; only the month-end result is"
+      }
+    },
+    {
+      "kind": "Client identity file",
+      "table": null,
+      "role": "not_held",
+      "home": {
+        "system": "outside_system",
+        "name": "the client onboarding system"
+      },
+      "direction": "not_held",
+      "source_ref": {
+        "field": null,
+        "issued_by": "the client onboarding system"
+      },
+      "match_key": {
+        "status": "not_needed"
+      },
+      "freshness": {
+        "max_age_days": null,
+        "read_by": []
+      },
+      "data_owner": "Compliance lead",
+      "sync_owner": null,
+      "allowed_writers": [
+        "nobody"
+      ],
+      "route": null,
+      "classification": {
+        "sensitivity": "personal_data",
+        "minimise": "not kept; onboarding exceptions use an opaque client code"
+      }
+    },
+    {
+      "kind": "Task or team promise",
+      "table": null,
+      "role": "not_held",
+      "home": {
+        "system": "task_system",
+        "name": "the organization task system"
+      },
+      "direction": "not_held",
+      "source_ref": {
+        "field": null,
+        "issued_by": "the task list (T- and W- numbers)"
+      },
+      "match_key": {
+        "status": "not_needed"
+      },
+      "freshness": {
+        "max_age_days": null,
+        "read_by": []
+      },
+      "data_owner": "Each task's owner",
+      "sync_owner": null,
+      "allowed_writers": [
+        "nobody"
+      ],
+      "route": null,
+      "classification": {
+        "sensitivity": "normal"
+      }
+    },
+    {
+      "kind": "Meeting note, decision or policy",
+      "table": null,
+      "role": "not_held",
+      "home": {
+        "system": "notes_system",
+        "name": "the organization notes system"
+      },
+      "direction": "not_held",
+      "source_ref": {
+        "field": null,
+        "issued_by": "the notes system (note title)"
+      },
+      "match_key": {
+        "status": "not_needed"
+      },
+      "freshness": {
+        "max_age_days": null,
+        "read_by": []
+      },
+      "data_owner": "Compliance lead",
+      "sync_owner": null,
+      "allowed_writers": [
+        "nobody"
+      ],
+      "route": null,
+      "classification": {
+        "sensitivity": "normal"
+      }
+    }
+  ],
+  "blockers": [
+    {
+      "id": "B01",
+      "ask": "One database file for this desk, or one for the whole company?",
+      "ask_who": "Owner",
+      "blocks": [
+        "CP1"
+      ],
+      "status": "answered",
+      "answer": "One file for this desk (made up)",
+      "answered_by": "Owner",
+      "answered_on": "2026-10-28"
+    },
+    {
+      "id": "B02",
+      "ask": "Can the accounting software export paid bills to a file, and with which columns?",
+      "ask_who": "Accounts lead",
+      "blocks": [
+        "CP4"
+      ],
+      "status": "open"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "CP1",
+      "title": "Preflight",
+      "kind": "preflight",
+      "steps": [
+        "Run scripts/check_manifest.py --for-build; stop on any error.",
+        "Check the SQLite version, and that the target file is new or backed up first."
+      ],
+      "readback": [
+        {
+          "check": "sqlite_version_at_least",
+          "target": "sqlite3",
+          "expect": "3.37.0"
+        },
+        {
+          "check": "file_absent_or_backed_up",
+          "target": "data/example-compliance-desk.db"
+        }
+      ],
+      "on_fail": "stop_and_report",
+      "stop_for_owner": false
+    },
+    {
+      "id": "CP2",
+      "title": "Rehearse on a throwaway copy",
+      "kind": "rehearse_on_copy",
+      "steps": [
+        "Run scripts/rehearse.py on this manifest; every check must pass."
+      ],
+      "readback": [
+        {
+          "check": "rehearsal_passed",
+          "target": "scripts/rehearse.py",
+          "expect": "all pass"
+        }
+      ],
+      "on_fail": "stop_and_report",
+      "stop_for_owner": false
+    },
+    {
+      "id": "CP3",
+      "title": "Build the empty database (M001)",
+      "kind": "migrate",
+      "migration": "M001",
+      "steps": [
+        "Apply M001 in one transaction, with PRAGMA foreign_keys = ON on the connection.",
+        "Fill record_home from this manifest's map."
+      ],
+      "readback": [
+        {
+          "check": "tables_exist",
+          "target": [
+            "deadline",
+            "licence",
+            "licence_request",
+            "paid_bill",
+            "month_close",
+            "onboarding_exception",
+            "record_home",
+            "import_guard",
+            "import_log",
+            "settings"
+          ]
+        },
+        {
+          "check": "views_exist",
+          "target": [
+            "report_day",
+            "deadline_list",
+            "due_next_30_days",
+            "overdue",
+            "licences_expiring",
+            "months_not_reconciled",
+            "fees_paid_by_deadline",
+            "unmatched_bills",
+            "money_paid_total",
+            "open_exceptions",
+            "stale_copies"
+          ]
+        },
+        {
+          "check": "triggers_exist",
+          "target": [
+            "licence_ro_ins",
+            "licence_ro_upd",
+            "licence_ro_del",
+            "paid_bill_ro_ins",
+            "paid_bill_ro_upd",
+            "paid_bill_ro_del",
+            "paid_bill_log",
+            "licence_log",
+            "licence_request_frozen",
+            "licence_request_keep",
+            "month_close_frozen_upd",
+            "month_close_frozen_del"
+          ]
+        },
+        {
+          "check": "columns_match",
+          "target": "paid_bill",
+          "expect": [
+            "id",
+            "source_ref",
+            "amount",
+            "currency",
+            "paid_on",
+            "match_ref",
+            "sync_status",
+            "last_synced",
+            "sync_note"
+          ]
+        },
+        {
+          "check": "user_version",
+          "target": "PRAGMA user_version",
+          "expect": 1
+        },
+        {
+          "check": "integrity_check_ok",
+          "target": "PRAGMA integrity_check"
+        },
+        {
+          "check": "foreign_key_check_empty",
+          "target": "PRAGMA foreign_key_check"
+        }
+      ],
+      "on_fail": "stop_and_report",
+      "stop_for_owner": false
+    },
+    {
+      "id": "CP4",
+      "title": "First hand import",
+      "kind": "import_by_hand",
+      "steps": [
+        "Ask the Accounts lead for the paid-bill export, and the Compliance lead for the licence details from the public register.",
+        "Make sure the export covers the two real records CP5 will use.",
+        "Import through the import step only; every row is labelled imported_by_hand with the export's date.",
+        "Report new rows, changed values and rejected duplicates."
+      ],
+      "readback": [
+        {
+          "check": "owner_confirms",
+          "target": "new rows, changed values and rejected lines for each export file",
+          "expect": "they match the export file"
+        },
+        {
+          "check": "owner_confirms",
+          "target": "SELECT * FROM unmatched_bills",
+          "expect": "each bill is fixed in its home or accepted as unmatched"
+        }
+      ],
+      "on_fail": "stop_and_report",
+      "stop_for_owner": true
+    },
+    {
+      "id": "CP5",
+      "title": "Two real records",
+      "kind": "acceptance_real",
+      "steps": [
+        "Ask the owner for one past deadline that went smoothly and one that went wrong.",
+        "The owner types them in; they are never copied into this file.",
+        "Run every Monday question and check each number by hand with the owner."
+      ],
+      "readback": [
+        {
+          "check": "owner_confirms",
+          "target": "every Monday question, run on the two real records",
+          "expect": "every number matches what the owner says happened"
+        }
+      ],
+      "on_fail": "stop_and_report",
+      "stop_for_owner": true
+    },
+    {
+      "id": "CP6",
+      "title": "Finish",
+      "kind": "finish",
+      "steps": [
+        "Write build-status.json: every checkpoint done with its readback matched.",
+        "State each route honestly: a hand import is step 2 at most.",
+        "Keep the backup."
+      ],
+      "readback": [
+        {
+          "check": "integrity_check_ok",
+          "target": "PRAGMA integrity_check"
+        },
+        {
+          "check": "owner_confirms",
+          "target": "SELECT * FROM stale_copies",
+          "expect": "empty, or the sync owner knows which copy is old"
+        }
+      ],
+      "on_fail": "stop_and_report",
+      "stop_for_owner": false
+    }
+  ],
+  "migrations": [
+    {
+      "id": "M001",
+      "from_version": 0,
+      "to_version": 1,
+      "up_file": "migrations/M001-up.sql",
+      "down_file": "migrations/M001-down.sql",
+      "up_sha256": "58ed5652f49a432faff7a8d37cf21d052c21225271375f3cbb107419906a283f",
+      "down_sha256": "48a4ddc446b28341090f305f78bd34fbab995e9e5d7a892f8abf4d6e73e2a631",
+      "additive": true,
+      "note": "Creates every table, guard, view and index from an empty file."
+    }
+  ],
+  "acceptance": {
+    "as_of": "2026-11-20",
+    "fixtures": [
+      {
+        "id": "FX01",
+        "case": "smooth",
+        "proves": "A licence renewal goes from deadline to request to paid fee, and shows up in the right Monday numbers.",
+        "rows": {
+          "deadline": [
+            {
+              "title": "Licence renewal for Regulator A",
+              "kind": "licence",
+              "owner_role": "Compliance lead",
+              "due_on": "2026-12-15",
+              "done_on": null
+            },
+            {
+              "title": "Auditor request: reply within 14 days",
+              "kind": "audit",
+              "owner_role": "Accounts lead",
+              "due_on": "2026-11-16",
+              "done_on": null
+            },
+            {
+              "title": "October bank reconciliation",
+              "kind": "reconciliation",
+              "owner_role": "Accounts lead",
+              "due_on": "2026-11-10",
+              "done_on": "2026-11-09"
+            },
+            {
+              "title": "Annual return filing",
+              "kind": "filing",
+              "owner_role": "Compliance lead",
+              "due_on": "2027-03-31",
+              "done_on": null
+            }
+          ],
+          "licence_request": [
+            {
+              "deadline_id": 1,
+              "drafted_on": "2026-11-03",
+              "fee_quoted": 5000.0,
+              "handed_over_on": "2026-11-05",
+              "handed_to_role": "Company secretary",
+              "returned_ref": "APP-0778"
+            }
+          ],
+          "paid_bill": [
+            {
+              "source_ref": "BILL-9001",
+              "amount": 5000.0,
+              "currency": "XXX",
+              "paid_on": "2026-11-12",
+              "match_ref": "DL-0001",
+              "last_synced": "2026-11-18"
+            }
+          ]
+        },
+        "then": [
+          {
+            "check": "query_returns",
+            "target": "SELECT code, owner_role, due_on FROM due_next_30_days",
+            "expect": [
+              [
+                "DL-0001",
+                "Compliance lead",
+                "2026-12-15"
+              ]
+            ]
+          },
+          {
+            "check": "query_returns",
+            "target": "SELECT paid FROM fees_paid_by_deadline WHERE code = 'DL-0001'",
+            "expect": 5000.0
+          }
+        ],
+        "fictional": true
+      },
+      {
+        "id": "FX02",
+        "case": "went_wrong",
+        "proves": "An overdue auditor request and a month that didn't reconcile both surface on Monday.",
+        "rows": {
+          "month_close": [
+            {
+              "month": "2026-09",
+              "reconciled": 0,
+              "difference": 12.5,
+              "checked_by_role": "Accounts lead",
+              "frozen_on": "2026-10-12"
+            },
+            {
+              "month": "2026-10",
+              "reconciled": 1,
+              "difference": 0.0,
+              "checked_by_role": "Accounts lead",
+              "frozen_on": "2026-11-09"
+            }
+          ]
+        },
+        "then": [
+          {
+            "check": "query_returns",
+            "target": "SELECT code, owner_role, days_late FROM overdue",
+            "expect": [
+              [
+                "DL-0002",
+                "Accounts lead",
+                4
+              ]
+            ]
+          },
+          {
+            "check": "query_returns",
+            "target": "SELECT month, difference FROM months_not_reconciled",
+            "expect": [
+              [
+                "2026-09",
+                12.5
+              ]
+            ]
+          }
+        ],
+        "fictional": true
+      },
+      {
+        "id": "FX03",
+        "case": "duplicate",
+        "proves": "The same line twice in one export file becomes one row, while a changed import receipt is audited. (Re-importing an identical whole file, and a crash halfway, are rehearsed for every copy table automatically.)",
+        "rows": {
+          "paid_bill": [
+            {
+              "source_ref": "BILL-9001",
+              "amount": 5000.0,
+              "currency": "XXX",
+              "paid_on": "2026-11-12",
+              "match_ref": "DL-0001",
+              "last_synced": "2026-11-18"
+            },
+            {
+              "source_ref": "BILL-9002",
+              "amount": 1200.0,
+              "currency": "XXX",
+              "paid_on": "2026-11-14",
+              "match_ref": "DL-0002",
+              "last_synced": "2026-11-18"
+            },
+            {
+              "source_ref": "BILL-9003",
+              "amount": 300.0,
+              "currency": "XXX",
+              "paid_on": "2026-11-15",
+              "match_ref": "DL-0020",
+              "last_synced": "2026-11-18"
+            },
+            {
+              "source_ref": "BILL-9001",
+              "amount": 5000.0,
+              "currency": "XXX",
+              "paid_on": "2026-11-12",
+              "match_ref": "DL-0001",
+              "last_synced": "2026-11-18"
+            }
+          ]
+        },
+        "then": [
+          {
+            "check": "row_count",
+            "target": "paid_bill",
+            "expect": 3
+          },
+          {
+            "check": "row_count",
+            "target": "import_log",
+            "expect": 1
+          }
+        ],
+        "fictional": true
+      },
+      {
+        "id": "FX04",
+        "case": "collision",
+        "proves": "Every changed value and import-receipt field in a later export is logged; two different lines with one bill number are rejected, not guessed.",
+        "rows": {
+          "paid_bill": [
+            {
+              "source_ref": "BILL-9002",
+              "amount": 1250.0,
+              "currency": "XXX",
+              "paid_on": "2026-11-14",
+              "match_ref": "DL-0002",
+              "last_synced": "2026-11-19"
+            },
+            {
+              "source_ref": "BILL-9004",
+              "amount": 100.0,
+              "currency": "XXX",
+              "paid_on": "2026-11-18",
+              "match_ref": "DL-0004",
+              "last_synced": "2026-11-19"
+            },
+            {
+              "source_ref": "BILL-9004",
+              "amount": 120.0,
+              "currency": "XXX",
+              "paid_on": "2026-11-18",
+              "match_ref": "DL-0004",
+              "last_synced": "2026-11-19"
+            }
+          ]
+        },
+        "then": [
+          {
+            "check": "query_returns",
+            "target": "SELECT source_ref, field, old_value, new_value FROM import_log",
+            "expect": [
+              [
+                "BILL-9001",
+                "sync_note",
+                "rehearsal FX01",
+                "rehearsal FX03"
+              ],
+              [
+                "BILL-9002",
+                "amount",
+                "1200.0",
+                "1250.0"
+              ],
+              [
+                "BILL-9002",
+                "last_synced",
+                "2026-11-18",
+                "2026-11-19"
+              ],
+              [
+                "BILL-9002",
+                "sync_note",
+                "rehearsal FX03",
+                "rehearsal FX04"
+              ]
+            ]
+          },
+          {
+            "check": "row_count",
+            "target": "SELECT COUNT(*) FROM paid_bill WHERE source_ref = 'BILL-9004'",
+            "expect": 0
+          }
+        ],
+        "fictional": true
+      },
+      {
+        "id": "FX05",
+        "case": "orphan_match",
+        "proves": "A bill whose deadline code has a typo is listed for a person to fix, never silently dropped.",
+        "rows": {},
+        "then": [
+          {
+            "check": "query_returns",
+            "target": "SELECT source_ref, amount, match_ref FROM unmatched_bills",
+            "expect": [
+              [
+                "BILL-9003",
+                300.0,
+                "DL-0020"
+              ]
+            ]
+          }
+        ],
+        "fictional": true
+      },
+      {
+        "id": "FX06",
+        "case": "stale",
+        "proves": "A copy older than its freshness limit is flagged wherever it's read.",
+        "rows": {
+          "licence": [
+            {
+              "source_ref": "RA-0001-X",
+              "regulator": "Regulator A",
+              "expires_on": "2027-01-31",
+              "status_in_home": "active",
+              "last_synced": "2026-10-01"
+            }
+          ]
+        },
+        "then": [
+          {
+            "check": "query_returns",
+            "target": "SELECT source_ref, expires_on, copy_taken_on, copy_is_stale FROM licences_expiring",
+            "expect": [
+              [
+                "RA-0001-X",
+                "2027-01-31",
+                "2026-10-01",
+                1
+              ]
+            ]
+          },
+          {
+            "check": "query_returns",
+            "target": "SELECT kind, age_days, max_age_days FROM stale_copies",
+            "expect": [
+              [
+                "Licence",
+                50,
+                30
+              ]
+            ]
+          }
+        ],
+        "fictional": true
+      },
+      {
+        "id": "FX07",
+        "case": "read_only",
+        "proves": "Nobody can change, delete or type into a copy outside the import step.",
+        "rows": {},
+        "then": [
+          {
+            "check": "refused",
+            "target": "UPDATE paid_bill SET amount = 1 WHERE source_ref = 'BILL-9001'",
+            "expect": "is a copy"
+          },
+          {
+            "check": "refused",
+            "target": "DELETE FROM paid_bill WHERE source_ref = 'BILL-9001'",
+            "expect": "is a copy"
+          },
+          {
+            "check": "refused",
+            "target": "INSERT INTO paid_bill (source_ref, amount, currency, paid_on, sync_status, last_synced) VALUES ('BILL-HAND', 9, 'XXX', '2026-11-20', 'imported_by_hand', '2026-11-20')",
+            "expect": "is a copy"
+          }
+        ],
+        "fictional": true
+      },
+      {
+        "id": "FX08",
+        "case": "intake_not_money",
+        "proves": "A handed-over request is frozen, and its quoted fee is never counted as money (6,550 paid, not 11,550).",
+        "rows": {},
+        "then": [
+          {
+            "check": "refused",
+            "target": "UPDATE licence_request SET fee_quoted = 4000 WHERE id = 1",
+            "expect": "handed over"
+          },
+          {
+            "check": "refused",
+            "target": "UPDATE licence_request SET returned_ref = 'APP-9999' WHERE id = 1",
+            "expect": "handed over"
+          },
+          {
+            "check": "query_returns",
+            "target": "SELECT paid FROM money_paid_total",
+            "expect": 6550.0
+          }
+        ],
+        "fictional": true
+      },
+      {
+        "id": "FX09",
+        "case": "snapshot_frozen",
+        "proves": "A month-end result can't be changed, deleted or written twice.",
+        "rows": {},
+        "then": [
+          {
+            "check": "refused",
+            "target": "UPDATE month_close SET difference = 0 WHERE month = '2026-09'",
+            "expect": "frozen figure"
+          },
+          {
+            "check": "refused",
+            "target": "DELETE FROM month_close WHERE month = '2026-10'",
+            "expect": "frozen figure"
+          },
+          {
+            "check": "refused",
+            "target": "INSERT INTO month_close VALUES ('2026-10', 1, 0, 'Accounts lead', '2026-11-20')",
+            "expect": "UNIQUE"
+          }
+        ],
+        "fictional": true
+      },
+      {
+        "id": "FX10",
+        "case": "privacy",
+        "proves": "A name typed where an opaque client code belongs is refused.",
+        "rows": {
+          "onboarding_exception": [
+            {
+              "client_code": "C-3F9A21",
+              "reason": "Proof of address missing; exception justified; escalated",
+              "opened_on": "2026-11-03",
+              "closed_on": null,
+              "escalated": 1
+            },
+            {
+              "client_code": "C-7B20E4",
+              "reason": "Document date unclear; resolved",
+              "opened_on": "2026-11-01",
+              "closed_on": "2026-11-10",
+              "escalated": 0
+            }
+          ]
+        },
+        "then": [
+          {
+            "check": "refused",
+            "target": "INSERT INTO onboarding_exception (client_code, reason, opened_on) VALUES ('Sample Person', 'x', '2026-11-20')",
+            "expect": "CHECK constraint failed"
+          },
+          {
+            "check": "query_returns",
+            "target": "SELECT open_count, oldest_opened_on FROM open_exceptions",
+            "expect": [
+              [
+                1,
+                "2026-11-03"
+              ]
+            ]
+          }
+        ],
+        "fictional": true
+      },
+      {
+        "id": "FX11",
+        "case": "rollback",
+        "proves": "After a backup, a bad change is undone exactly by restoring the backup.",
+        "rows": {},
+        "then": [
+          {
+            "check": "same_as_backup",
+            "target": "restore after a deliberate bad change"
+          }
+        ],
+        "fictional": true
+      }
+    ],
+    "metrics": [
+      {
+        "id": "Q01",
+        "monday_question": "What's due in the next 30 days, and who owns it?",
+        "answered_by": "due_next_30_days",
+        "columns": [
+          "code",
+          "owner_role",
+          "due_on"
+        ],
+        "expected_with_fixtures": [
+          [
+            "DL-0001",
+            "Compliance lead",
+            "2026-12-15"
+          ]
+        ]
+      },
+      {
+        "id": "Q02",
+        "monday_question": "What's overdue, and by how many days?",
+        "answered_by": "overdue",
+        "columns": [
+          "code",
+          "owner_role",
+          "days_late"
+        ],
+        "expected_with_fixtures": [
+          [
+            "DL-0002",
+            "Accounts lead",
+            4
+          ]
+        ]
+      },
+      {
+        "id": "Q03",
+        "monday_question": "Which licences expire in the next 90 days, and is our copy fresh?",
+        "answered_by": "licences_expiring",
+        "columns": [
+          "source_ref",
+          "expires_on",
+          "copy_taken_on",
+          "copy_is_stale"
+        ],
+        "expected_with_fixtures": [
+          [
+            "RA-0001-X",
+            "2027-01-31",
+            "2026-10-01",
+            1
+          ]
+        ]
+      },
+      {
+        "id": "Q04",
+        "monday_question": "Which months didn't reconcile?",
+        "answered_by": "months_not_reconciled",
+        "columns": [
+          "month",
+          "difference"
+        ],
+        "expected_with_fixtures": [
+          [
+            "2026-09",
+            12.5
+          ]
+        ]
+      },
+      {
+        "id": "Q05",
+        "monday_question": "What have we paid against each deadline?",
+        "answered_by": "fees_paid_by_deadline",
+        "columns": [
+          "code",
+          "paid"
+        ],
+        "expected_with_fixtures": [
+          [
+            "DL-0001",
+            5000.0
+          ],
+          [
+            "DL-0002",
+            1250.0
+          ]
+        ]
+      },
+      {
+        "id": "Q06",
+        "monday_question": "How many onboarding exceptions are open, and since when?",
+        "answered_by": "open_exceptions",
+        "columns": [
+          "open_count",
+          "oldest_opened_on"
+        ],
+        "expected_with_fixtures": [
+          [
+            1,
+            "2026-11-03"
+          ]
+        ]
+      }
+    ],
+    "real_records": {
+      "count": 2,
+      "cases": [
+        "smooth",
+        "went_wrong"
+      ],
+      "kept_in_this_file": false,
+      "stop_for_owner": true
+    }
+  },
+  "rollback": {
+    "backup_dir": "backups/example-compliance-desk/",
+    "method": "sqlite_online_backup",
+    "restore_steps": [
+      "Stop any program that has the database open.",
+      "Copy the backup over the live file with SQLite's own backup, not a plain file copy.",
+      "Read back: user_version, integrity_check and the row counts must match the backup's.",
+      "Write what happened in build-status.json."
+    ],
+    "proven_on_copy": true
+  },
+  "not_in_this_build": [
+    "Any connector to an outside system; each connector is a separate approved project.",
+    "Write-back to any record home.",
+    "A new dashboard.",
+    "Bank statement lines, identity files, tasks, meeting notes, and policies: see the Not kept lines."
+  ]
+}

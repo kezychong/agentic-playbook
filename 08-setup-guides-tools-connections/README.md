@@ -11,6 +11,7 @@ Set up the machine your agents live on, reach it from your laptop and phone, sto
 4. Open the complete skill below. Keep supporting files beside SKILL.md.
 
 ## Included skills
+- [ap-base-schema](base-schema/skills/ap-base-schema/README.md)
 - [ap-html-output](html-output/skills/ap-html-output/README.md)
 - [ap-hermes-server-setup](server-setup/skills/ap-hermes-server-setup/README.md)
 - [ap-mac-mini-setup](server-setup/skills/ap-mac-mini-setup/README.md)
@@ -22,8 +23,9 @@ Set up the machine your agents live on, reach it from your laptop and phone, sto
 - [ap-connect-to-capture](connect-your-tools/skills/ap-connect-to-capture/README.md)
 
 ## Prerequisites and limits
-An existing host, a local draft workspace and the supplied task inputs. Scripts, connectors,
-model routes and runtime configuration are untested. No skill loading starts an installer or
+An existing host, a local draft workspace and the supplied task inputs. Base Schema's validator,
+regressions and fictional throwaway rehearsal were checked offline. Connectors, model routes,
+host installation and live integration remain untested. No skill loading starts an installer or
 schedule. Approve any sending, publishing, spending, deletion, account or profile change separately.
 Missing data remains unknown. These are adapted supplied methods, maintained by Kezy;
 no new downstream license grant is implied.
@@ -35,6 +37,7 @@ no new downstream license grant is implied.
 These are browsing entries, not a requirement to install the whole topic. Combined source packs stay together; independent source products stay separate.
 
 - [Html Output](html-output/README.md)
+- [Base Schema](base-schema/README.md)
 - [Server Setup](server-setup/README.md)
 - [Add a Key](add-a-key/README.md)
 - [Connect My Machines](connect-my-machines/README.md)
